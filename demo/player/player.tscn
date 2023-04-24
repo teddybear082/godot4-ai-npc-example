@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://8ulc2s07842v"]
+
+[ext_resource type="PackedScene" uid="uid://b8hc2ex21u8xj" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_physics_fullglove_low.tscn" id="1_r5mt0"]
+[ext_resource type="PackedScene" uid="uid://cqhw276realc" path="res://addons/godot-xr-tools/functions/function_pointer.tscn" id="2_06kra"]
+[ext_resource type="PackedScene" uid="uid://bkdeegb8w3oah" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/right_physics_fullglove_low.tscn" id="2_b7c8s"]
+[ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="3_508yh"]
+[ext_resource type="PackedScene" uid="uid://b6bk2pj8vbj28" path="res://addons/godot-xr-tools/functions/movement_turn.tscn" id="5_qryta"]
+[ext_resource type="PackedScene" uid="uid://diyu06cw06syv" path="res://addons/godot-xr-tools/player/player_body.tscn" id="6_1o8it"]
+
+[node name="Player" type="XROrigin3D"]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+
+[node name="LeftHandController" type="XRController3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, 0)
+tracker = &"left_hand"
+pose = &"aim"
+
+[node name="LeftPhysicsHand" parent="LeftHandController" instance=ExtResource("1_r5mt0")]
+
+[node name="FunctionPointer" parent="LeftHandController" instance=ExtResource("2_06kra")]
+show_laser = 0
+laser_length = 1
+show_target = true
+collision_mask = 1048580
+collide_with_areas = true
+
+[node name="MovementDirect" parent="LeftHandController" instance=ExtResource("3_508yh")]
+strafe = true
+
+[node name="RightHandController" type="XRController3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 0)
+tracker = &"right_hand"
+pose = &"aim"
+
+[node name="RightPhysicsHand" parent="RightHandController" instance=ExtResource("2_b7c8s")]
+
+[node name="FunctionPointer" parent="RightHandController" instance=ExtResource("2_06kra")]
+show_laser = 0
+laser_length = 1
+show_target = true
+collision_mask = 1048580
+collide_with_areas = true
+
+[node name="MovementTurn" parent="RightHandController" instance=ExtResource("5_qryta")]
+step_turn_angle = 45.0
+
+[node name="PlayerBody" parent="." instance=ExtResource("6_1o8it")]
+collision_layer = 524290

@@ -1,0 +1,463 @@
+[gd_scene load_steps=42 format=3 uid="uid://dpsjlwa7mye4o"]
+
+[ext_resource type="PackedScene" uid="uid://de75036o5g1q6" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-medium.glb" id="2"]
+[ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
+[ext_resource type="PackedScene" uid="uid://cnn66tacxxgyj" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-window-wide.glb" id="4"]
+[ext_resource type="PackedScene" uid="uid://ckodl60h5lhr8" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-doorway-wide.glb" id="5"]
+[ext_resource type="PackedScene" uid="uid://cxs1bawqyedpk" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-high.glb" id="6"]
+[ext_resource type="PackedScene" uid="uid://dd7f42rrddmwp" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-wall.glb" id="7"]
+[ext_resource type="PackedScene" uid="uid://c0exeywd1cdgr" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-corner-inner.glb" id="8"]
+[ext_resource type="PackedScene" uid="uid://20nb6kx5jftx" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door.glb" id="10"]
+[ext_resource type="PackedScene" uid="uid://c7dsp87147d45" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/conveyor-bars-stripe-fence.glb" id="11"]
+[ext_resource type="PackedScene" uid="uid://byfitmoc2utqm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/top-large.glb" id="12"]
+[ext_resource type="PackedScene" uid="uid://dh5xfpe2pe53f" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/box-long.glb" id="13"]
+[ext_resource type="PackedScene" uid="uid://ckpxvchnbxacu" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/box-large.glb" id="14"]
+[ext_resource type="PackedScene" uid="uid://dpdg1cb1a4jjs" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/box-small.glb" id="15"]
+[ext_resource type="PackedScene" uid="uid://dnta4qo40aedr" path="res://assets/models/gdquest/mannequiny-0.3.0.glb" id="16"]
+[ext_resource type="Script" path="res://assets/models/gdquest/mannequiny-0.3.0.gd" id="17"]
+[ext_resource type="Script" path="res://demo/Main.gd" id="18"]
+[ext_resource type="FontFile" path="res://fonts/droid-sans/DroidSans.tres" id="19"]
+[ext_resource type="AudioStream" uid="uid://nqitbcfd0the" path="res://assets/sounds/freesound.org/659965__beussa__breathingmachine.mp3" id="20"]
+[ext_resource type="AudioStream" uid="uid://4c8xmiiqske6" path="res://assets/sounds/freesound.org/677227__davilca__sfx_factory_power_1.mp3" id="21"]
+[ext_resource type="AudioStream" uid="uid://cmah6673gpjmp" path="res://assets/sounds/freesound.org/563649__jecky1000__castle-hill-pud-30102020.mp3" id="22"]
+[ext_resource type="PackedScene" path="res://addons/godot-gpt-35-turbo/GodotGPT35Turbo.tscn" id="23"]
+[ext_resource type="PackedScene" path="res://scripts/Godot-AI-NPC-Controller.tscn" id="24"]
+[ext_resource type="PackedScene" path="res://addons/godot-witai/VRVoiceControl-WitAI.tscn" id="25"]
+[ext_resource type="Script" path="res://scripts/npc_interaction_area.gd" id="27"]
+[ext_resource type="FontFile" uid="uid://ek8c4w247n4i" path="res://fonts/droid-sans/DroidSans.ttf" id="28"]
+[ext_resource type="PackedScene" path="res://addons/godot-convAI/GodotConvAI.tscn" id="29"]
+[ext_resource type="PackedScene" uid="uid://8ulc2s07842v" path="res://demo/player/player.tscn" id="29_0qx8x"]
+[ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="29_msa3g"]
+[ext_resource type="PackedScene" path="res://addons/godot-elevenlabs-tts/ElevenLabsTTS.tscn" id="30"]
+
+[sub_resource type="BoxMesh" id="1"]
+size = Vector3(10, 0.25, 10)
+
+[sub_resource type="BoxShape3D" id="2"]
+margin = 0.01
+size = Vector3(10, 0.25, 10)
+
+[sub_resource type="BoxShape3D" id="6"]
+size = Vector3(1, 3, 6)
+
+[sub_resource type="BoxShape3D" id="7"]
+size = Vector3(8, 3, 1)
+
+[sub_resource type="BoxShape3D" id="8"]
+size = Vector3(0.1, 1, 2.5)
+
+[sub_resource type="BoxShape3D" id="9"]
+size = Vector3(1, 1, 4)
+
+[sub_resource type="BoxShape3D" id="10"]
+size = Vector3(1, 1, 1.5)
+
+[sub_resource type="CapsuleShape3D" id="5"]
+radius = 0.3
+height = 1.5
+
+[sub_resource type="BoxShape3D" id="3"]
+size = Vector3(3, 1.5, 3)
+
+[sub_resource type="CapsuleShape3D" id="4"]
+radius = 0.3
+height = 1.5
+
+[sub_resource type="FontFile" id="11"]
+fallbacks = Array[Font]([ExtResource("28")])
+face_index = null
+embolden = null
+transform = null
+cache/0/32/0/ascent = 0.0
+cache/0/32/0/descent = 0.0
+cache/0/32/0/underline_position = 0.0
+cache/0/32/0/underline_thickness = 0.0
+cache/0/32/0/scale = 1.0
+cache/0/32/0/glyphs/0/advance = Vector2(0, 0)
+cache/0/32/0/glyphs/0/offset = Vector2(0, 0)
+cache/0/32/0/glyphs/0/size = Vector2(0, 0)
+cache/0/32/0/glyphs/0/uv_rect = Rect2(0, 0, 0, 0)
+cache/0/32/0/glyphs/0/texture_idx = -1
+cache/0/32/0/kerning_overrides/32/0 = Vector2(0, 0)
+cache/0/32/0/kerning_overrides/32/12 = Vector2(0, 0)
+cache/0/32/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/32/0/kerning_overrides/128/0 = Vector2(0, 0)
+cache/0/32/0/kerning_overrides/128/12 = Vector2(0, 0)
+cache/0/32/0/kerning_overrides/62/0 = Vector2(0, 0)
+cache/0/32/0/kerning_overrides/64/0 = Vector2(0, 0)
+cache/0/32/12/glyphs/0/offset = Vector2(0, 0)
+cache/0/32/12/glyphs/0/size = Vector2(0, 0)
+cache/0/32/12/glyphs/0/uv_rect = Rect2(0, 0, 0, 0)
+cache/0/32/12/glyphs/0/texture_idx = -1
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/32/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/32/12 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/128/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/128/12 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/62/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/64/0 = Vector2(0, 0)
+cache/0/128/0/ascent = 0.0
+cache/0/128/0/descent = 0.0
+cache/0/128/0/underline_position = 0.0
+cache/0/128/0/underline_thickness = 0.0
+cache/0/128/0/scale = 1.0
+cache/0/128/0/glyphs/0/advance = Vector2(0, 0)
+cache/0/128/0/glyphs/0/offset = Vector2(0, 0)
+cache/0/128/0/glyphs/0/size = Vector2(0, 0)
+cache/0/128/0/glyphs/0/uv_rect = Rect2(0, 0, 0, 0)
+cache/0/128/0/glyphs/0/texture_idx = -1
+cache/0/128/0/kerning_overrides/32/0 = Vector2(0, 0)
+cache/0/128/0/kerning_overrides/32/12 = Vector2(0, 0)
+cache/0/128/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/128/0/kerning_overrides/128/0 = Vector2(0, 0)
+cache/0/128/0/kerning_overrides/128/12 = Vector2(0, 0)
+cache/0/128/0/kerning_overrides/62/0 = Vector2(0, 0)
+cache/0/128/0/kerning_overrides/64/0 = Vector2(0, 0)
+cache/0/128/12/glyphs/0/offset = Vector2(0, 0)
+cache/0/128/12/glyphs/0/size = Vector2(0, 0)
+cache/0/128/12/glyphs/0/uv_rect = Rect2(0, 0, 0, 0)
+cache/0/128/12/glyphs/0/texture_idx = -1
+cache/0/62/0/ascent = 0.0
+cache/0/62/0/descent = 0.0
+cache/0/62/0/underline_position = 0.0
+cache/0/62/0/underline_thickness = 0.0
+cache/0/62/0/scale = 1.0
+cache/0/62/0/kerning_overrides/32/0 = Vector2(0, 0)
+cache/0/62/0/kerning_overrides/32/12 = Vector2(0, 0)
+cache/0/62/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/62/0/kerning_overrides/128/0 = Vector2(0, 0)
+cache/0/62/0/kerning_overrides/128/12 = Vector2(0, 0)
+cache/0/62/0/kerning_overrides/62/0 = Vector2(0, 0)
+cache/0/62/0/kerning_overrides/64/0 = Vector2(0, 0)
+cache/0/64/0/ascent = 0.0
+cache/0/64/0/descent = 0.0
+cache/0/64/0/underline_position = 0.0
+cache/0/64/0/underline_thickness = 0.0
+cache/0/64/0/scale = 1.0
+cache/0/64/0/kerning_overrides/32/0 = Vector2(0, 0)
+cache/0/64/0/kerning_overrides/32/12 = Vector2(0, 0)
+cache/0/64/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/64/0/kerning_overrides/128/0 = Vector2(0, 0)
+cache/0/64/0/kerning_overrides/128/12 = Vector2(0, 0)
+cache/0/64/0/kerning_overrides/62/0 = Vector2(0, 0)
+cache/0/64/0/kerning_overrides/64/0 = Vector2(0, 0)
+
+[sub_resource type="Environment" id="Environment_tg4mb"]
+background_mode = 1
+background_color = Color(0, 0, 0, 0)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("18")
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="Ambient" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("22")
+autoplay = true
+
+[node name="Noise1" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.90095, 0.940986, 3.17191)
+stream = ExtResource("21")
+autoplay = true
+max_distance = 5.0
+
+[node name="Noise2" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.47752, 0.807715, -0.995072)
+stream = ExtResource("20")
+autoplay = true
+max_distance = 5.0
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("2")
+
+[node name="Building" type="Node3D" parent="."]
+
+[node name="walls" type="Node3D" parent="Building"]
+
+[node name="structure-wall" parent="Building/walls" instance=ExtResource("7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2.5)
+
+[node name="structure-wall3" parent="Building/walls" instance=ExtResource("7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.98909, 0.1, -1.53362)
+
+[node name="structure-wall4" parent="Building/walls" instance=ExtResource("7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.98909, 0.1, -0.577312)
+
+[node name="structure-wall5" parent="Building/walls" instance=ExtResource("7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.98909, 0.1, 0.391256)
+
+[node name="structure-wall6" parent="Building/walls" instance=ExtResource("7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.98909, 0.1, 1.32216)
+
+[node name="structure-wall2" parent="Building/walls" instance=ExtResource("7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.96901, 0.1, -2.5)
+
+[node name="structure-window-wide" parent="Building/walls" instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.49637, 0.1, -2.5)
+
+[node name="structure-window-wide2" parent="Building/walls" instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.47816, 0.1, -2.5)
+
+[node name="structure-window-wide3" parent="Building/walls" instance=ExtResource("4")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.96131, 0.1, 0.890151)
+
+[node name="structure-corner-inner" parent="Building/walls" instance=ExtResource("8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.96, 0.1, -2.5)
+
+[node name="structure-corner-inner4" parent="Building/walls" instance=ExtResource("8")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.96, 0.1, 2.32541)
+
+[node name="structure-corner-inner2" parent="Building/walls" instance=ExtResource("8")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.98472, 0.1, -2.5)
+
+[node name="structure-corner-inner3" parent="Building/walls" instance=ExtResource("8")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 2.98751, 0.1, 2.29117)
+
+[node name="door-wide-half" parent="Building/walls" instance=ExtResource("3")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.89335, 0, -1.06804)
+
+[node name="door-wide-half2" parent="Building/walls" instance=ExtResource("3")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.55245, 0.142719, 2.65191)
+
+[node name="structure-doorway-wide" parent="Building/walls" instance=ExtResource("5")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.96143, 0.1, -1.07196)
+
+[node name="structure-doorway-wide2" parent="Building/walls" instance=ExtResource("5")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.58656, 0.1, 2.29621)
+
+[node name="structure-wall7" parent="Building/walls" instance=ExtResource("7")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.1525, 0.101128, 2.27312)
+
+[node name="structure-wall8" parent="Building/walls" instance=ExtResource("7")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -3.12883, 0.101128, 2.31488)
+
+[node name="door" parent="Building/walls" instance=ExtResource("10")]
+transform = Transform3D(-1.5, 0, -2.26494e-07, 0, 1.5, 0, 2.26494e-07, 0, -1.5, -0.910367, 0.0788178, 2.92499)
+
+[node name="door2" parent="Building/walls" instance=ExtResource("10")]
+transform = Transform3D(-1.5, 0, -2.26494e-07, 0, 1.5, 0, 2.26494e-07, 0, -1.5, -2.07547, 0.0788178, 2.92499)
+
+[node name="top-large" parent="Building" instance=ExtResource("12")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -1.29272, 2.10837, 2.95485)
+
+[node name="top-large2" parent="Building" instance=ExtResource("12")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -1.69472, 2.10837, 2.95485)
+
+[node name="structure-yellow-medium" parent="Building" instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="structure-yellow-medium2" parent="Building" instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 1.5)
+
+[node name="structure-yellow-high" parent="Building" instance=ExtResource("6")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.6, 0.1, -1.07438)
+
+[node name="conveyor-bars-stripe-fence" parent="Building" instance=ExtResource("11")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.6, 0.626, -0.491)
+
+[node name="conveyor-bars-stripe-fence2" parent="Building" instance=ExtResource("11")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.6, 0.626, 0.511)
+
+[node name="conveyor-bars-stripe-fence3" parent="Building" instance=ExtResource("11")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.6, 0.626, 1.497)
+
+[node name="conveyor-bars-stripe-fence4" parent="Building" instance=ExtResource("11")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.6, 0.626, 2.47369)
+
+[node name="top-large3" parent="Building" instance=ExtResource("12")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 3.12553, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Building"]
+transform = Transform3D(-0.998963, -4.09782e-08, -0.0455374, -0.0337557, 0.671203, 0.740504, 0.0305648, 0.741273, -0.670507, 1.51787, 2.12307, -3.49025)
+light_color = Color(0.992157, 0.952941, 0.556863, 1)
+light_energy = 10.0
+light_indirect_energy = 0.0
+spot_range = 10.0
+
+[node name="SpotLight2" type="SpotLight3D" parent="Building"]
+transform = Transform3D(-0.998963, -6.49954e-08, -0.0455374, -0.0337557, 0.671203, 0.740504, 0.0305648, 0.741273, -0.670507, -1.51136, 2.06798, -3.9835)
+light_color = Color(0.992157, 0.952941, 0.556863, 1)
+light_energy = 10.0
+light_indirect_energy = 0.0
+spot_range = 10.0
+
+[node name="box-small" parent="Building" instance=ExtResource("15")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51129, 1.0183, 0)
+
+[node name="box-long" parent="Building" instance=ExtResource("13")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.79551, 0.139969, 2.3987)
+
+[node name="box-large" parent="Building" instance=ExtResource("14")]
+transform = Transform3D(1, 0, 0, 0, 0.765899, 0.642961, 0, -0.642961, 0.765899, -3.79753, 0.461386, 1.94084)
+
+[node name="Colliders" type="Node3D" parent="Building"]
+
+[node name="Wall1" type="StaticBody3D" parent="Building/Colliders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.98297, 1.65852, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Colliders/Wall1"]
+shape = SubResource("6")
+
+[node name="Wall2" type="StaticBody3D" parent="Building/Colliders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.87083, 1.62879, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Colliders/Wall2"]
+shape = SubResource("6")
+
+[node name="Wall3" type="StaticBody3D" parent="Building/Colliders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.286478, 1.65294, -3.48986)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Colliders/Wall3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0658606, 0, 0)
+shape = SubResource("7")
+
+[node name="Wall4" type="StaticBody3D" parent="Building/Colliders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.293998, 1.65177, 3.16417)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Colliders/Wall4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0658606, 0, 0)
+shape = SubResource("7")
+
+[node name="Barriers" type="StaticBody3D" parent="Building/Colliders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.98993, 0.63041, 0.733003)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Colliders/Barriers"]
+shape = SubResource("8")
+
+[node name="Conveyor" type="StaticBody3D" parent="Building/Colliders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.64949, 0.900596, 0.828486)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Colliders/Conveyor"]
+shape = SubResource("9")
+
+[node name="Boxes" type="StaticBody3D" parent="Building/Colliders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.76284, 0.657233, 2.04093)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Colliders/Boxes"]
+shape = SubResource("10")
+
+[node name="AI_NPC" type="Node3D" parent="."]
+transform = Transform3D(0.00153585, 0, 0.999999, 0, 1, 0, -0.999999, 0, 0.00153585, -3.52453, 0.139575, 0)
+
+[node name="NPC" parent="AI_NPC" instance=ExtResource("16")]
+script = ExtResource("17")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="AI_NPC/NPC"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0470702, 1.01376, -7.22408e-05)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AI_NPC/NPC/CharacterBody3D"]
+shape = SubResource("5")
+
+[node name="npc_dialogue_enabled_area" type="Area3D" parent="AI_NPC"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.38696e-05, 0.978153, 0.0350752)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AI_NPC/npc_dialogue_enabled_area"]
+shape = SubResource("3")
+
+[node name="npc_pointer_interaction_area" type="Area3D" parent="AI_NPC"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000232985, 1.0048, 0.151697)
+collision_layer = 4
+script = ExtResource("27")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AI_NPC/npc_pointer_interaction_area"]
+shape = SubResource("4")
+
+[node name="InteractLabel3D" type="Label3D" parent="AI_NPC/npc_pointer_interaction_area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000867405, 0.342965, 0.564771)
+visible = false
+pixel_size = 0.001
+billboard = 2
+text = "Press Trigger to talk."
+font = ExtResource("19")
+
+[node name="InstructionsLabel3D" type="Label3D" parent="."]
+transform = Transform3D(0.618559, 0, 0.785738, 0, 1, 0, -0.785738, 0, 0.618559, -2.48897, 1.55772, -1.34009)
+pixel_size = 0.001
+text = "Either walk close to the NPC and press the B/Y button or point to the NPC and press the trigger button to start your microphone to talk.  Press the button again to stop talking and send for processing."
+font = ExtResource("19")
+font_size = 64
+autowrap_mode = 2
+width = 1000.0
+
+[node name="ExitLabel3D" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.892779, 1.78868, 2.9187)
+pixel_size = 0.001
+modulate = Color(0.882353, 0.0431373, 0.160784, 1)
+text = "EXIT
+Press both Grip buttons together to quit."
+font = SubResource("11")
+font_size = 128
+autowrap_mode = 2
+width = 600.0
+
+[node name="ExitLabel3D2" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2.04761, 1.78873, 2.9187)
+pixel_size = 0.001
+modulate = Color(0.882353, 0.0431373, 0.160784, 1)
+text = "EXIT
+
+...Or say \"quit\" to Bob."
+font = SubResource("11")
+font_size = 128
+autowrap_mode = 2
+width = 600.0
+
+[node name="Godot-AI-NPC-Controller" parent="." instance=ExtResource("24")]
+ai_brain_type_choice = 1
+
+[node name="VRVoiceControl-WitAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("25")]
+
+[node name="GodotGPT35Turbo" parent="Godot-AI-NPC-Controller" instance=ExtResource("23")]
+
+[node name="InteractLabel3D" type="Label3D" parent="Godot-AI-NPC-Controller"]
+transform = Transform3D(0.00153585, 0, 0.999999, 0, 1, 0, -0.999999, 0, 0.00153585, -3.06764, 2.15063, 9.31323e-10)
+visible = false
+pixel_size = 0.001
+billboard = 2
+text = "In NPC proximity. Press B / Y to talk."
+font = ExtResource("19")
+font_size = 64
+autowrap_mode = 2
+
+[node name="MicActiveLabel3D" type="Label3D" parent="Godot-AI-NPC-Controller"]
+transform = Transform3D(0.602595, 0, 0.798047, 0, 1, 0, -0.798047, 0, 0.602595, -2.48017, 1.21867, -1.32777)
+visible = false
+pixel_size = 0.001
+modulate = Color(0.882353, 0.0431373, 0.160784, 1)
+text = "Mic recording..."
+font = SubResource("11")
+font_size = 62
+autowrap_mode = 2
+
+[node name="GodotConvAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("29")]
+
+[node name="ElevenLabsTTS" parent="Godot-AI-NPC-Controller" instance=ExtResource("30")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tg4mb")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.708106, 0.706106, 0, -0.706106, -0.708106, 0, 4.90822, 0)
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5059, 2.26546, -3.27816)
+box_projection = true
+
+[node name="StartXR" parent="." instance=ExtResource("29_msa3g")]
+enable_passthrough = true
+physics_rate_multiplier = 1
+
+[node name="Player" parent="." instance=ExtResource("29_0qx8x")]

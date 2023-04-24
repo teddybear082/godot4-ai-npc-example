@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/godot-gpt-35-turbo/VRChatGPT35.gd" type="Script" id=1]
+
+[node name="GodotGPT35Turbo" type="Node"]
+script = ExtResource( 1 )

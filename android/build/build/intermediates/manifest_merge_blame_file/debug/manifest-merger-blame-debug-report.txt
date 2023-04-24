@@ -1,0 +1,223 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="org.godotengine.godotgordonfreeman"
+4    android:installLocation="auto"
+5    android:versionCode="1"
+6    android:versionName="1.0" >
+7
+8    <uses-sdk
+9        android:minSdkVersion="24"
+10        android:targetSdkVersion="33" />
+11
+12    <supports-screens
+12-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:9:5-13:40
+13        android:largeScreens="true"
+13-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:12:9-36
+14        android:normalScreens="true"
+14-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:11:9-37
+15        android:smallScreens="true"
+15-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:10:9-36
+16        android:xlargeScreens="true" />
+16-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:13:9-37
+17
+18    <uses-feature
+18-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:15:5-17:35
+19        android:glEsVersion="0x00030000"
+19-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:16:9-41
+20        android:required="true" />
+20-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:17:9-32
+21
+22    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+22-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:11:5-79
+22-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:11:22-76
+23    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+23-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:12:5-76
+23-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:12:22-73
+24    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+24-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:13:5-79
+24-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:13:22-76
+25    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+25-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:14:5-76
+25-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:14:22-73
+26    <uses-permission android:name="android.permission.INTERNET" />
+26-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:15:5-67
+26-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:15:22-64
+27    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+27-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:16:5-82
+27-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:16:22-79
+28    <uses-permission
+28-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:17:5-107
+29        android:name="android.permission.READ_EXTERNAL_STORAGE"
+29-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:17:22-77
+30        android:maxSdkVersion="29" />
+30-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:17:78-104
+31    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+31-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:18:5-71
+31-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:18:22-68
+32    <uses-permission
+32-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:19:5-108
+33        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+33-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:19:22-78
+34        android:maxSdkVersion="29" />
+34-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:19:79-105
+35
+36    <uses-feature
+36-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:20:5-113
+37        android:name="com.oculus.feature.PASSTHROUGH"
+37-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:20:40-85
+38        android:required="false" />
+38-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:20:86-110
+39    <uses-feature
+39-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:21:5-131
+40        android:name="android.hardware.vulkan.level"
+40-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:21:40-84
+41        android:required="true"
+41-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:21:85-108
+42        android:version="1" />
+42-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:21:109-128
+43    <uses-feature
+43-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:9:5-12:31
+44        android:name="android.hardware.vr.headtracking"
+44-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:10:9-56
+45        android:required="true"
+45-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:11:9-32
+46        android:version="1" />
+46-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:12:9-28
+47
+48    <application
+48-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:19:5-52:19
+49        android:allowBackup="false"
+49-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:21:9-36
+50        android:appCategory="game"
+50-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:23:9-35
+51        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+51-->[androidx.core:core:1.2.0] C:\Users\Willi\.gradle\caches\transforms-3\cab1da514d18152bab16f7293c149bb2\transformed\core-1.2.0\AndroidManifest.xml:24:18-86
+52        android:debuggable="true"
+53        android:extractNativeLibs="false"
+54        android:hasFragileUserData="false"
+54-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:25:9-43
+55        android:icon="@mipmap/icon"
+55-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:22:9-36
+56        android:isGame="true"
+56-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:24:9-30
+57        android:label="@string/godot_project_name_string"
+57-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:20:9-58
+58        android:requestLegacyExternalStorage="true" >
+58-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:26:9-53
+59        <activity
+59-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:34:9-50:20
+60            android:name="com.godot.game.GodotApp"
+60-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:35:13-37
+61            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|density|keyboard|navigation|screenLayout|uiMode"
+61-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:42:13-141
+62            android:excludeFromRecents="false"
+62-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:39:13-47
+63            android:exported="true"
+63-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:40:13-36
+64            android:label="@string/godot_project_name_string"
+64-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:36:13-62
+65            android:launchMode="singleTask"
+65-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:38:13-44
+66            android:resizeableActivity="true"
+66-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:43:13-47
+67            android:screenOrientation="landscape"
+67-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:41:13-50
+68            android:theme="@style/GodotAppSplashTheme" >
+68-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:37:13-55
+69            <intent-filter>
+69-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:33:13-47:29
+70                <action android:name="android.intent.action.MAIN" />
+70-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:47:17-69
+70-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:47:25-66
+71
+72                <category android:name="android.intent.category.LAUNCHER" />
+72-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:48:17-77
+72-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\AndroidManifest.xml:48:27-74
+73
+74                <!--
+75                Enable access to OpenXR on Oculus mobile devices, no-op on other Android
+76                platforms.
+77                -->
+78                <category android:name="com.oculus.intent.category.VR" />
+78-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:39:17-74
+78-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:39:27-71
+79
+80                <!--
+81                OpenXR category tag to indicate the activity starts in an immersive OpenXR mode. 
+82                See https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#android-runtime-category.
+83                -->
+84                <category android:name="org.khronos.openxr.intent.category.IMMERSIVE_HMD" />
+84-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:43:17-93
+84-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:43:27-90
+85
+86                <!-- Enable VR access on HTC Vive Focus devices. -->
+87                <category android:name="com.htc.intent.category.VRAPP" />
+87-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:46:17-74
+87-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:46:27-71
+88            </intent-filter>
+89        </activity>
+90        <!-- Records the version of the Godot editor used for building -->
+91        <meta-data
+92            android:name="org.godotengine.editor.version"
+93            android:value="4.0.2.stable" /> <!-- Records the version of the Godot library -->
+94        <meta-data
+94-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:14:9-16:44
+95            android:name="org.godotengine.library.version"
+95-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:15:13-59
+96            android:value="4.0.2.stable" />
+96-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:16:13-41
+97
+98        <service android:name="org.godotengine.godot.GodotDownloaderService" />
+98-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:18:9-80
+98-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:18:18-77
+99
+100        <activity
+100-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:20:9-24:75
+101            android:name="org.godotengine.godot.utils.ProcessPhoenix"
+101-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:21:13-70
+102            android:exported="false"
+102-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:22:13-37
+103            android:process=":phoenix"
+103-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:23:13-39
+104            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+104-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:24:13-72
+105
+106        <provider
+106-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:26:9-34:20
+107            android:name="androidx.core.content.FileProvider"
+107-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:27:13-62
+108            android:authorities="org.godotengine.godotgordonfreeman.fileprovider"
+108-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:28:13-64
+109            android:exported="false"
+109-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:29:13-37
+110            android:grantUriPermissions="true" >
+110-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:30:13-47
+111            <meta-data
+111-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:31:13-33:64
+112                android:name="android.support.FILE_PROVIDER_PATHS"
+112-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:32:17-67
+113                android:resource="@xml/godot_provider_paths" />
+113-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:33:17-61
+114        </provider>
+115
+116        <meta-data
+116-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:15:9-17:82
+117            android:name="org.godotengine.plugin.v1.GodotOpenXRMeta"
+117-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:16:13-69
+118            android:value="org.godotengine.openxrloaders.meta.GodotOpenXRMeta" />
+118-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:17:13-79
+119        <meta-data
+119-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:18:9-20:53
+120            android:name="com.oculus.supportedDevices"
+120-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:19:13-55
+121            android:value="quest|quest2|questpro" />
+121-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:20:13-50
+122        <meta-data
+122-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:21:9-23:36
+123            android:name="com.oculus.vr.focusaware"
+123-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:22:13-52
+124            android:value="true" />
+124-->[godotopenxrmeta-debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\ce2ef7736fded68a9c0e9a6f246b3084\transformed\jetified-godotopenxrmeta-debug\AndroidManifest.xml:23:13-33
+125    </application>
+126
+127</manifest>

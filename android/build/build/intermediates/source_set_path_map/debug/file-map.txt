@@ -1,0 +1,14 @@
+com.godot.game-jetified-godot-lib.template_debug-0 C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\res
+com.godot.game-lifecycle-runtime-2.3.1-1 C:\Users\Willi\.gradle\caches\transforms-3\3583eca40d69ce43b6621863908cd8a9\transformed\lifecycle-runtime-2.3.1\res
+com.godot.game-fragment-1.3.6-2 C:\Users\Willi\.gradle\caches\transforms-3\70cc13e2f895dcde1db33096ac808cc6\transformed\fragment-1.3.6\res
+com.godot.game-jetified-savedstate-1.1.0-3 C:\Users\Willi\.gradle\caches\transforms-3\85cb557932580fb0f5a8ee6d43b76824\transformed\jetified-savedstate-1.1.0\res
+com.godot.game-lifecycle-viewmodel-2.3.1-4 C:\Users\Willi\.gradle\caches\transforms-3\c541b5eafcaa95ef66b4471cdd477b88\transformed\lifecycle-viewmodel-2.3.1\res
+com.godot.game-core-1.2.0-5 C:\Users\Willi\.gradle\caches\transforms-3\cab1da514d18152bab16f7293c149bb2\transformed\core-1.2.0\res
+com.godot.game-pngs-6 C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\build\generated\res\pngs\debug
+com.godot.game-resValues-7 C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\build\generated\res\resValues\debug
+com.godot.game-rs-8 C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\build\generated\res\rs\debug
+com.godot.game-mergeDebugResources-9 C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\build\intermediates\incremental\debug\mergeDebugResources\merged.dir
+com.godot.game-mergeDebugResources-10 C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\build\intermediates\incremental\debug\mergeDebugResources\stripped.dir
+com.godot.game-merged_res-11 C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\build\intermediates\merged_res\debug
+com.godot.game-build-12 C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\res
+com.godot.game-debug-13 C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\res
