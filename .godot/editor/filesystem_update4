@@ -2,4 +2,4 @@ res://default_env.tres
 res://demo/Main.tscn
 res://addons/godot-xr-tools/hands/animations/left/hand_blend_tree.tres
 res://addons/godot-xr-tools/hands/animations/right/hand_blend_tree.tres
-res://addons/godot-elevenlabs-tts/ElevenLabsTTS.gd
+res://addons/godot-witai/VRVoiceControl.gd

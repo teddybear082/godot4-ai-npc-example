@@ -289,6 +289,10 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 				var AI_generated_audio = data_json["audio"]
 				#print(AI_generated_audio)
 				var encoded_audio = Marshalls.base64_to_raw(AI_generated_audio)
+				# Try to eliminate pops in audio
+				for n in 60:
+					encoded_audio.remove_at(0)
+				encoded_audio.resize(encoded_audio.size()-80)
 				stored_streamed_audio.append_array(encoded_audio)
 				# If speech player not playing, play streamed audio and delete the queue if any; if audio is currently playing just queue audio for delivery after
 				if !convai_speech_player.playing:

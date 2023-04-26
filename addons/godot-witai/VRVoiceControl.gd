@@ -141,7 +141,7 @@ func _http_request_completed(result, response_code, headers, body):
 	if response_code == 200:
 		var data = fix_chunked_response(body.get_string_from_utf8())
 
-		#print ("Data received: %s"%data)
+		print ("Data received: %s"%data)
 		var test_json_conv = JSON.new()
 		test_json_conv.parse(data)
 		var response = test_json_conv.get_data()
@@ -173,6 +173,8 @@ func _http_request_completed(result, response_code, headers, body):
 				print("selected_text is " + selected_text)
 				emit_signal("wit_ai_speech_to_text_received", selected_text)
 			else:
+				# if didn't receive anything back, use placeholder to ask user for input again
+				emit_signal("wit_ai_speech_to_text_received", "Tell me you didn't hear what I said.")
 				return
 				
 #We don't understand chunks so we have to fix it
