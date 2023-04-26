@@ -416,7 +416,6 @@ autowrap_mode = 2
 width = 600.0
 
 [node name="Godot-AI-NPC-Controller" parent="." instance=ExtResource("24")]
-ai_brain_type_choice = 1
 
 [node name="VRVoiceControl-WitAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("25")]
 

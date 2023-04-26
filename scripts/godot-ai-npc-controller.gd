@@ -207,7 +207,7 @@ func _on_gpt_3_5_turbo_processed(dialogue : String):
 	mic_active_label3D.visible = false
 	if text_to_speech_choice == text_to_speech_type.GODOT:
 #		text_to_speech.speak(dialogue)
-		DisplayServer.tts_speak(dialogue, voice_id, 50, 1.0, 1.2, false)
+		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
 	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
 	else:

@@ -46,7 +46,7 @@ func call_GPT(prompt):
 		summarize_GPT(past_messages_array)
 		await self.messages_summarized
 		
-	#print("calling GPT")
+	print("calling GPT")
 	var body = JSON.stringify({
 		"model": engine,
 		"messages": past_messages_array + [{"role": "system", "content": npc_background_directions}, {"role": "user", "content": sample_npc_question_prompt}, {"role": "assistant", "content": sample_npc_prompt_response}, {"role": "user", "content": prompt}],
@@ -68,14 +68,14 @@ func call_GPT(prompt):
 func _on_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + responseCode)
+		print("There was an error, response code:" + str(responseCode))
 		print(result)
 		print(headers)
 		print(body)
 		return
 		
 	var data = body.get_string_from_utf8()#fix_chunked_response(body.get_string_from_utf8())
-	#print ("Data received: %s"%data)
+	print ("Data received: %s"%data)
 	var test_json_conv = JSON.new()
 	test_json_conv.parse(data)
 	var response = test_json_conv.get_data()

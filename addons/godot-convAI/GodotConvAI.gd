@@ -130,7 +130,7 @@ func call_convAI(prompt):
 	else:
 		voice_response_string = "False"
 			
-	#print("calling convAI with prompt:" + prompt)
+	print("calling convAI with prompt:" + prompt)
 	var body = {
 		"userText": prompt,
 		"charID": convai_character_id,
@@ -139,7 +139,7 @@ func call_convAI(prompt):
 	}
 	
 	var form_data = http_client.query_string_from_dict(body)
-	#print(form_data)
+	print(form_data)
 	
 	# Now call convAI
 	var error = http_request.request(url, headers, HTTPClient.METHOD_POST, form_data)
@@ -160,7 +160,7 @@ func _on_request_completed(result, responseCode, headers, body):
 		return
 		
 	var data = body.get_string_from_utf8()#fix_chunked_response(body.get_string_from_utf8())
-	#print ("Data received: %s"%data)
+	print ("Data received: %s"%data)
 	var test_json_conv = JSON.new()
 	test_json_conv.parse(data)
 	var response = test_json_conv.get_data()
@@ -235,7 +235,7 @@ func call_convAI_stream(prompt):
 	else:
 		voice_response_string = "False"
 			
-	#print("calling convAI with prompt:" + prompt)
+	print("calling convAI with prompt:" + prompt)
 	var body = {
 		"userText": prompt,
 		"charID": convai_character_id,
@@ -245,7 +245,7 @@ func call_convAI_stream(prompt):
 	}
 	
 	var form_data = http_client.query_string_from_dict(body)
-	#print(form_data)
+	print(form_data)
 	
 	# Now call convAI
 	var error = stream_http_request.request(url, headers, HTTPClient.METHOD_POST, form_data)
@@ -275,7 +275,7 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 			test_json_conv.parse(data)
 			var data_json = test_json_conv.get_data()
 			if "text" in data_json:
-				#print("Text: ", data_json["text"])
+				print("Text: ", data_json["text"])
 				var AI_generated_dialogue = data_json["text"]
 				# Let other nodes know that AI generated dialogue is ready from convAI	
 				emit_signal("AI_response_generated", AI_generated_dialogue)

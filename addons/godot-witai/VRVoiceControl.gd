@@ -97,8 +97,8 @@ func _process(delta):
 		
 			while idx < buffer_len:
 				var val =  (data[int(idx)].x + data[int(idx)].y)/2.0
-				var val_discreet = int( clamp( val * 32768, -32768, 32768))
-
+				#var val_discreet = int( clamp( val * 32768, -32768, 32768))
+				var val_discreet = int(clamp(val*32768, 0, 32768))
 				audio_buffer[2*audio_buffer_pos] = 0xFF & (val_discreet >> 8)
 				audio_buffer[2*audio_buffer_pos+1] = 0xFF & val_discreet
 
@@ -123,8 +123,8 @@ func end_voice_command():
 			#Only process audio if there is enough speech
 			#Prevent spurious calls	
 		
-			var audio_content = audio_buffer.subarray(0,audio_buffer_pos*2)
-			
+			#var audio_content = audio_buffer.subarray(0,audio_buffer_pos*2)
+			var audio_content = audio_buffer.slice(0, audio_buffer_pos*2)
 			# Make request to wit.ai speech endpoint		
 			request = HTTPRequest.new()
 			add_child(request)
@@ -160,7 +160,7 @@ func _http_request_completed(result, response_code, headers, body):
 					selected_score = i["confidence"]
 					selected_intent = i["name"]
 			if selected_intent:
-				#print ("Command is: %s"%selected_intent)
+				print ("Command is: %s"%selected_intent)
 				emit_signal("voice_command",selected_intent)	
 				return
 			# If no pre-set intents were found that exceed the required confidence, send the final response free text to GPT instead
@@ -170,7 +170,7 @@ func _http_request_completed(result, response_code, headers, body):
 				continue
 			if is_final and is_final == true:
 				selected_text = r.get("text")
-				#print("selected_text is " + selected_text)
+				print("selected_text is " + selected_text)
 				emit_signal("wit_ai_speech_to_text_received", selected_text)
 			else:
 				return
