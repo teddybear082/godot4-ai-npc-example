@@ -445,6 +445,8 @@ autowrap_mode = 2
 
 [node name="ElevenLabsTTS" parent="Godot-AI-NPC-Controller" instance=ExtResource("30")]
 
+[node name="PlaceholderSoundPlayer" type="AudioStreamPlayer" parent="Godot-AI-NPC-Controller"]
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_tg4mb")
 

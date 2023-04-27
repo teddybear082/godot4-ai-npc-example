@@ -12,7 +12,6 @@ extends Node3D
 
 
 @onready var player = $Player
-
 @onready var player_left_controller : XRController3D = $Player/LeftHandController
 @onready var player_right_controller : XRController3D = $Player/RightHandController
 @onready var npc_dialogue_enabled_area : Area3D = $AI_NPC/npc_dialogue_enabled_area

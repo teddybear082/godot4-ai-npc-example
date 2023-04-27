@@ -188,13 +188,13 @@ func _on_voice_command_detected(intent: String):
 	match intent:
 		# Here you use the intents you have set up in your software as the match values, and provide text for the prompt to use when that intent is detected
 		"asking_video_game":
-			selected_text = "Tell me about this factory as if the game world was real and not a video game"
+			selected_text = "Tell me about something you have done."
 		"asking_player_task":
-			selected_text = "What is a mission I can do in this game about factories and packing and shipping boxes? When you answer, pretend the missions are real life and not a video game."
+			selected_text = "What is something a person could do in City 17?"
 		"how_are_you":
 			selected_text = "How are you doing?"
 		"say_hi":
-			selected_text = "Hi Bob!"
+			selected_text = "Hi Gordon!"
 		"what_do_you_do":
 			selected_text = "What is your favorite thing to do?"
 		"whats_your_name":
@@ -202,6 +202,7 @@ func _on_voice_command_detected(intent: String):
 		# Example of matching intent to an in-game action for a voice command, here used to quit the game, rather than speech
 		"quit_game":
 			get_parent().save_api_info()
+			await get_tree().create_timer(1.0).timeout
 			get_tree().quit()
 	#print(selected_text)
 	emit_signal("wit_ai_speech_to_text_received", selected_text)

@@ -98,6 +98,6 @@ func set_api_key(new_api_key):
 func set_character_code(new_code):
 	character_code = new_code
 	if use_stream_mode == true:
-		endpoint = endpoint + character_code + "/stream"
+		endpoint = "https://api.elevenlabs.io/v1/text-to-speech/" + character_code + "/stream"
 	else:
-		endpoint = endpoint + character_code
+		endpoint = "https://api.elevenlabs.io/v1/text-to-speech/" + character_code

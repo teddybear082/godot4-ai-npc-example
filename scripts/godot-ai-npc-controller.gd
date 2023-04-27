@@ -47,6 +47,7 @@ enum ai_brain_type {
 @onready var mic_active_label3D = get_node("MicActiveLabel3D")
 @onready var convai_node = get_node("GodotConvAI")
 @onready var eleven_labs_tts_node = get_node("ElevenLabsTTS")
+@onready var placeholder_sound_player = get_node("PlaceholderSoundPlayer")
 
 # Variable used to determine if player can use proximity interaction
 var close_enough_to_talk : bool = false
@@ -70,9 +71,16 @@ var eleven_labs_api_key : String
 var eleven_labs_character_code : String
 var config_text_to_speech_choice
 var config_ai_brain_type_choice
+
+# Whether to use convai in stream or normal API mode
 var use_convai_stream_mode : bool = true
+
+# Variables for new Godot4 text to speech
 var voices 
 var voice_id
+
+# Array to hold audio files for placeholder sounds
+var placeholder_sound_array = []
 
 func _ready():
 	# Load config file so it is ready if needed
@@ -231,15 +239,27 @@ func _on_convai_processed(dialogue : String):
 func save_api_info():
 	# Save convai session id if using convai for possible persistence between sessions
 	last_convai_session_id = convai_node.get_session_id()
-	#var file_checker: File = File.new()
-	if not FileAccess.file_exists("user://ai_npc_api_keys.cfg"):
-		# To create a new file
-		# warning-ignore:return_value_discarded
-		FileAccess.open("user://ai_npc_api_keys.cfg", FileAccess.WRITE)
-	#file_checker.close()
+	var err : int
+	var prefs_cfg : ConfigFile = ConfigFile.new()
+	var exe_cfg_path : String
+	if OS.has_feature("editor"):
+		exe_cfg_path = "user://ai_npc_api_keys.cfg"
+		if not FileAccess.file_exists(exe_cfg_path):
+			# To create a new file
+			# warning-ignore:return_value_discarded
+			FileAccess.open(exe_cfg_path, FileAccess.WRITE)
+		err = prefs_cfg.load(exe_cfg_path)
+	elif OS.has_feature("android"):
+		exe_cfg_path = OS.get_executable_path().get_base_dir() + "/" + "files" + "/" + "ai_npc_api_keys.cfg"
+		if not FileAccess.file_exists(exe_cfg_path):
+			FileAccess.open(exe_cfg_path, FileAccess.WRITE)
+		err = prefs_cfg.load(exe_cfg_path)
+	else:
+		exe_cfg_path = OS.get_executable_path().get_base_dir() + "/" + "ai_npc_api_keys.cfg"
+		if not FileAccess.file_exists(exe_cfg_path):
+			FileAccess.open(exe_cfg_path, FileAccess.WRITE)
+		err = prefs_cfg.load(exe_cfg_path)
 	
-	var prefs_cfg: ConfigFile = ConfigFile.new()
-	var err: int = prefs_cfg.load("user://ai_npc_api_keys.cfg")
 	
 	# Not including the seated variable in this because already set by xr tools saved options
 	
@@ -259,15 +279,26 @@ func save_api_info():
 		prefs_cfg.set_value("api_keys", "eleven_labs_character_code", eleven_labs_character_code)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type_choice)
-		err = prefs_cfg.save("user://ai_npc_api_keys.cfg")
+		err = prefs_cfg.save(exe_cfg_path)
 	
 	emit_signal("options_saved")
 	
 	
 func load_api_info():
 	var prefs_cfg: ConfigFile = ConfigFile.new()
-	var err: int = prefs_cfg.load("user://ai_npc_api_keys.cfg")
-	
+	var err: int 
+	if OS.has_feature("editor"):
+		err = prefs_cfg.load("user://ai_npc_api_keys.cfg")
+		print(err)
+	elif OS.has_feature("android"):
+		var exe_cfg_path : String = OS.get_executable_path().get_base_dir() + "/" + "files" + "/" + "ai_npc_api_keys.cfg"
+		err = prefs_cfg.load(exe_cfg_path)
+		print(err)
+	else:
+		var exe_cfg_path : String = OS.get_executable_path().get_base_dir() + "/" + "ai_npc_api_keys.cfg"
+		err = prefs_cfg.load(exe_cfg_path)
+		print(err)
+		
 	if err == OK:
 		wit_ai_token = prefs_cfg.get_value("api_keys", "wit_ai_token", "insert_your_wit_api_token_here")
 		gpt_3_5_turbo_api_key = prefs_cfg.get_value("api_keys", "gpt_3_5_turbo_api_key", "insert your api key here")

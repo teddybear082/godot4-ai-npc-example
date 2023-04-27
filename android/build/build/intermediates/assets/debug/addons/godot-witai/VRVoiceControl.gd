@@ -97,8 +97,8 @@ func _process(delta):
 		
 			while idx < buffer_len:
 				var val =  (data[int(idx)].x + data[int(idx)].y)/2.0
-				var val_discreet = int( clamp( val * 32768, -32768, 32768))
-
+				#var val_discreet = int( clamp( val * 32768, -32768, 32768))
+				var val_discreet = int(clamp(val*32768, 0, 32768))
 				audio_buffer[2*audio_buffer_pos] = 0xFF & (val_discreet >> 8)
 				audio_buffer[2*audio_buffer_pos+1] = 0xFF & val_discreet
 
@@ -123,8 +123,8 @@ func end_voice_command():
 			#Only process audio if there is enough speech
 			#Prevent spurious calls	
 		
-			var audio_content = audio_buffer.subarray(0,audio_buffer_pos*2)
-			
+			#var audio_content = audio_buffer.subarray(0,audio_buffer_pos*2)
+			var audio_content = audio_buffer.slice(0, audio_buffer_pos*2)
 			# Make request to wit.ai speech endpoint		
 			request = HTTPRequest.new()
 			add_child(request)
@@ -141,7 +141,7 @@ func _http_request_completed(result, response_code, headers, body):
 	if response_code == 200:
 		var data = fix_chunked_response(body.get_string_from_utf8())
 
-		#print ("Data received: %s"%data)
+		print ("Data received: %s"%data)
 		var test_json_conv = JSON.new()
 		test_json_conv.parse(data)
 		var response = test_json_conv.get_data()
@@ -160,7 +160,7 @@ func _http_request_completed(result, response_code, headers, body):
 					selected_score = i["confidence"]
 					selected_intent = i["name"]
 			if selected_intent:
-				#print ("Command is: %s"%selected_intent)
+				print ("Command is: %s"%selected_intent)
 				emit_signal("voice_command",selected_intent)	
 				return
 			# If no pre-set intents were found that exceed the required confidence, send the final response free text to GPT instead
@@ -170,9 +170,11 @@ func _http_request_completed(result, response_code, headers, body):
 				continue
 			if is_final and is_final == true:
 				selected_text = r.get("text")
-				#print("selected_text is " + selected_text)
+				print("selected_text is " + selected_text)
 				emit_signal("wit_ai_speech_to_text_received", selected_text)
 			else:
+				# if didn't receive anything back, use placeholder to ask user for input again
+				emit_signal("wit_ai_speech_to_text_received", "Tell me you didn't hear what I said.")
 				return
 				
 #We don't understand chunks so we have to fix it
@@ -186,13 +188,13 @@ func _on_voice_command_detected(intent: String):
 	match intent:
 		# Here you use the intents you have set up in your software as the match values, and provide text for the prompt to use when that intent is detected
 		"asking_video_game":
-			selected_text = "Tell me about this factory as if the game world was real and not a video game"
+			selected_text = "Tell me about something you have done."
 		"asking_player_task":
-			selected_text = "What is a mission I can do in this game about factories and packing and shipping boxes? When you answer, pretend the missions are real life and not a video game."
+			selected_text = "What is something a person could do in City 17?"
 		"how_are_you":
 			selected_text = "How are you doing?"
 		"say_hi":
-			selected_text = "Hi Bob!"
+			selected_text = "Hi Gordon!"
 		"what_do_you_do":
 			selected_text = "What is your favorite thing to do?"
 		"whats_your_name":
@@ -200,6 +202,7 @@ func _on_voice_command_detected(intent: String):
 		# Example of matching intent to an in-game action for a voice command, here used to quit the game, rather than speech
 		"quit_game":
 			get_parent().save_api_info()
+			await get_tree().create_timer(1.0).timeout
 			get_tree().quit()
 	#print(selected_text)
 	emit_signal("wit_ai_speech_to_text_received", selected_text)
