@@ -33,18 +33,18 @@
 23    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 23-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:12:5-76
 23-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:12:22-73
-24    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+24    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
 24-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:13:5-79
 24-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:13:22-76
-25    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-25-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:14:5-76
-25-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:14:22-73
-26    <uses-permission android:name="android.permission.INTERNET" />
-26-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:15:5-67
-26-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:15:22-64
-27    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-27-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:16:5-82
-27-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:16:22-79
+25    <uses-permission android:name="android.permission.INTERNET" />
+25-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:14:5-67
+25-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:14:22-64
+26    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+26-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:15:5-82
+26-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:15:22-79
+27    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+27-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:16:5-80
+27-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:16:22-77
 28    <uses-permission
 28-->C:\Users\Willi\Documents\GitHub\godot-gordon-freeman\android\build\src\debug\AndroidManifest.xml:17:5-107
 29        android:name="android.permission.READ_EXTERNAL_STORAGE"

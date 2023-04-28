@@ -90,8 +90,9 @@ func _ready():
 	wit_ai_node.activate_voice_commands(true)
 	
 	# Set voice for Godot text to speech
-	voices = DisplayServer.tts_get_voices_for_language("en")
-	voice_id = voices[0]
+	if !OS.has_feature("android"):
+		voices = DisplayServer.tts_get_voices_for_language("en")
+		voice_id = voices[0]
 	
 	# Set speaking rate of text to speech for text to speech
 #	text_to_speech._set_rate(1.2)
@@ -214,7 +215,6 @@ func _on_wit_ai_processed(dialogue : String):
 func _on_gpt_3_5_turbo_processed(dialogue : String):
 	mic_active_label3D.visible = false
 	if text_to_speech_choice == text_to_speech_type.GODOT:
-#		text_to_speech.speak(dialogue)
 		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
 	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
@@ -227,7 +227,6 @@ func _on_convai_processed(dialogue : String):
 	mic_active_label3D.visible = false
 	if text_to_speech_choice == text_to_speech_type.GODOT:
 		# The false argument here is optional, if true you can interrupt dialogue, with false, allows streaming in advance of text for speech
-#		text_to_speech.speak(dialogue, false)
 		DisplayServer.tts_speak(dialogue, voice_id, 50, 1.0, 1.2, false)
 	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
@@ -250,7 +249,7 @@ func save_api_info():
 			FileAccess.open(exe_cfg_path, FileAccess.WRITE)
 		err = prefs_cfg.load(exe_cfg_path)
 	elif OS.has_feature("android"):
-		exe_cfg_path = OS.get_executable_path().get_base_dir() + "/" + "files" + "/" + "ai_npc_api_keys.cfg"
+		exe_cfg_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "ai_npc_api_keys.cfg"#OS.get_executable_path().get_base_dir() + "/" + "files" + "/" + "ai_npc_api_keys.cfg"
 		if not FileAccess.file_exists(exe_cfg_path):
 			FileAccess.open(exe_cfg_path, FileAccess.WRITE)
 		err = prefs_cfg.load(exe_cfg_path)
@@ -286,12 +285,16 @@ func save_api_info():
 	
 func load_api_info():
 	var prefs_cfg: ConfigFile = ConfigFile.new()
-	var err: int 
+	var err: int
 	if OS.has_feature("editor"):
 		err = prefs_cfg.load("user://ai_npc_api_keys.cfg")
 		print(err)
 	elif OS.has_feature("android"):
-		var exe_cfg_path : String = OS.get_executable_path().get_base_dir() + "/" + "files" + "/" + "ai_npc_api_keys.cfg"
+		print_debug("OS data directory is:" + str(OS.get_data_dir()))
+		print_debug("OS executable path base directory is:" + str(OS.get_executable_path().get_base_dir()))
+		print_debug("OS user data directory is" + str(OS.get_user_data_dir()))
+		print_debug("OS documents path is" + str(OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false)))
+		var exe_cfg_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "ai_npc_api_keys.cfg"#OS.get_executable_path().get_base_dir() + "/" + "files" + "/" + "ai_npc_api_keys.cfg"
 		err = prefs_cfg.load(exe_cfg_path)
 		print(err)
 	else:
