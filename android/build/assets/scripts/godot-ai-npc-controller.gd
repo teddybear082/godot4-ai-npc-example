@@ -249,7 +249,7 @@ func save_api_info():
 			FileAccess.open(exe_cfg_path, FileAccess.WRITE)
 		err = prefs_cfg.load(exe_cfg_path)
 	elif OS.has_feature("android"):
-		exe_cfg_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "ai_npc_api_keys.cfg"#OS.get_executable_path().get_base_dir() + "/" + "files" + "/" + "ai_npc_api_keys.cfg"
+		exe_cfg_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "ai_npc_api_keys.cfg"
 		if not FileAccess.file_exists(exe_cfg_path):
 			FileAccess.open(exe_cfg_path, FileAccess.WRITE)
 		err = prefs_cfg.load(exe_cfg_path)
@@ -290,11 +290,10 @@ func load_api_info():
 		err = prefs_cfg.load("user://ai_npc_api_keys.cfg")
 		print(err)
 	elif OS.has_feature("android"):
-		print_debug("OS data directory is:" + str(OS.get_data_dir()))
-		print_debug("OS executable path base directory is:" + str(OS.get_executable_path().get_base_dir()))
-		print_debug("OS user data directory is" + str(OS.get_user_data_dir()))
-		print_debug("OS documents path is" + str(OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false)))
-		var exe_cfg_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "ai_npc_api_keys.cfg"#OS.get_executable_path().get_base_dir() + "/" + "files" + "/" + "ai_npc_api_keys.cfg"
+#		print_debug("OS data directory is:" + str(OS.get_data_dir()))
+#		print_debug("OS user data directory is" + str(OS.get_user_data_dir()))
+#		print_debug("OS documents path is" + str(OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false)))
+		var exe_cfg_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "ai_npc_api_keys.cfg"
 		err = prefs_cfg.load(exe_cfg_path)
 		print(err)
 	else:
@@ -305,7 +304,7 @@ func load_api_info():
 	if err == OK:
 		wit_ai_token = prefs_cfg.get_value("api_keys", "wit_ai_token", "insert_your_wit_api_token_here")
 		gpt_3_5_turbo_api_key = prefs_cfg.get_value("api_keys", "gpt_3_5_turbo_api_key", "insert your api key here")
-		gpt_npc_background_directions = prefs_cfg.get_value("api_keys", "gpt_npc_background_directions", "You are a non-playable character in a video game.  You are a robot.  Your name is Bob.  Your job is taping boxes of supplies.  You love organization.  You hate mess. Your boss is Robbie the Robot. Robbie is a difficult boss who makes a lot of demands.  You respond to the user's questions as if you are in the video game world with the player.")
+		gpt_npc_background_directions = prefs_cfg.get_value("gpt_options", "gpt_npc_background_directions", "You are a non-playable character in a video game.  You are a robot.  Your name is Bob.  Your job is taping boxes of supplies.  You love organization.  You hate mess. Your boss is Robbie the Robot. Robbie is a difficult boss who makes a lot of demands.  You respond to the user's questions as if you are in the video game world with the player.")
 		gpt_sample_npc_question = prefs_cfg.get_value("gpt_options", "gpt_sample_npc_question", "Hi, what do you do here?")
 		gpt_sample_npc_response = prefs_cfg.get_value("gpt_options", "gpt_sample_npc_response", "Greetings fellow worker! My name is Bob and I am a robot.  My job is to tape up the boxes in this factory before they are shipped out to our customers!")
 		gpt_temperature = prefs_cfg.get_value("gpt_options", "gpt_temperature", 0.5)

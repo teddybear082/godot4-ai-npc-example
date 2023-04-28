@@ -304,7 +304,7 @@ func load_api_info():
 	if err == OK:
 		wit_ai_token = prefs_cfg.get_value("api_keys", "wit_ai_token", "insert_your_wit_api_token_here")
 		gpt_3_5_turbo_api_key = prefs_cfg.get_value("api_keys", "gpt_3_5_turbo_api_key", "insert your api key here")
-		gpt_npc_background_directions = prefs_cfg.get_value("api_keys", "gpt_npc_background_directions", "You are a non-playable character in a video game.  You are a robot.  Your name is Bob.  Your job is taping boxes of supplies.  You love organization.  You hate mess. Your boss is Robbie the Robot. Robbie is a difficult boss who makes a lot of demands.  You respond to the user's questions as if you are in the video game world with the player.")
+		gpt_npc_background_directions = prefs_cfg.get_value("gpt_options", "gpt_npc_background_directions", "You are a non-playable character in a video game.  You are a robot.  Your name is Bob.  Your job is taping boxes of supplies.  You love organization.  You hate mess. Your boss is Robbie the Robot. Robbie is a difficult boss who makes a lot of demands.  You respond to the user's questions as if you are in the video game world with the player.")
 		gpt_sample_npc_question = prefs_cfg.get_value("gpt_options", "gpt_sample_npc_question", "Hi, what do you do here?")
 		gpt_sample_npc_response = prefs_cfg.get_value("gpt_options", "gpt_sample_npc_response", "Greetings fellow worker! My name is Bob and I am a robot.  My job is to tape up the boxes in this factory before they are shipped out to our customers!")
 		gpt_temperature = prefs_cfg.get_value("gpt_options", "gpt_temperature", 0.5)
