@@ -418,6 +418,7 @@ width = 600.0
 [node name="Godot-AI-NPC-Controller" parent="." instance=ExtResource("24")]
 
 [node name="VRVoiceControl-WitAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("25")]
+wit_tts_voice_selection = "Prospector"
 
 [node name="GodotGPT35Turbo" parent="Godot-AI-NPC-Controller" instance=ExtResource("23")]
 
