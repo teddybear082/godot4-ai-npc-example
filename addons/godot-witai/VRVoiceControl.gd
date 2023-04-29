@@ -63,9 +63,9 @@ var wit_tts_voices : Array = [
 "wit/Rubie") var wit_tts_voice_selection : String = "Cooper": set = set_wit_tts_voice
 
 # Speech speed used for wit TTS if using wit TTS
-@export_range (10, 400, 1) var wit_tts_speech_speed : int = 100
+@export_range (10, 400, 1) var wit_tts_speech_speed : int = 100 : set = set_wit_tts_speech_speed
 # Speech pitch used for wit TTS if using wit TTS
-@export_range (25, 400, 1) var wit_tts_speech_pitch : int = 100
+@export_range (25, 400, 1) var wit_tts_speech_pitch : int = 100 : set = set_wit_tts_speech_pitch
 
 var capture_effect = null
 
@@ -313,6 +313,16 @@ func set_wit_tts_voice(voice_selection : String):
 		print("error, wit voice selection string does not exist in wit options")
 		return
 	wit_tts_voice_selection = voice_selection
+
+
+# Function to set TTS speech speed	
+func set_wit_tts_speech_speed(speed : int):
+	wit_tts_speech_speed = speed
+	
+
+# Function to set TTS speech pitch
+func set_wit_tts_speech_pitch(pitch : int):
+	wit_tts_speech_pitch = pitch	
 	
 	
 # Method to call wit's text to speech function with selected voice

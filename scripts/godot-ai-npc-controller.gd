@@ -70,6 +70,9 @@ var last_convai_session_id : String
 var convai_standalone_tts_voice
 var eleven_labs_api_key : String
 var eleven_labs_character_code : String
+var wit_ai_tts_voice : String
+var wit_ai_tts_speed : int
+var wit_ai_tts_pitch : int
 var config_text_to_speech_choice
 var config_ai_brain_type_choice
 
@@ -108,6 +111,15 @@ func _ready():
 	if use_config_file == true:
 		# Set wit.ai API key
 		wit_ai_node.set_token(wit_ai_token)
+		
+		# Set wit.ai speech voice
+		wit_ai_node.set_wit_tts_voice(wit_ai_tts_voice)
+		
+		# Set wit.ai speech speed
+		wit_ai_node.set_wit_tts_speech_speed(wit_ai_tts_speed)
+		
+		# Set wit.ai speech pitch
+		wit_ai_node.set_wit_tts_speech_pitch(wit_ai_tts_pitch)
 		
 		# Set GPT API key
 		gpt_node.set_api_key(gpt_3_5_turbo_api_key)
@@ -279,6 +291,9 @@ func save_api_info():
 		prefs_cfg.set_value("convai_options", "last_convai_sesion_id", last_convai_session_id)
 		prefs_cfg.set_value("api_keys", "eleven_labs_api_key", eleven_labs_api_key)
 		prefs_cfg.set_value("api_keys", "eleven_labs_character_code", eleven_labs_character_code)
+		prefs_cfg.set_value("wit_options", "wit_ai_tts_voice", wit_ai_tts_voice)
+		prefs_cfg.set_value("wit_options", "wit_ai_tts_speed", wit_ai_tts_speed)
+		prefs_cfg.set_value("wit_options", "wit_ai_tts_pitch", wit_ai_tts_pitch)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type_choice)
 		err = prefs_cfg.save(exe_cfg_path)
@@ -291,19 +306,23 @@ func load_api_info():
 	var err: int
 	if OS.has_feature("editor"):
 		err = prefs_cfg.load("user://ai_npc_api_keys.cfg")
-		print(err)
-		print("editor config loaded")
+		#print(err)
+		#print("editor config loaded")
+		print("Config directory is:")
+		print(OS.get_config_dir())
+		print("Data directory is:")
+		print(OS.get_data_dir())
 	elif OS.has_feature("android"):
 #		print_debug("OS data directory is:" + str(OS.get_data_dir()))
 #		print_debug("OS user data directory is" + str(OS.get_user_data_dir()))
 #		print_debug("OS documents path is" + str(OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false)))
 		var exe_cfg_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "ai_npc_api_keys.cfg"
 		err = prefs_cfg.load(exe_cfg_path)
-		print(err)
+		#print(err)
 	else:
 		var exe_cfg_path : String = OS.get_executable_path().get_base_dir() + "/" + "ai_npc_api_keys.cfg"
 		err = prefs_cfg.load(exe_cfg_path)
-		print(err)
+		#print(err)
 		
 	if err == OK:
 		wit_ai_token = prefs_cfg.get_value("api_keys", "wit_ai_token", "insert_your_wit_api_token_here")
@@ -319,6 +338,9 @@ func load_api_info():
 		convai_standalone_tts_voice = prefs_cfg.get_value("convai_options", "convai_standalone_tts_voice", "WUMale 1")
 		eleven_labs_api_key = prefs_cfg.get_value("api_keys", "eleven_labs_api_key", "insert your Eleven Labs API Key")
 		eleven_labs_character_code = prefs_cfg.get_value("api_keys", "eleven_labs_character_code", "nccuBdAiU0VZsr2UBFyD")
+		wit_ai_tts_voice = prefs_cfg.get_value("wit_options", "wit_ai_tts_voice", "Prospector")
+		wit_ai_tts_speed = prefs_cfg.get_value("wit_options", "wit_ai_tts_speed", 100)
+		wit_ai_tts_pitch = prefs_cfg.get_value("wit_options", "wit_ai_tts_pitch", 100)
 		config_text_to_speech_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_type.GODOT)
 		config_ai_brain_type_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type.CONVAI)
 	

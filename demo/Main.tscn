@@ -278,20 +278,6 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.6, 0
 [node name="top-large3" parent="Building" instance=ExtResource("12")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 3.12553, 0)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Building"]
-transform = Transform3D(-0.998963, -4.09782e-08, -0.0455374, -0.0337557, 0.671203, 0.740504, 0.0305648, 0.741273, -0.670507, 1.51787, 2.12307, -3.49025)
-light_color = Color(0.992157, 0.952941, 0.556863, 1)
-light_energy = 10.0
-light_indirect_energy = 0.0
-spot_range = 10.0
-
-[node name="SpotLight2" type="SpotLight3D" parent="Building"]
-transform = Transform3D(-0.998963, -6.49954e-08, -0.0455374, -0.0337557, 0.671203, 0.740504, 0.0305648, 0.741273, -0.670507, -1.51136, 2.06798, -3.9835)
-light_color = Color(0.992157, 0.952941, 0.556863, 1)
-light_energy = 10.0
-light_indirect_energy = 0.0
-spot_range = 10.0
-
 [node name="box-small" parent="Building" instance=ExtResource("15")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51129, 1.0183, 0)
 
@@ -455,7 +441,7 @@ environment = SubResource("Environment_tg4mb")
 transform = Transform3D(1, 0, 0, 0, -0.708106, 0.706106, 0, -0.706106, -0.708106, 0, 4.90822, 0)
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5059, 2.26546, -3.27816)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5059, 2.38891, -3.27802)
 box_projection = true
 
 [node name="StartXR" parent="." instance=ExtResource("29_msa3g")]
