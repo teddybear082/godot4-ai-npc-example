@@ -1,9 +1,10 @@
-[gd_scene load_steps=43 format=3 uid="uid://dpsjlwa7mye4o"]
+[gd_scene load_steps=44 format=3 uid="uid://dpsjlwa7mye4o"]
 
 [ext_resource type="PackedScene" uid="uid://de75036o5g1q6" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-medium.glb" id="2"]
 [ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
 [ext_resource type="PackedScene" uid="uid://cnn66tacxxgyj" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-window-wide.glb" id="4"]
 [ext_resource type="PackedScene" uid="uid://ckodl60h5lhr8" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-doorway-wide.glb" id="5"]
+[ext_resource type="Material" path="res://assets/materials/floormaterial.tres" id="5_kr130"]
 [ext_resource type="PackedScene" uid="uid://cxs1bawqyedpk" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-high.glb" id="6"]
 [ext_resource type="PackedScene" uid="uid://dd7f42rrddmwp" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-wall.glb" id="7"]
 [ext_resource type="PackedScene" uid="uid://c0exeywd1cdgr" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-corner-inner.glb" id="8"]
@@ -175,6 +176,7 @@ max_distance = 5.0
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("1")
+surface_material_override/0 = ExtResource("5_kr130")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)

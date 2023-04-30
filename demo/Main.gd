@@ -18,7 +18,7 @@ extends Node3D
 @onready var npc_interaction_area : Area3D = $AI_NPC/npc_pointer_interaction_area
 @onready var ai_npc_controller : Node = get_node("Godot-AI-NPC-Controller")
 @onready var building : Node3D = $Building
-
+@onready var building_floor : MeshInstance3D = $Floor
 # Code to quit if player presses both grip buttons together to avoid more detailed quitting interface.
 # In a real game you would make a menu to quit.
 func _process(delta):
@@ -57,3 +57,4 @@ func _ready():
 	# Check if on android and passthrough enabled, and if so, hide building structure to allow passthrough to work
 	if OS.has_feature("android") and $StartXR.enable_passthrough == true:
 		building.visible = false
+		building_floor.visible = false

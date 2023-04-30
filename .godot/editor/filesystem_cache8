@@ -1,13 +1,13 @@
 bdbec74c6e5bd72edee867077d70896c
-::res://::1682853416
-default_env.tres::Environment::9124224684588276908::1682853388::0::1::::<><>::
-export_presets.cfg::TextFile::-1::1682715504::0::1::::<><>::
+::res://::1682856293
+default_env.tres::Environment::9124224684588276908::1682855698::0::1::::<><>::
+export_presets.cfg::TextFile::-1::1682855646::0::1::::<><>::
 icon.png::CompressedTexture2D::300792686067952121::1681005633::1682274634::1::::<><>::
 openxr_action_map.tres::OpenXRActionMap::8422391758210820149::1682262192::0::1::::<><>::
 README.md::TextFile::-1::1682362577::0::1::::<><>::
 ::res://addons/::1682848294
-::res://addons/godot-convAI/::1682852827
-GodotConvAI.gd::GDScript::-1::1682852827::0::1::::<>Node<>::
+::res://addons/godot-convAI/::1682854968
+GodotConvAI.gd::GDScript::-1::1682854968::0::1::::<>Node<>::
 GodotConvAI.tscn::PackedScene::-1::1682252485::0::1::::<><>::res://addons/godot-convAI/GodotConvAI.gd
 ::res://addons/godot-elevenlabs-tts/::1682472769
 ElevenLabsTTS.gd::GDScript::-1::1682472769::0::1::::<>Node<>::
@@ -93,7 +93,7 @@ hand_physics_bone.gd::GDScript::-1::1682274720::0::1::::XRToolsHandPhysicsBone<>
 License.md::TextFile::-1::1682274720::0::1::::<><>::
 physics_hand.gd::GDScript::-1::1682274720::0::1::::XRToolsPhysicsHand<>XRToolsHand<>::
 ::res://addons/godot-xr-tools/hands/animations/::1682274720
-::res://addons/godot-xr-tools/hands/animations/left/::1682846393
+::res://addons/godot-xr-tools/hands/animations/left/::1682855698
 AnimationPlayer.tscn::PackedScene::1348338211824726535::1682274720::0::1::::<><>::uid://dgfeikrugfewi<>uid://dlxa6f6hwurka<>uid://dqa0h82y3qn1t<>uid://di384xtde8ydf<>uid://dd67rufxwj2u<>uid://db62hs5s4n2b3<>uid://bediglpx0rj7i<>uid://nq3xh1olqipq<>uid://plad1r85f7ws<>uid://bi1l6lre2w2lp<>uid://c3e6h0rv2uw2d<>uid://dfekure1r6q13<>uid://b0rhk4r0r0t32<>uid://f5k0gh4qnmv5<>uid://1nlkfvitq7ku<>uid://dhjb0e334tfwl<>uid://dkjsnihi81b7p<>uid://bn0fdhe2jwq3h<>uid://bo1b8w0s4ci81<>uid://m5x2m8x3tcel<>uid://fi23m6i7orhw<>uid://c8qmcuyaltdnw<>uid://bqnoubqq7ogwu<>uid://ddbo6ioa282en<>uid://brkptjihht3ae<>uid://cnng6xumhw7cx<>uid://cevirj0eagdrq<>uid://cc6phxovf1ban<>uid://ohthjp8qbcc4<>uid://dmx42g64577g5<>uid://dhsoxntrktx0p<>uid://c0u2a3yc2vhg8<>uid://4g211my0hoiw<>uid://d06l7hygl4qt3<>uid://bxei4oebd4hu3
 Cup.res::Animation::7590974708412206284::1682274720::0::1::::<><>::
 Default pose.res::Animation::7978875689906027064::1682274720::0::1::::<><>::
@@ -104,7 +104,7 @@ Grip 4.res::Animation::7295099457076786082::1682274720::0::1::::<><>::
 Grip 5.res::Animation::2673866244220991652::1682274720::0::1::::<><>::
 Grip Shaft.res::Animation::947226568896451102::1682274720::0::1::::<><>::
 Grip.res::Animation::1075547560655330150::1682274720::0::1::::<><>::
-hand_blend_tree.tres::AnimationNodeBlendTree::8000931627586676636::1682846393::0::1::::<><>::
+hand_blend_tree.tres::AnimationNodeBlendTree::8000931627586676636::1682855698::0::1::::<><>::
 Hold.res::Animation::3002329105171642897::1682274720::0::1::::<><>::
 Horns.res::Animation::6748282567936908705::1682274720::0::1::::<><>::
 Metal.res::Animation::7519107566372913432::1682274720::0::1::::<><>::
@@ -131,7 +131,7 @@ Sign_Point.res::Animation::6570490880079797409::1682274720::0::1::::<><>::
 Straight.res::Animation::2049549906742426534::1682274720::0::1::::<><>::
 Surfer.res::Animation::8978704289758581818::1682274720::0::1::::<><>::
 Thumb.res::Animation::4009559863906171416::1682274720::0::1::::<><>::
-::res://addons/godot-xr-tools/hands/animations/right/::1682846393
+::res://addons/godot-xr-tools/hands/animations/right/::1682855698
 AnimationPlayer.tscn::PackedScene::4018207629101171331::1682274720::0::1::::<><>::uid://do01jton6rk42<>uid://ky28birj4su6<>uid://daqddcrbpam0c<>uid://r8hleealhrqt<>uid://rs7vpclot07o<>uid://d1xnpyc08njjx<>uid://s1vqcxyqcvea<>uid://c8dghcftg1thx<>uid://ccds2u22gbxn7<>uid://bv5tuc1kjv0k5<>uid://cdjfhqnr4n2mr<>uid://b1kqsodcr1til<>uid://cg6fsqb2iuuih<>uid://c3isimdlxg54a<>uid://bxmc3vlfih764<>uid://dg4v7rqiaje2h<>uid://cuwwpxi44vwpm<>uid://c6vghurk7t5yb<>uid://mjotm5uukoo3<>uid://ca21ej1p3g2yt<>uid://cseojxi8rrqc<>uid://c8hn123uon74u<>uid://b6ra3rqia1gvb<>uid://csp3fdknowmi5<>uid://2ttepgvf634h<>uid://wcwa3p1qrhwr<>uid://bcwx6a6mhsoj2<>uid://btnsp36fjkldf<>uid://c35i6glt1ov2m<>uid://b8mmk2ufmlyf<>uid://ddgl3lsnlfiny<>uid://ccy3e7a0hvxyl<>uid://d3h36bkauutoq<>uid://bq7cjxdn28jcv<>uid://d2ukhr3n2r1u8
 Cup.res::Animation::8195111040024005301::1682274720::0::1::::<><>::
 Default pose.res::Animation::753131858148690599::1682274720::0::1::::<><>::
@@ -142,7 +142,7 @@ Grip 4.res::Animation::9032470046656576133::1682274720::0::1::::<><>::
 Grip 5.res::Animation::1318376778329847596::1682274720::0::1::::<><>::
 Grip Shaft.res::Animation::7095643256860440737::1682274720::0::1::::<><>::
 Grip.res::Animation::4920554403641237694::1682274720::0::1::::<><>::
-hand_blend_tree.tres::AnimationNodeBlendTree::912215260637445682::1682846393::0::1::::<><>::
+hand_blend_tree.tres::AnimationNodeBlendTree::912215260637445682::1682855698::0::1::::<><>::
 Hold.res::Animation::3923507217133086158::1682274720::0::1::::<><>::
 Horns.res::Animation::5002304244875762093::1682274720::0::1::::<><>::
 Metal.res::Animation::4232978752073040327::1682274720::0::1::::<><>::
@@ -508,9 +508,9 @@ pattern_0026.png::CompressedTexture2D::4399940979500726163::1666979818::16822746
 pattern_0027.png::CompressedTexture2D::2823857612019619841::1666979819::1682274634::1::::<><>::
 pattern_0028.png::CompressedTexture2D::4707359152108094110::1666979819::1682274634::1::::<><>::
 pattern_0029.png::CompressedTexture2D::461403599032086983::1666979819::1682274634::1::::<><>::
-::res://demo/::1682853388
-Main.gd::GDScript::-1::1682846650::0::1::::<>Node3D<>::
-Main.tscn::PackedScene::8249820758875338616::1682853388::0::1::::<><>::uid://de75036o5g1q6<>uid://3l4j0tlmkfdm<>uid://cnn66tacxxgyj<>uid://ckodl60h5lhr8<>uid://cxs1bawqyedpk<>uid://dd7f42rrddmwp<>uid://c0exeywd1cdgr<>uid://20nb6kx5jftx<>uid://c7dsp87147d45<>uid://byfitmoc2utqm<>uid://dh5xfpe2pe53f<>uid://ckpxvchnbxacu<>uid://dpdg1cb1a4jjs<>uid://dnta4qo40aedr<>res://assets/models/gdquest/mannequiny-0.3.0.gd<>res://demo/Main.gd<>res://fonts/droid-sans/DroidSans.tres<>uid://nqitbcfd0the<>uid://4c8xmiiqske6<>uid://cmah6673gpjmp<>res://addons/godot-gpt-35-turbo/GodotGPT35Turbo.tscn<>res://scripts/Godot-AI-NPC-Controller.tscn<>res://addons/godot-witai/VRVoiceControl-WitAI.tscn<>res://scripts/npc_interaction_area.gd<>uid://ek8c4w247n4i<>uid://bale0f6eerba2<>res://addons/godot-convAI/GodotConvAI.tscn<>uid://8ulc2s07842v<>uid://clc5dre31iskm<>res://addons/godot-elevenlabs-tts/ElevenLabsTTS.tscn
+::res://demo/::1682855698
+Main.gd::GDScript::-1::1682855334::0::1::::<>Node3D<>::
+Main.tscn::PackedScene::8249820758875338616::1682855698::0::1::::<><>::uid://de75036o5g1q6<>uid://3l4j0tlmkfdm<>uid://cnn66tacxxgyj<>uid://ckodl60h5lhr8<>uid://cxs1bawqyedpk<>uid://dd7f42rrddmwp<>uid://c0exeywd1cdgr<>uid://20nb6kx5jftx<>uid://c7dsp87147d45<>uid://byfitmoc2utqm<>uid://dh5xfpe2pe53f<>uid://ckpxvchnbxacu<>uid://dpdg1cb1a4jjs<>uid://dnta4qo40aedr<>res://assets/models/gdquest/mannequiny-0.3.0.gd<>res://demo/Main.gd<>res://fonts/droid-sans/DroidSans.tres<>uid://nqitbcfd0the<>uid://4c8xmiiqske6<>uid://cmah6673gpjmp<>res://addons/godot-gpt-35-turbo/GodotGPT35Turbo.tscn<>res://scripts/Godot-AI-NPC-Controller.tscn<>res://addons/godot-witai/VRVoiceControl-WitAI.tscn<>res://scripts/npc_interaction_area.gd<>uid://ek8c4w247n4i<>uid://bale0f6eerba2<>res://addons/godot-convAI/GodotConvAI.tscn<>uid://8ulc2s07842v<>uid://clc5dre31iskm<>res://addons/godot-elevenlabs-tts/ElevenLabsTTS.tscn
 ::res://demo/npc/::1681006444
 ::res://demo/player/::1682278063
 player.tscn::PackedScene::2358192300761418311::1682278063::0::1::::<><>::uid://b8hc2ex21u8xj<>uid://cqhw276realc<>uid://bkdeegb8w3oah<>uid://bl2nuu3qhlb5k<>uid://b6bk2pj8vbj28<>uid://diyu06cw06syv
@@ -534,8 +534,8 @@ Apache License.txt::TextFile::-1::1681126232::0::1::::<><>::
 DroidSans-Bold.ttf::FontFile::6434227450256950665::1681126232::1682274634::1::::<><>::
 DroidSans.tres::FontFile::-1::1682252485::0::1::::<><>::res://fonts/droid-sans/DroidSans.ttf
 DroidSans.ttf::FontFile::303407942871465670::1681126232::1682274634::1::::<><>::
-::res://scripts/::1682853388
-godot-ai-npc-controller.gd::GDScript::-1::1682852985::0::1::::<>Node<>::
+::res://scripts/::1682854842
+godot-ai-npc-controller.gd::GDScript::-1::1682854842::0::1::::<>Node<>::
 Godot-AI-NPC-Controller.tscn::PackedScene::-1::1682252485::0::1::::<><>::res://scripts/godot-ai-npc-controller.gd
-HTTPFilePost.gd::GDScript::-1::1682853388::0::1::::<>HTTPRequest<>::
+HTTPFilePost.gd::GDScript::-1::1682854124::0::1::::<>HTTPRequest<>::
 npc_interaction_area.gd::GDScript::-1::1682252485::0::1::::<>Area3D<>::
