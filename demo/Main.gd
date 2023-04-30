@@ -17,7 +17,7 @@ extends Node3D
 @onready var npc_dialogue_enabled_area : Area3D = $AI_NPC/npc_dialogue_enabled_area
 @onready var npc_interaction_area : Area3D = $AI_NPC/npc_pointer_interaction_area
 @onready var ai_npc_controller : Node = get_node("Godot-AI-NPC-Controller")
-
+@onready var building : Node3D = $Building
 
 # Code to quit if player presses both grip buttons together to avoid more detailed quitting interface.
 # In a real game you would make a menu to quit.
@@ -53,3 +53,7 @@ func _ready():
 	# Connect player's grip buttons to the AI NPC Controller mode handler function
 	player_left_controller.connect("button_pressed", Callable(ai_npc_controller, "_on_player_controller_button_pressed"))
 	player_right_controller.connect("button_pressed", Callable(ai_npc_controller, "_on_player_controller_button_pressed"))
+
+	# Check if on android and passthrough enabled, and if so, hide building structure to allow passthrough to work
+	if OS.has_feature("android") and $StartXR.enable_passthrough == true:
+		building.visible = false
