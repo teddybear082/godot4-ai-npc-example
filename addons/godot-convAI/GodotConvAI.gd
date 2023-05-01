@@ -194,10 +194,10 @@ func call_convAI(prompt):
 func _on_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with convAI's response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var data = body.get_string_from_utf8()#fix_chunked_response(body.get_string_from_utf8())
@@ -245,15 +245,14 @@ func call_convAI_TTS(text):
 func _on_TTS_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with convAI's standalone TTS response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	#var audio_file_from_convai = body
 	
-	#var file = FileAccess.new()
 	var file = FileAccess.open("user://convaiaudio.mp3", FileAccess.READ)
 	var bytes = file.get_buffer(file.get_length())
 	convai_tts_stream.data = bytes 
@@ -301,10 +300,10 @@ func call_convAI_stream(prompt):
 func _on_stream_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with ConvAI's stream response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var body_text = body.get_string_from_utf8()
@@ -344,8 +343,12 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 					emit_signal("convAI_voice_sample_played")	
 
 
-# Function to call convAI's AI generation using convAI's stream protocol instead, should be faster for response time
+# Function to call convAI's AI generation using convAI's stream with voice protocol instead, here, this is sending an audio file recorded from the microphone above to convAI directly
 func call_convAI_stream_with_voice():
+	if !can_send_audio_request:
+		print("Error, tried calling convai stream with voice method, but required component [HTTPFilePost node child] is missing.")
+		return
+		
 	var voice_response_string : String
 	
 	if voice_response == true:
@@ -364,31 +367,22 @@ func call_convAI_stream_with_voice():
 		"charID": convai_character_id,
 		"sessionID": convai_session_id,
 		"voiceResponse": voice_response_string,
-		"responseLevel": "5"
+		"stream": "True"
 	}
-#post_file(url: String, field_name: String, file_name: String, file_path: String, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = [])
-
-	godothttpfilepost.post_file(url, "file", "audio.wav", "user://audio.wav", body, "audio/wav", voice_file_headers)
-#	var form_data = http_client.query_string_from_dict(body)
-#	print(form_data)
-#
-#	# Now call convAI
-#	var error = voice_stream_http_request.request(url, headers, HTTPClient.METHOD_POST, form_data)
-#
-#	if error != OK:
-#		push_error("Something Went Wrong!")
-#		print(error)
+	# This is the format godothttpfilepost expects
+	#post_file(url: String, field_name: String, file_name: String, file_path: String, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = [])
 	
+	godothttpfilepost.post_file(url, "file", "audio.wav", "user://audio.wav", body, "audio/wav", voice_file_headers)
 
 
 # Function to receive response to convAI's AI generation using the stream protocol and audio file prompt
 func _on_voice_stream_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with ConvAI's voice stream response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var body_text = body.get_string_from_utf8()
@@ -452,6 +446,8 @@ func start_voice_command():
 # End voice capture		
 func end_voice_command():
 	recording = record_effect.get_recording()
+	recording.set_stereo(false)
+	recording.set_mix_rate(22050)
 	record_effect.set_recording_active(false)
 	print(recording)
 	print(recording.format)
@@ -478,12 +474,14 @@ func set_session_id(new_session_id : String):
 func get_session_id():
 	return convai_session_id
 
+
 # Setter function for API Key
 func set_api_key(new_api_key : String):
 	api_key = new_api_key
 	headers = PackedStringArray(["CONVAI-API-KEY: " + api_key, "Content-Type: application/x-www-form-urlencoded"])
 	tts_headers = PackedStringArray(["CONVAI-API-KEY: " + api_key, "Content-Type: application/json"])
 	voice_file_headers = PackedStringArray(["CONVAI-API-KEY: " + api_key])
+
 
 # Reset session ID so conversation is not remembered
 func reset_session():

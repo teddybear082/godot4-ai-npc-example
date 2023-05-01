@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
 [ext_resource type="PackedScene" uid="uid://cnn66tacxxgyj" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-window-wide.glb" id="4"]
 [ext_resource type="PackedScene" uid="uid://ckodl60h5lhr8" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-doorway-wide.glb" id="5"]
-[ext_resource type="Material" path="res://assets/materials/floormaterial.tres" id="5_kr130"]
+[ext_resource type="Material" uid="uid://c0gndlah2ieer" path="res://assets/materials/floormaterial.tres" id="5_kr130"]
 [ext_resource type="PackedScene" uid="uid://cxs1bawqyedpk" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-high.glb" id="6"]
 [ext_resource type="PackedScene" uid="uid://dd7f42rrddmwp" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-wall.glb" id="7"]
 [ext_resource type="PackedScene" uid="uid://c0exeywd1cdgr" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-corner-inner.glb" id="8"]
@@ -407,6 +407,8 @@ autowrap_mode = 2
 width = 600.0
 
 [node name="Godot-AI-NPC-Controller" parent="." instance=ExtResource("24")]
+speech_to_text_choice = 1
+text_to_speech_choice = 2
 
 [node name="VRVoiceControl-WitAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("25")]
 wit_tts_voice_selection = "Prospector"
@@ -436,10 +438,12 @@ autowrap_mode = 2
 [node name="GodotConvAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("29")]
 
 [node name="GodotHTTPFilePost" parent="Godot-AI-NPC-Controller/GodotConvAI" instance=ExtResource("28_io3n1")]
+timeout = 20.0
 
 [node name="MicRecordPlayer" type="AudioStreamPlayer" parent="Godot-AI-NPC-Controller/GodotConvAI"]
 stream = SubResource("AudioStreamMicrophone_y6ap5")
 autoplay = true
+mix_target = 2
 bus = &"ConvaiMicRecorder"
 
 [node name="ElevenLabsTTS" parent="Godot-AI-NPC-Controller" instance=ExtResource("30")]

@@ -1,6 +1,8 @@
 extends Node
 
-## This node manages the interactions between the wit.ai node, the gpt-3.5 turbo node and the text to speech addon.
+## This node manages the interactions between the various AI, TTS, and STT functionalities.
+## It is meant to serve as an example of merging a bunch of possibilities together.  
+## But realisitcally, you will probably choose one Speech to text, AI brain and Text to Speech option in any given project.
 
 # Signal when config options saved
 signal options_saved
@@ -18,7 +20,14 @@ signal options_loaded
 # Variable for text to display while waiting for response
 @export var waiting_text: String = "Waiting for response..."
 
-# Enum for text to speech choice; note if CONVAI is chosen, AI will also be set to COVAI automatically in script for now
+# Enum for speech to text choice - note, if convai is chosen, convai will automatically be set as brain
+# To-Do - add OpenAI Whisper as an option
+enum speech_to_text_type {
+	WIT,
+	CONVAI
+}
+
+# Enum for text to speech choice
 enum text_to_speech_type {
 	GODOT,
 	ELEVENLABS,
@@ -31,6 +40,9 @@ enum ai_brain_type {
 	CONVAI,
 	GPTTURBO
 }
+
+# Export for speech to text type
+@export var speech_to_text_choice: speech_to_text_type
 
 # Export for text to speech choice
 @export var text_to_speech_choice: text_to_speech_type
@@ -75,15 +87,16 @@ var wit_ai_tts_speed : int
 var wit_ai_tts_pitch : int
 var config_text_to_speech_choice
 var config_ai_brain_type_choice
+var config_speech_to_text_choice
 
 # Whether to use convai in stream or normal API mode
 var use_convai_stream_mode : bool = true
 
-# Variables for new Godot4 text to speech
+# Variables for new Godot4 native text to speech (does not work on android)
 var voices 
 var voice_id
 
-# Array to hold audio files for placeholder sounds
+# Array to hold audio files for placeholder sounds (T0 DO: Implement example)
 var placeholder_sound_array = []
 
 func _ready():
@@ -156,8 +169,13 @@ func _ready():
 		# Set own options
 		text_to_speech_choice = config_text_to_speech_choice
 		ai_brain_type_choice = config_ai_brain_type_choice
-
-	# If text to speech mode is convai, then override to set AI choice automatically to convai as well, and set convai node voice response to true
+		speech_to_text_choice = config_speech_to_text_choice
+		
+	# If using convai for speech to text, then make AI brain automatically use convai too for the most efficient pipeline
+	if speech_to_text_choice == speech_to_text_type.CONVAI:
+		ai_brain_type_choice = ai_brain_type.CONVAI
+	
+	# If text to speech mode is convai, then if ConvAI is the AI brain, make sure its voice response mode is set to true, otherwise make sure to use standalone convAI TTS function
 	if text_to_speech_choice == text_to_speech_type.CONVAI:
 		if ai_brain_type_choice == ai_brain_type.CONVAI:
 			convai_node.set_voice_response_mode(true)
@@ -202,14 +220,18 @@ func _on_npc_dialogue_enabled_area_exited(body):
 func _on_npc_area_interaction_area_clicked(location):
 	# If mic is already active, then end voice command and display waiting notification to user while wit.ai and GPT process response
 	if mic_active:
-		#wit_ai_node.end_voice_command()
-		convai_node.end_voice_command()
+		if speech_to_text_choice == speech_to_text_type.WIT:
+			wit_ai_node.end_voice_command()
+		elif speech_to_text_choice == speech_to_text_type.CONVAI:
+			convai_node.end_voice_command()
 		mic_active = false
 		mic_active_label3D.text = waiting_text
 	# Otherwise, start voice command and display mic recording notification to user	
 	else:
-		#wit_ai_node.start_voice_command()
-		convai_node.start_voice_command()
+		if speech_to_text_choice == speech_to_text_type.WIT:
+			wit_ai_node.start_voice_command()
+		elif speech_to_text_choice == speech_to_text_type.CONVAI:
+			convai_node.start_voice_command()
 		mic_active = true
 		mic_active_label3D.text = mic_recording_text
 		mic_active_label3D.visible = true
@@ -244,7 +266,7 @@ func _on_gpt_3_5_turbo_processed(dialogue : String):
 func _on_convai_processed(dialogue : String):
 	mic_active_label3D.visible = false
 	if text_to_speech_choice == text_to_speech_type.GODOT:
-		# The false argument here is optional, if true you can interrupt dialogue, with false, allows streaming in advance of text for speech
+		# The false argument here is optional, if true you can interrupt dialogue, with false, allows streaming in advance of text for speech.  Waiting for Godot 4.1 to fully fix streaming responses.
 		DisplayServer.tts_speak(dialogue, voice_id, 50, 1.0, 1.2, false)
 	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
@@ -254,13 +276,14 @@ func _on_convai_processed(dialogue : String):
 	else:
 		pass
 
-
+# Saver function, saving options to config file
 func save_api_info():
 	# Save convai session id if using convai for possible persistence between sessions
 	last_convai_session_id = convai_node.get_session_id()
 	var err : int
 	var prefs_cfg : ConfigFile = ConfigFile.new()
 	var exe_cfg_path : String
+	# Determine where to put file, then save it
 	if OS.has_feature("editor"):
 		exe_cfg_path = "user://ai_npc_api_keys.cfg"
 		if not FileAccess.file_exists(exe_cfg_path):
@@ -278,9 +301,6 @@ func save_api_info():
 		if not FileAccess.file_exists(exe_cfg_path):
 			FileAccess.open(exe_cfg_path, FileAccess.WRITE)
 		err = prefs_cfg.load(exe_cfg_path)
-	
-	
-	# Not including the seated variable in this because already set by xr tools saved options
 	
 	if err == OK:
 		prefs_cfg.set_value("api_keys", "wit_ai_token", wit_ai_token)
@@ -301,6 +321,7 @@ func save_api_info():
 		prefs_cfg.set_value("wit_options", "wit_ai_tts_pitch", wit_ai_tts_pitch)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type_choice)
+		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_choice)
 		err = prefs_cfg.save(exe_cfg_path)
 	
 	emit_signal("options_saved")
@@ -309,6 +330,7 @@ func save_api_info():
 func load_api_info():
 	var prefs_cfg: ConfigFile = ConfigFile.new()
 	var err: int
+	# Determine where file should be
 	if OS.has_feature("editor"):
 		err = prefs_cfg.load("user://ai_npc_api_keys.cfg")
 		#print(err)
@@ -346,8 +368,8 @@ func load_api_info():
 		wit_ai_tts_voice = prefs_cfg.get_value("wit_options", "wit_ai_tts_voice", "Prospector")
 		wit_ai_tts_speed = prefs_cfg.get_value("wit_options", "wit_ai_tts_speed", 100)
 		wit_ai_tts_pitch = prefs_cfg.get_value("wit_options", "wit_ai_tts_pitch", 100)
-		config_text_to_speech_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_type.GODOT)
+		config_text_to_speech_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_type.CONVAI)
 		config_ai_brain_type_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type.CONVAI)
-	
+		config_speech_to_text_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_type.CONVAI)
 	emit_signal("options_loaded")
 

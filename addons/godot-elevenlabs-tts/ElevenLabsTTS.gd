@@ -64,14 +64,15 @@ func call_ElevenLabs(text):
 		push_error("Something Went Wrong!")
 		print(error)
 		
+		
 # Called when response received from Eleven Labs		
 func _on_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with ElevenLabs' response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var audio_file_from_eleven = body
@@ -84,6 +85,7 @@ func _on_request_completed(result, responseCode, headers, body):
 	
 	# Let other nodes know that AI generated dialogue is ready from GPT	
 	emit_signal("ElevenLabs_generated_speech")
+	
 	
 # Set new API key
 func set_api_key(new_api_key):
