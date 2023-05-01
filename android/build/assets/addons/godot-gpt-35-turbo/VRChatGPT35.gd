@@ -68,10 +68,10 @@ func call_GPT(prompt):
 func _on_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with GPT's response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var data = body.get_string_from_utf8()#fix_chunked_response(body.get_string_from_utf8())
@@ -111,10 +111,10 @@ func summarize_GPT(messages : Array):
 func _on_summarize_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with GPT's summarize response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var data = body.get_string_from_utf8()#fix_chunked_response(body.get_string_from_utf8())

@@ -70,7 +70,8 @@ var convai_standalone_tts_voices : Array = [
 	"WUFemale 4",
 	"WUFemale 5") var convai_standalone_tts_voice_selection : String = "WUMale 1": set = set_convai_standalone_tts_voice
 #var convai_standalone_tts_voice_selection = "WUMale 1"
-@onready var godothttpfilepost = get_node_or_null("GodotHTTPFilePost")
+#@onready var godothttpfilepost = get_node_or_null("GodotHTTPFilePost")
+@onready var godothttpfilepost = preload("res://addons/godot-httpfilepost/HTTPFilePost.gd")
 @onready var micrecordplayer = get_node_or_null("MicRecordPlayer")
 var url = "https://api.convai.com/character/getResponse" 
 var tts_url = "https://api.convai.com/tts/"
@@ -83,6 +84,7 @@ var convai_speech_player : AudioStreamPlayer
 var convai_stream : AudioStreamWAV
 var convai_tts_stream : AudioStreamMP3
 var TTS_http_request : HTTPRequest
+var http_file_post_request
 var stream_http_request : HTTPRequest
 var stored_streamed_audio : PackedByteArray = []
 # Variables for possible voice requests to server
@@ -130,13 +132,17 @@ func _ready():
 	add_child(convai_speech_player)
 	convai_stream = AudioStreamWAV.new()	
 	
-	# If godothttpfilepost is not present, turn ability to send audio request off
+	# If godothttpfilepost addon is not present, turn ability to send audio request off
 	if godothttpfilepost == null:
 		can_send_audio_request = false
 		
 	else:
 		can_send_audio_request = true
-		godothttpfilepost.connect("request_completed", Callable(self, "_on_voice_stream_request_completed"))
+		http_file_post_request = godothttpfilepost.new()
+		add_child(http_file_post_request)
+		http_file_post_request.timeout = 10.0
+		http_file_post_request.use_threads = true
+		http_file_post_request.connect("request_completed", Callable(self, "_on_voice_stream_request_completed"))
 	
 	# Audio request ready stuff to allow recording of microphone
 	if can_send_audio_request:
@@ -346,7 +352,7 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 # Function to call convAI's AI generation using convAI's stream with voice protocol instead, here, this is sending an audio file recorded from the microphone above to convAI directly
 func call_convAI_stream_with_voice():
 	if !can_send_audio_request:
-		print("Error, tried calling convai stream with voice method, but required component [HTTPFilePost node child] is missing.")
+		print("Error, tried calling convai stream with voice method, but required component [HTTPFilePost addon and script] is missing.")
 		return
 		
 	var voice_response_string : String
@@ -369,10 +375,9 @@ func call_convAI_stream_with_voice():
 		"voiceResponse": voice_response_string,
 		"stream": "True"
 	}
-	# This is the format godothttpfilepost expects
+	# This is the format godothttpfilepost expects:
 	#post_file(url: String, field_name: String, file_name: String, file_path: String, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = [])
-	
-	godothttpfilepost.post_file(url, "file", "audio.wav", "user://audio.wav", body, "audio/wav", voice_file_headers)
+	http_file_post_request.post_file(url, "file", "audio.wav", "user://audio.wav", body, "audio/wav", voice_file_headers)
 
 
 # Function to receive response to convAI's AI generation using the stream protocol and audio file prompt
@@ -440,6 +445,7 @@ func activate_voice_commands(value):
 # Start voice capture		
 func start_voice_command():
 	#print ("Reading sound")
+	micrecordplayer.play()
 	record_effect.set_recording_active(true)
 		
 		
@@ -456,7 +462,10 @@ func end_voice_command():
 	var data = recording.get_data()
 	print(data.size())
 	var save_path = "user://audio.wav"
-	recording.save_to_wav(save_path)
+	var err = recording.save_to_wav(save_path)
+	if err != OK:
+		print("error saving convai wav file, error code was: " + str(err))
+	micrecordplayer.stop()
 	call_convAI_stream_with_voice()
 			
 					

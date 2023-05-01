@@ -200,6 +200,14 @@ func end_voice_command():
 
 # Called when the HTTP request to wit.ai is completed.
 func _http_request_completed(result, response_code, headers, body):
+	# Should recieve 200 if all is fine; if not print code
+	if response_code != 200:
+		print("There was an error with wit.ai's response, response code:" + str(response_code))
+		print(result)
+		print(headers)
+		print(body.get_string_from_utf8())
+		return
+		
 	if response_code == 200:
 		var data = fix_chunked_response(body.get_string_from_utf8())
 
@@ -292,10 +300,10 @@ func get_available_voices():
 func _available_voices_received(result, response_code, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if response_code != 200:
-		print("There was an error, response code:" + str(response_code))
+		print("There was an error with wit.ai's availabe voices response, response code:" + str(response_code))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var data = body.get_string_from_utf8()
@@ -369,10 +377,10 @@ func call_wit_TTS(text):
 func _wit_TTS_response_received(result, response_code, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if response_code != 200:
-		print("There was an error, response code:" + str(response_code))
+		print("There was an error with wit.ai's text to speech, response code:" + str(response_code))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 	
 	#print("audio received from wit is")

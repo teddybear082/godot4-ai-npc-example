@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://dpsjlwa7mye4o"]
+[gd_scene load_steps=44 format=3 uid="uid://dpsjlwa7mye4o"]
 
 [ext_resource type="PackedScene" uid="uid://de75036o5g1q6" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-medium.glb" id="2"]
 [ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
@@ -26,7 +26,6 @@
 [ext_resource type="PackedScene" path="res://addons/godot-witai/VRVoiceControl-WitAI.tscn" id="25"]
 [ext_resource type="Script" path="res://scripts/npc_interaction_area.gd" id="27"]
 [ext_resource type="FontFile" uid="uid://ek8c4w247n4i" path="res://fonts/droid-sans/DroidSans.ttf" id="28"]
-[ext_resource type="PackedScene" uid="uid://bale0f6eerba2" path="res://addons/godot-httpfilepost/GodotHTTPFilePost.tscn" id="28_io3n1"]
 [ext_resource type="PackedScene" path="res://addons/godot-convAI/GodotConvAI.tscn" id="29"]
 [ext_resource type="PackedScene" uid="uid://8ulc2s07842v" path="res://demo/player/player.tscn" id="29_0qx8x"]
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="29_msa3g"]
@@ -437,13 +436,8 @@ autowrap_mode = 2
 
 [node name="GodotConvAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("29")]
 
-[node name="GodotHTTPFilePost" parent="Godot-AI-NPC-Controller/GodotConvAI" instance=ExtResource("28_io3n1")]
-timeout = 20.0
-
 [node name="MicRecordPlayer" type="AudioStreamPlayer" parent="Godot-AI-NPC-Controller/GodotConvAI"]
 stream = SubResource("AudioStreamMicrophone_y6ap5")
-autoplay = true
-mix_target = 2
 bus = &"ConvaiMicRecorder"
 
 [node name="ElevenLabsTTS" parent="Godot-AI-NPC-Controller" instance=ExtResource("30")]

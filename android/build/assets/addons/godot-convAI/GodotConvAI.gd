@@ -17,9 +17,7 @@ signal convAI_voice_sample_played
 @export var voice_sample_rate: int = 22050
 @export var voice_pitch_scale = 1.0 # (float,-10.0, 10.0)
 @export var use_standalone_text_to_speech: bool = false: set = set_use_standalone_tts
-@export var microphone_gain_db: float = 1.2
-@export var command_minlen_sec: float = 0.3
-@export_range (1.0, 20.0, 1.0) var maxlen_sec : float = 10.0
+
 # Array of standard convai voices as of creation of this script (April 2023): https://docs.convai.com/api-docs/reference/core-api-reference/standalone-voice-api/text-to-speech-api
 var convai_standalone_tts_voices : Array = [
 	"WUKMale 1",
@@ -72,7 +70,9 @@ var convai_standalone_tts_voices : Array = [
 	"WUFemale 4",
 	"WUFemale 5") var convai_standalone_tts_voice_selection : String = "WUMale 1": set = set_convai_standalone_tts_voice
 #var convai_standalone_tts_voice_selection = "WUMale 1"
-@onready var godothttpfilepost = get_node_or_null("GodotHTTPFilePost")
+#@onready var godothttpfilepost = get_node_or_null("GodotHTTPFilePost")
+@onready var godothttpfilepost = preload("res://addons/godot-httpfilepost/HTTPFilePost.gd")
+@onready var micrecordplayer = get_node_or_null("MicRecordPlayer")
 var url = "https://api.convai.com/character/getResponse" 
 var tts_url = "https://api.convai.com/tts/"
 var headers
@@ -84,18 +84,14 @@ var convai_speech_player : AudioStreamPlayer
 var convai_stream : AudioStreamWAV
 var convai_tts_stream : AudioStreamMP3
 var TTS_http_request : HTTPRequest
+var http_file_post_request
 var stream_http_request : HTTPRequest
 var stored_streamed_audio : PackedByteArray = []
 # Variables for possible voice requests to server
 var can_send_audio_request : bool = true
-var capture_effect = null
-var audio_player
-var audio_buffer = PackedByteArray()
-var audio_buffer_pos = 0
-var target_rate = 16000
-var actual_rate = AudioServer.get_mix_rate()
-var sending = false	
+var record_effect : AudioEffectRecord = null
 var interface_enabled = false
+var recording
 
 func _ready():
 	# Set up normal http request node for calls to call_convAI function
@@ -136,38 +132,41 @@ func _ready():
 	add_child(convai_speech_player)
 	convai_stream = AudioStreamWAV.new()	
 	
-	# If godothttpfilepost is not present, turn ability to send audio request off
+	# If godothttpfilepost addon is not present, turn ability to send audio request off
 	if godothttpfilepost == null:
 		can_send_audio_request = false
 		
 	else:
 		can_send_audio_request = true
-		godothttpfilepost.connect("request_completed", Callable(self, "_on_voice_stream_request_completed"))
+		http_file_post_request = godothttpfilepost.new()
+		add_child(http_file_post_request)
+		http_file_post_request.timeout = 10.0
+		http_file_post_request.use_threads = true
+		http_file_post_request.connect("request_completed", Callable(self, "_on_voice_stream_request_completed"))
 	
 	# Audio request ready stuff to allow recording of microphone
-#	if can_send_audio_request:
-#		ProjectSettings.set_setting("audio/driver/enable_input", true)
-#
-#		audio_buffer.resize(2*target_rate*maxlen_sec)
+	if can_send_audio_request:
+		var record_bus_idx = AudioServer.get_bus_index("ConvaiMicRecorder")
+		record_effect = AudioServer.get_bus_effect(record_bus_idx, 0)
+		
+		ProjectSettings.set_setting("audio/driver/enable_input", true)
 #
 #		var current_number = 0
 #		while AudioServer.get_bus_index("VoiceMicRecorder" + str(current_number)) != -1:
 #			current_number += 1
 #
-#		var bus_name = "VoiceMicRecorder" + str(current_number)
+#		var bus_name = "ConvaiMicRecorder" + str(current_number)
 #		var record_bus_idx = AudioServer.bus_count
 #
 #		AudioServer.add_bus(record_bus_idx)
 #		AudioServer.set_bus_name(record_bus_idx, bus_name)
 #
-#		capture_effect = AudioEffectCapture.new()
-#		AudioServer.add_bus_effect(record_bus_idx, capture_effect)
+#		record_effect = AudioEffectRecord.new()
+#		AudioServer.add_bus_effect(record_bus_idx, record_effect)
 #
 #		AudioServer.set_bus_mute(record_bus_idx, true)
 #
-#		audio_player = AudioStreamPlayer.new()
-#		add_child(audio_player)
-#		audio_player.bus = bus_name
+#		micrecordplayer.bus = bus_name
 	
 	
 func call_convAI(prompt):
@@ -201,10 +200,10 @@ func call_convAI(prompt):
 func _on_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with convAI's response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var data = body.get_string_from_utf8()#fix_chunked_response(body.get_string_from_utf8())
@@ -252,15 +251,14 @@ func call_convAI_TTS(text):
 func _on_TTS_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with convAI's standalone TTS response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	#var audio_file_from_convai = body
 	
-	#var file = FileAccess.new()
 	var file = FileAccess.open("user://convaiaudio.mp3", FileAccess.READ)
 	var bytes = file.get_buffer(file.get_length())
 	convai_tts_stream.data = bytes 
@@ -308,10 +306,10 @@ func call_convAI_stream(prompt):
 func _on_stream_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with ConvAI's stream response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var body_text = body.get_string_from_utf8()
@@ -351,8 +349,12 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 					emit_signal("convAI_voice_sample_played")	
 
 
-# Function to call convAI's AI generation using convAI's stream protocol instead, should be faster for response time
+# Function to call convAI's AI generation using convAI's stream with voice protocol instead, here, this is sending an audio file recorded from the microphone above to convAI directly
 func call_convAI_stream_with_voice():
+	if !can_send_audio_request:
+		print("Error, tried calling convai stream with voice method, but required component [HTTPFilePost addon and script] is missing.")
+		return
+		
 	var voice_response_string : String
 	
 	if voice_response == true:
@@ -363,7 +365,8 @@ func call_convAI_stream_with_voice():
 		convai_stream.mix_rate = voice_sample_rate
 	else:
 		voice_response_string = "False"
-			
+	
+		
 	print("calling convAI with audio file prompt")
 	
 	var body = {
@@ -372,28 +375,19 @@ func call_convAI_stream_with_voice():
 		"voiceResponse": voice_response_string,
 		"stream": "True"
 	}
-#
-	godothttpfilepost.post_file(url, "file", "audio.wav", "user://audio.wav", body, "audio/wav", voice_file_headers)
-#	var form_data = http_client.query_string_from_dict(body)
-#	print(form_data)
-#
-#	# Now call convAI
-#	var error = voice_stream_http_request.request(url, headers, HTTPClient.METHOD_POST, form_data)
-#
-#	if error != OK:
-#		push_error("Something Went Wrong!")
-#		print(error)
-	
+	# This is the format godothttpfilepost expects:
+	#post_file(url: String, field_name: String, file_name: String, file_path: String, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = [])
+	http_file_post_request.post_file(url, "file", "audio.wav", "user://audio.wav", body, "audio/wav", voice_file_headers)
 
 
 # Function to receive response to convAI's AI generation using the stream protocol and audio file prompt
 func _on_voice_stream_request_completed(result, responseCode, headers, body):
 	# Should recieve 200 if all is fine; if not print code
 	if responseCode != 200:
-		print("There was an error, response code:" + str(responseCode))
+		print("There was an error with ConvAI's voice stream response, response code:" + str(responseCode))
 		print(result)
 		print(headers)
-		print(body)
+		print(body.get_string_from_utf8())
 		return
 		
 	var body_text = body.get_string_from_utf8()
@@ -437,69 +431,43 @@ func _on_voice_stream_request_completed(result, responseCode, headers, body):
 func activate_voice_commands(value):
 	interface_enabled = value
 	if value:
-		if audio_player.stream == null:
-			audio_player.stream = AudioStreamMicrophone.new()
-		capture_effect.clear_buffer()
-		audio_player.play()
+		if micrecordplayer.stream == null:
+			micrecordplayer.stream = AudioStreamMicrophone.new()
+		if !micrecordplayer.playing:
+			micrecordplayer.play()
 	else:	
-		if audio_player.playing:
-			audio_player.stop()
+		if micrecordplayer.playing:
+			micrecordplayer.stop()
 
-		audio_player.stream = null
+		micrecordplayer.stream = null
 	
-
-func _process(delta):
-	if capture_effect and sending:
-		var data: PackedVector2Array = capture_effect.get_buffer(capture_effect.get_frames_available())
-		var sample_skip = actual_rate/target_rate 
-		var samples = ceil(float(data.size())/sample_skip)
-		
-		if data.size() > 0:
-			var max_value = 0.0
-			var min_value = 0.0
-			var idx = 0
-			var buffer_len = data.size()
-			var target_idx = 0
-		
-			while idx < buffer_len:
-				var val =  (data[int(idx)].x + data[int(idx)].y)/2.0
-				#var val_discreet = int( clamp( val * 32768, -32768, 32768))
-				var val_discreet = int(clamp(val*32768, 0, 32768))
-				audio_buffer[2*audio_buffer_pos] = 0xFF & (val_discreet >> 8)
-				audio_buffer[2*audio_buffer_pos+1] = 0xFF & val_discreet
-
-				idx += sample_skip
-				audio_buffer_pos = min(audio_buffer_pos+1, audio_buffer.size()/2-1)
-
 
 # Start voice capture		
 func start_voice_command():
-	if not sending and interface_enabled:
-		#print ("Reading sound")
-		sending = true
-		audio_buffer_pos = 0
+	#print ("Reading sound")
+	micrecordplayer.play()
+	record_effect.set_recording_active(true)
 		
 		
 # End voice capture		
 func end_voice_command():
-	if sending:
-		#print ("Finish reading sound")
-		sending = false
-		
-		if audio_buffer_pos / target_rate > command_minlen_sec:
+	recording = record_effect.get_recording()
+	recording.set_stereo(false)
+	recording.set_mix_rate(22050)
+	record_effect.set_recording_active(false)
+	print(recording)
+	print(recording.format)
+	print(recording.mix_rate)
+	print(recording.stereo)
+	var data = recording.get_data()
+	print(data.size())
+	var save_path = "user://audio.wav"
+	var err = recording.save_to_wav(save_path)
+	if err != OK:
+		print("error saving convai wav file, error code was: " + str(err))
+	micrecordplayer.stop()
+	call_convAI_stream_with_voice()
 			
-			#Only process audio if there is enough speech
-			#Prevent spurious calls	
-		
-			#var audio_content = audio_buffer.subarray(0,audio_buffer_pos*2)
-			var audio_content = audio_buffer.slice(0, audio_buffer_pos*2)
-			
-			#"Content-type: audio/raw;encoding=signed-integer;bits=16;rate=%d;endian=big
-			var file = FileAccess.open("user://audio.wav", FileAccess.WRITE_READ)
-			file.store_buffer(audio_content)
-			file.close()
-			call_convAI_stream_with_voice()
-			#
 					
 # Setter function for character
 func set_character_id(new_character_id : String):
@@ -515,12 +483,14 @@ func set_session_id(new_session_id : String):
 func get_session_id():
 	return convai_session_id
 
+
 # Setter function for API Key
 func set_api_key(new_api_key : String):
 	api_key = new_api_key
 	headers = PackedStringArray(["CONVAI-API-KEY: " + api_key, "Content-Type: application/x-www-form-urlencoded"])
 	tts_headers = PackedStringArray(["CONVAI-API-KEY: " + api_key, "Content-Type: application/json"])
 	voice_file_headers = PackedStringArray(["CONVAI-API-KEY: " + api_key])
+
 
 # Reset session ID so conversation is not remembered
 func reset_session():

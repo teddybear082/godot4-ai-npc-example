@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bale0f6eerba2"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/HTTPFilePost.gd" id="1_121sr"]
+[ext_resource type="Script" path="res://addons/godot-httpfilepost/HTTPFilePost.gd" id="1_121sr"]
 
 [node name="GodotHTTPFilePost" type="HTTPRequest"]
 script = ExtResource("1_121sr")
