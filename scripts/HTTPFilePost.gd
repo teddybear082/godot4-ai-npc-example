@@ -24,9 +24,10 @@ func post_file(url: String, field_name: String, file_name: String, file_path: St
 func post_data_as_file(url: String, field_name: String, file_name: String, data, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = []):
 	randomize()
 	var boundary = "---------------------------" + str(randi()) + str(randi())
-	custom_headers.append("content-type: multipart/formdata; boundary=" + boundary)
+	custom_headers.append("Content-Type: multipart/form-data; boundary=" + boundary)
 	var body1 = "\r\n\r\n" + boundary + "\r\n"
 	for key in post_fields:
+		print("key found:" + str(key))
 		body1 += "Content-Disposition: form-data; name=\"" + key + "\"\r\n\r\n" + post_fields[key] + "\r\n"
 	body1 += "Content-Disposition: form-data; name=\"" + field_name + "\"; filename=\"" + file_name + "\"\r\nContent-Type: "
 	if content_type != "":
@@ -41,9 +42,13 @@ func post_data_as_file(url: String, field_name: String, file_name: String, data,
 	if data is String:
 		post_content = (body1 + data + body2).to_utf8_buffer()
 	elif data is PackedByteArray:
+		print("http file content found")
 		post_content = body1.to_utf8_buffer() + data + body2.to_utf8_buffer()
 	else:
 		assert(false)
 		return false
 	print("making file http request")
+	print(url)
+	print(custom_headers)
+	print(post_content)
 	request_raw(url, custom_headers, HTTPClient.METHOD_POST, post_content)

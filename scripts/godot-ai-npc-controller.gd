@@ -94,7 +94,7 @@ func _ready():
 	wit_ai_node.activate_voice_commands(true)
 	
 	# Activate convai voice commands
-	#convai_node.activate_voice_commands(true)
+	convai_node.activate_voice_commands(true)
 	
 	# Set voice for Godot text to speech
 	if !OS.has_feature("android"):
@@ -202,14 +202,14 @@ func _on_npc_dialogue_enabled_area_exited(body):
 func _on_npc_area_interaction_area_clicked(location):
 	# If mic is already active, then end voice command and display waiting notification to user while wit.ai and GPT process response
 	if mic_active:
-		wit_ai_node.end_voice_command()
-		#convai_node.end_voice_command()
+		#wit_ai_node.end_voice_command()
+		convai_node.end_voice_command()
 		mic_active = false
 		mic_active_label3D.text = waiting_text
 	# Otherwise, start voice command and display mic recording notification to user	
 	else:
-		wit_ai_node.start_voice_command()
-		#convai_node.start_voice_command()
+		#wit_ai_node.start_voice_command()
+		convai_node.start_voice_command()
 		mic_active = true
 		mic_active_label3D.text = mic_recording_text
 		mic_active_label3D.visible = true
