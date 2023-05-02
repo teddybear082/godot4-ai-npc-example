@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://dpsjlwa7mye4o"]
+[gd_scene load_steps=43 format=3 uid="uid://dpsjlwa7mye4o"]
 
 [ext_resource type="PackedScene" uid="uid://de75036o5g1q6" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-medium.glb" id="2"]
 [ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
@@ -147,8 +147,6 @@ cache/0/64/0/kerning_overrides/128/0 = Vector2(0, 0)
 cache/0/64/0/kerning_overrides/128/12 = Vector2(0, 0)
 cache/0/64/0/kerning_overrides/62/0 = Vector2(0, 0)
 cache/0/64/0/kerning_overrides/64/0 = Vector2(0, 0)
-
-[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_y6ap5"]
 
 [sub_resource type="Environment" id="Environment_tg4mb"]
 background_mode = 1
@@ -435,10 +433,6 @@ font_size = 62
 autowrap_mode = 2
 
 [node name="GodotConvAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("29")]
-
-[node name="MicRecordPlayer" type="AudioStreamPlayer" parent="Godot-AI-NPC-Controller/GodotConvAI"]
-stream = SubResource("AudioStreamMicrophone_y6ap5")
-bus = &"ConvaiMicRecorder"
 
 [node name="ElevenLabsTTS" parent="Godot-AI-NPC-Controller" instance=ExtResource("30")]
 

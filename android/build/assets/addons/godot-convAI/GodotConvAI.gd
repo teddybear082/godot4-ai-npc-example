@@ -72,7 +72,7 @@ var convai_standalone_tts_voices : Array = [
 #var convai_standalone_tts_voice_selection = "WUMale 1"
 #@onready var godothttpfilepost = get_node_or_null("GodotHTTPFilePost")
 @onready var godothttpfilepost = preload("res://addons/godot-httpfilepost/HTTPFilePost.gd")
-@onready var micrecordplayer = get_node_or_null("MicRecordPlayer")
+#@onready var micrecordplayer = get_node_or_null("MicRecordPlayer")
 var url = "https://api.convai.com/character/getResponse" 
 var tts_url = "https://api.convai.com/tts/"
 var headers
@@ -92,6 +92,7 @@ var can_send_audio_request : bool = true
 var record_effect : AudioEffectRecord = null
 var interface_enabled = false
 var recording
+var micrecordplayer : AudioStreamPlayer
 
 func _ready():
 	# Set up normal http request node for calls to call_convAI function
@@ -146,29 +147,32 @@ func _ready():
 	
 	# Audio request ready stuff to allow recording of microphone
 	if can_send_audio_request:
-		var record_bus_idx = AudioServer.get_bus_index("ConvaiMicRecorder")
-		record_effect = AudioServer.get_bus_effect(record_bus_idx, 0)
+		#var record_bus_idx = AudioServer.get_bus_index("ConvaiMicRecorder")
+		#record_effect = AudioServer.get_bus_effect(record_bus_idx, 0)
 		
 		ProjectSettings.set_setting("audio/driver/enable_input", true)
-#
-#		var current_number = 0
-#		while AudioServer.get_bus_index("VoiceMicRecorder" + str(current_number)) != -1:
-#			current_number += 1
-#
-#		var bus_name = "ConvaiMicRecorder" + str(current_number)
-#		var record_bus_idx = AudioServer.bus_count
-#
-#		AudioServer.add_bus(record_bus_idx)
-#		AudioServer.set_bus_name(record_bus_idx, bus_name)
-#
-#		record_effect = AudioEffectRecord.new()
-#		AudioServer.add_bus_effect(record_bus_idx, record_effect)
-#
-#		AudioServer.set_bus_mute(record_bus_idx, true)
-#
-#		micrecordplayer.bus = bus_name
-	
-	
+		print("Available input devices found by Convai: " + str(AudioServer.get_input_device_list()))
+		var current_number = 0
+		while AudioServer.get_bus_index("ConvaiMicRecorder" + str(current_number)) != -1:
+			current_number += 1
+
+		var bus_name = "ConvaiMicRecorder" + str(current_number)
+		var record_bus_idx = AudioServer.bus_count
+		print("number of buses for convai node before adding convai bus: " + str(AudioServer.get_bus_count()))
+		AudioServer.add_bus(record_bus_idx)
+		AudioServer.set_bus_name(record_bus_idx, bus_name)
+		print("Convai bus index is: " + str(AudioServer.get_bus_index(bus_name)))
+
+		record_effect = AudioEffectRecord.new()
+		AudioServer.add_bus_effect(record_bus_idx, record_effect)
+		AudioServer.set_bus_mute(record_bus_idx, true)
+
+		micrecordplayer = AudioStreamPlayer.new()
+		add_child(micrecordplayer)
+		micrecordplayer.bus = bus_name
+		micrecordplayer.stream = AudioStreamMicrophone.new()
+
+
 func call_convAI(prompt):
 	var voice_response_string : String
 	
@@ -369,9 +373,11 @@ func call_convAI_stream_with_voice():
 		
 	print("calling convAI with audio file prompt")
 	
+	# There seems to be a bug with convAI's API with sending by voice that sending a session ID other than -1 with the call freezes the response
+	# So setting for now always sending -1 as session rather than convai_session_id
 	var body = {
 		"charID": convai_character_id,
-		"sessionID": convai_session_id,
+		"sessionID": "-1",
 		"voiceResponse": voice_response_string,
 		"stream": "True"
 	}
@@ -452,16 +458,21 @@ func start_voice_command():
 # End voice capture		
 func end_voice_command():
 	recording = record_effect.get_recording()
-	recording.set_stereo(false)
-	recording.set_mix_rate(22050)
 	record_effect.set_recording_active(false)
+	recording.set_stereo(false)
 	print(recording)
 	print(recording.format)
 	print(recording.mix_rate)
 	print(recording.stereo)
 	var data = recording.get_data()
 	print(data.size())
-	var save_path = "user://audio.wav"
+	var save_path = "" 
+	if OS.has_feature("editor"):
+		save_path = "user://audio.wav"
+	elif OS.has_feature("android"):
+		save_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "audio.wav"
+	else:
+		save_path = OS.get_executable_path().get_base_dir() + "/" + "audio.wav"
 	var err = recording.save_to_wav(save_path)
 	if err != OK:
 		print("error saving convai wav file, error code was: " + str(err))
