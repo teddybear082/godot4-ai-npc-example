@@ -397,7 +397,7 @@ func _process(delta):
 
 			while idx < buffer_len:
 				var val = (data[int(idx)].x + data[int(idx)].y) / 2.0
-				var val_discreet = int(clamp(val * 127, -128, 127))
+				var val_discreet = int(clamp(val * 255, -128, 127))
 				audio_buffer[audio_buffer_pos] = 0xFF & val_discreet
 
 				idx += sample_skip
@@ -532,7 +532,7 @@ func end_voice_command():
 			new_wav_stream.loop_mode = AudioStreamWAV.LOOP_DISABLED
 			new_wav_stream.stereo = false
 			new_wav_stream.mix_rate = target_rate
-			new_wav_stream.FORMAT_8_BITS
+			new_wav_stream.FORMAT_16_BITS # was 8 bits
 			new_wav_stream.data = audio_content
 			var err = new_wav_stream.save_to_wav(save_path)
 			#print(err)
