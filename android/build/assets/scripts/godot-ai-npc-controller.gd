@@ -103,12 +103,6 @@ func _ready():
 	# Load config file so it is ready if needed
 	load_api_info()
 	
-	# Activate wit ai voice commands
-	wit_ai_node.activate_voice_commands(true)
-	
-	# Activate convai voice commands
-	convai_node.activate_voice_commands(true)
-	
 	# Set voice for Godot text to speech
 	if !OS.has_feature("android"):
 		voices = DisplayServer.tts_get_voices_for_language("en")
@@ -174,6 +168,12 @@ func _ready():
 	# If using convai for speech to text, then make AI brain automatically use convai too for the most efficient pipeline
 	if speech_to_text_choice == speech_to_text_type.CONVAI:
 		ai_brain_type_choice = ai_brain_type.CONVAI
+		# Activate convai voice commands
+		convai_node.activate_voice_commands(true)
+	
+	else:
+		# Activate wit ai voice commands
+		wit_ai_node.activate_voice_commands(true)
 	
 	# If text to speech mode is convai, then if ConvAI is the AI brain, make sure its voice response mode is set to true, otherwise make sure to use standalone convAI TTS function
 	if text_to_speech_choice == text_to_speech_type.CONVAI:
@@ -182,6 +182,7 @@ func _ready():
 		else:
 			convai_node.set_voice_response_mode(false)
 			convai_node.set_use_standalone_tts(true)	
+	
 	
 			
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC

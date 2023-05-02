@@ -86,11 +86,23 @@ var http_file_post_request
 var stream_http_request : HTTPRequest
 var stored_streamed_audio : PackedByteArray = []
 # Variables for possible voice requests to server
-var can_send_audio_request : bool = false
+var can_send_audio_request : bool = true
 var record_effect : AudioEffectRecord = null
 var interface_enabled = false
 var recording
 var micrecordplayer : AudioStreamPlayer
+
+# Test variables for wit.ai style recording
+var sending = false
+var microphone_gain_db: float = 1.2
+var command_minlen_sec: float = 0.1
+var maxlen_sec : float = 10.0 
+var capture_effect = null
+var audio_buffer = PackedByteArray()
+var audio_buffer_pos = 0
+var target_rate = 16000
+var actual_rate = AudioServer.get_mix_rate()
+var save_path = ""	
 
 func _ready():
 	# Set up normal http request node for calls to call_convAI function
@@ -144,28 +156,49 @@ func _ready():
 		http_file_post_request.connect("request_completed", Callable(self, "_on_voice_stream_request_completed"))
 	
 	# Audio request ready stuff to allow recording of microphone; right now this is broken because of Godot not being able to record a mono wav file, but leaving here for future potential use
-		ProjectSettings.set_setting("audio/driver/enable_input", true)
-		print("Available input devices found by Convai: " + str(AudioServer.get_input_device_list()))
+#		ProjectSettings.set_setting("audio/driver/enable_input", true)
+#		print("Available input devices found by Convai: " + str(AudioServer.get_input_device_list()))
+#		var current_number = 0
+#		while AudioServer.get_bus_index("ConvaiMicRecorder" + str(current_number)) != -1:
+#			current_number += 1
+#
+#		var bus_name = "ConvaiMicRecorder" + str(current_number)
+#		var record_bus_idx = AudioServer.bus_count
+#		print("number of buses for convai node before adding convai bus: " + str(AudioServer.get_bus_count()))
+#		AudioServer.add_bus(record_bus_idx)
+#		AudioServer.set_bus_name(record_bus_idx, bus_name)
+#		print("Convai bus index is: " + str(AudioServer.get_bus_index(bus_name)))
+#
+#		record_effect = AudioEffectRecord.new()
+#		AudioServer.add_bus_effect(record_bus_idx, record_effect)
+#		AudioServer.set_bus_mute(record_bus_idx, true)
+#
+#		micrecordplayer = AudioStreamPlayer.new()
+#		add_child(micrecordplayer)
+#		micrecordplayer.bus = bus_name
+#		micrecordplayer.stream = AudioStreamMicrophone.new()
+		audio_buffer.resize(2*target_rate*maxlen_sec)
+	
 		var current_number = 0
-		while AudioServer.get_bus_index("ConvaiMicRecorder" + str(current_number)) != -1:
+		while AudioServer.get_bus_index("VoiceMicRecorder" + str(current_number)) != -1:
 			current_number += 1
 
-		var bus_name = "ConvaiMicRecorder" + str(current_number)
+		var bus_name = "VoiceMicRecorder" + str(current_number)
 		var record_bus_idx = AudioServer.bus_count
-		print("number of buses for convai node before adding convai bus: " + str(AudioServer.get_bus_count()))
+
 		AudioServer.add_bus(record_bus_idx)
 		AudioServer.set_bus_name(record_bus_idx, bus_name)
-		print("Convai bus index is: " + str(AudioServer.get_bus_index(bus_name)))
 
-		record_effect = AudioEffectRecord.new()
-		AudioServer.add_bus_effect(record_bus_idx, record_effect)
+		capture_effect = AudioEffectCapture.new()
+		AudioServer.add_bus_effect(record_bus_idx, capture_effect)
+
 		AudioServer.set_bus_mute(record_bus_idx, true)
 
 		micrecordplayer = AudioStreamPlayer.new()
 		add_child(micrecordplayer)
 		micrecordplayer.bus = bus_name
-		micrecordplayer.stream = AudioStreamMicrophone.new()
-
+		
+		
 # Used to call normal convai API endpoint
 func call_convAI(prompt):
 	var voice_response_string : String
@@ -349,6 +382,28 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 
 # Function to call convAI's AI generation using convAI's stream with voice protocol instead, here, this is sending an audio file recorded from the microphone above to convAI directly
 # Presently this is broken because Godot can't record a mono wav file.
+func _process(delta):
+	if capture_effect and sending:
+		var data: PackedVector2Array = capture_effect.get_buffer(capture_effect.get_frames_available())
+		var sample_skip = actual_rate / target_rate
+		var samples = ceil(float(data.size()) / sample_skip)
+
+		if data.size() > 0:
+			var max_value = 0.0
+			var min_value = 0.0
+			var idx = 0
+			var buffer_len = data.size()
+			var target_idx = 0
+
+			while idx < buffer_len:
+				var val = (data[int(idx)].x + data[int(idx)].y) / 2.0
+				var val_discreet = int(clamp(val * 127, -128, 127))
+				audio_buffer[audio_buffer_pos] = 0xFF & val_discreet
+
+				idx += sample_skip
+				audio_buffer_pos = min(audio_buffer_pos + 1, audio_buffer.size() - 1)
+
+
 func call_convAI_stream_with_voice():
 	if !can_send_audio_request:
 		print("Error, tried calling convai stream with voice method, but required component [HTTPFilePost addon and script] is missing.")
@@ -378,7 +433,8 @@ func call_convAI_stream_with_voice():
 	}
 	# This is the format godothttpfilepost expects:
 	#post_file(url: String, field_name: String, file_name: String, file_path: String, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = [])
-	http_file_post_request.post_file(url, "file", "audio.wav", "user://audio.wav", body, "audio/wav", voice_file_headers)
+	
+	http_file_post_request.post_file(url, "file", "audio.wav", save_path, body, "audio/wav", voice_file_headers)
 
 
 # Function to receive response to convAI's AI generation using the stream protocol and audio file prompt
@@ -437,6 +493,7 @@ func activate_voice_commands(value):
 	if value:
 		if micrecordplayer.stream == null:
 			micrecordplayer.stream = AudioStreamMicrophone.new()
+			capture_effect.clear_buffer()
 		if !micrecordplayer.playing:
 			micrecordplayer.play()
 	else:	
@@ -449,34 +506,37 @@ func activate_voice_commands(value):
 # Start voice capture		
 func start_voice_command():
 	#print ("Reading sound")
-	micrecordplayer.play()
-	record_effect.set_recording_active(true)
-		
+#	micrecordplayer.play()
+#	record_effect.set_recording_active(true)
+	if not sending and interface_enabled:
+		#print ("Reading sound")
+		sending = true
+		audio_buffer_pos = 0	
 		
 # End voice capture		
 func end_voice_command():
-	recording = record_effect.get_recording()
-	record_effect.set_recording_active(false)
-	#print ("stopped reading sound")
-	recording.set_stereo(false)
-	print(recording)
-	print(recording.format)
-	print(recording.mix_rate)
-	print(recording.stereo)
-	var data = recording.get_data()
-	print(data.size())
-	var save_path = "" 
-	if OS.has_feature("editor"):
-		save_path = "user://audio.wav"
-	elif OS.has_feature("android"):
-		save_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/" + "audio.wav"
-	else:
-		save_path = OS.get_executable_path().get_base_dir() + "/" + "audio.wav"
-	var err = recording.save_to_wav(save_path)
-	if err != OK:
-		print("error saving convai wav file, error code was: " + str(err))
-	micrecordplayer.stop()
-	call_convAI_stream_with_voice()
+	if sending:
+		#print ("Finish reading sound")
+		sending = false
+		
+		if audio_buffer_pos / target_rate > command_minlen_sec:
+			var audio_content = audio_buffer.slice(0, audio_buffer_pos * 2)
+			save_path = ""
+			if OS.has_feature("editor"):
+				save_path = "user://audio.wav"
+			elif OS.has_feature("android"):
+				save_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/audio.wav"
+			else:
+				save_path = OS.get_executable_path().get_base_dir() + "/audio.wav"
+			var new_wav_stream = AudioStreamWAV.new()
+			new_wav_stream.loop_mode = AudioStreamWAV.LOOP_DISABLED
+			new_wav_stream.stereo = false
+			new_wav_stream.mix_rate = target_rate
+			new_wav_stream.FORMAT_8_BITS
+			new_wav_stream.data = audio_content
+			var err = new_wav_stream.save_to_wav(save_path)
+			#print(err)
+			call_convAI_stream_with_voice()
 			
 					
 # Setter function for character

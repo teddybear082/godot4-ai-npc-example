@@ -23,7 +23,7 @@ signal wit_voice_sample_played
 
 @export var token: String = "insert_your_wit_api_token_here": set = set_token
 @export var microphone_gain_db: float = 1.2
-@export var command_minlen_sec: float = 0.3
+@export var command_minlen_sec: float = 0.2
 @export_range (0.1, 0.99, .01) var selected_score : float = 0.85 #Set this from 0-.99 depending on how often you want input diverted into the set intents in wit.ai; lower the value more script defers to those intents vs free text
 @export_range (1.0, 20.0, 1.0) var maxlen_sec : float = 10.0 # Max length of audio buffer for recording player speech
 # Array of standard convai voices as of creation of this script (April 2023): https://docs.convai.com/api-docs/reference/core-api-reference/standalone-voice-api/text-to-speech-api
