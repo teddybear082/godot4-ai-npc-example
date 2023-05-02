@@ -70,9 +70,7 @@ var convai_standalone_tts_voices : Array = [
 	"WUFemale 4",
 	"WUFemale 5") var convai_standalone_tts_voice_selection : String = "WUMale 1": set = set_convai_standalone_tts_voice
 #var convai_standalone_tts_voice_selection = "WUMale 1"
-#@onready var godothttpfilepost = get_node_or_null("GodotHTTPFilePost")
 @onready var godothttpfilepost = preload("res://addons/godot-httpfilepost/HTTPFilePost.gd")
-#@onready var micrecordplayer = get_node_or_null("MicRecordPlayer")
 var url = "https://api.convai.com/character/getResponse" 
 var tts_url = "https://api.convai.com/tts/"
 var headers
@@ -88,7 +86,7 @@ var http_file_post_request
 var stream_http_request : HTTPRequest
 var stored_streamed_audio : PackedByteArray = []
 # Variables for possible voice requests to server
-var can_send_audio_request : bool = true
+var can_send_audio_request : bool = false
 var record_effect : AudioEffectRecord = null
 var interface_enabled = false
 var recording
@@ -136,20 +134,16 @@ func _ready():
 	# If godothttpfilepost addon is not present, turn ability to send audio request off
 	if godothttpfilepost == null:
 		can_send_audio_request = false
-		
-	else:
-		can_send_audio_request = true
+	
+	# If can send audio request and godot file post addon is present set up file post for form-data capability	
+	if can_send_audio_request == true:
 		http_file_post_request = godothttpfilepost.new()
 		add_child(http_file_post_request)
 		http_file_post_request.timeout = 10.0
 		http_file_post_request.use_threads = true
 		http_file_post_request.connect("request_completed", Callable(self, "_on_voice_stream_request_completed"))
 	
-	# Audio request ready stuff to allow recording of microphone
-	if can_send_audio_request:
-		#var record_bus_idx = AudioServer.get_bus_index("ConvaiMicRecorder")
-		#record_effect = AudioServer.get_bus_effect(record_bus_idx, 0)
-		
+	# Audio request ready stuff to allow recording of microphone; right now this is broken because of Godot not being able to record a mono wav file, but leaving here for future potential use
 		ProjectSettings.set_setting("audio/driver/enable_input", true)
 		print("Available input devices found by Convai: " + str(AudioServer.get_input_device_list()))
 		var current_number = 0
@@ -172,7 +166,7 @@ func _ready():
 		micrecordplayer.bus = bus_name
 		micrecordplayer.stream = AudioStreamMicrophone.new()
 
-
+# Used to call normal convai API endpoint
 func call_convAI(prompt):
 	var voice_response_string : String
 	
@@ -354,6 +348,7 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 
 
 # Function to call convAI's AI generation using convAI's stream with voice protocol instead, here, this is sending an audio file recorded from the microphone above to convAI directly
+# Presently this is broken because Godot can't record a mono wav file.
 func call_convAI_stream_with_voice():
 	if !can_send_audio_request:
 		print("Error, tried calling convai stream with voice method, but required component [HTTPFilePost addon and script] is missing.")
@@ -433,8 +428,11 @@ func _on_voice_stream_request_completed(result, responseCode, headers, body):
 					emit_signal("convAI_voice_sample_played")	
 		
 		
-# This is needed to activate the voice commands in the node.
+# This is needed to activate the voice commands in the node.  Right now this is force-deactivated because not working as explained above.
 func activate_voice_commands(value):
+	if can_send_audio_request == false:
+		print("Tried to activate Convai Voice Commands but they are deactivated.")
+		return
 	interface_enabled = value
 	if value:
 		if micrecordplayer.stream == null:
@@ -459,6 +457,7 @@ func start_voice_command():
 func end_voice_command():
 	recording = record_effect.get_recording()
 	record_effect.set_recording_active(false)
+	#print ("stopped reading sound")
 	recording.set_stereo(false)
 	print(recording)
 	print(recording.format)
