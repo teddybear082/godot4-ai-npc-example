@@ -604,6 +604,37 @@ func _on_speech_player_finished():
 		emit_signal("convAI_voice_sample_played")
 	
 	
+func call_convai_speech_to_text_standalone(speechfile_path):
+	var http_post_new = godothttpfilepost.new()
+	add_child(http_post_new)
+	http_post_new.connect("request_completed", Callable(self, "_convai_speech_to_text_request_completed"))
+	var body = {
+		"enableTimestamps": "False",
+	}
+	# This is the format godothttpfilepost expects:
+	#post_file(url: String, field_name: String, file_name: String, file_path: String, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = [])
+	
+	http_file_post_request.post_file("https://api.convai.com/stt/", "file", "audio.wav", speechfile_path, body, "audio/wav", voice_file_headers)
+	
+	
+# Receiver function for standalone convai speech to text
+func convai_speech_to_text_standalone(result, responseCode, headers, body):
+	# Should recieve 200 if all is fine; if not print code
+	if responseCode != 200:
+		print("There was an error with ConvAI's standalone speech to text response, response code:" + str(responseCode))
+		print(result)
+		print(headers)
+		print(body.get_string_from_utf8())
+		return
+	
+	var data = body.get_string_from_utf8()
+	print ("Data received: %s"%data)
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(data)
+	var response = test_json_conv.get_data()
+	var convai_text_from_speech = response["text"]	
+	print("convai generated this text from speech: " + convai_text_from_speech)
+
 #If needed someday
 func fix_chunked_response(data):
 	var tmp = data.replace("}\r\n{","},\n{")

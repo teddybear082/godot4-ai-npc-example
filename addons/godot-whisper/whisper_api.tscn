@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7w6h7i10rgiy"]
+
+[ext_resource type="Script" path="res://addons/godot-whisper/WhisperAPI.gd" id="1_c36tp"]
+
+[node name="WhisperAPI" type="Node"]
+script = ExtResource("1_c36tp")
