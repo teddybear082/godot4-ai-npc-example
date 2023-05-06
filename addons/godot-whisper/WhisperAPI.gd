@@ -128,6 +128,7 @@ func _on_whisper_request_completed(result, responseCode, headers, body):
 		
 # This is needed to activate the voice commands in the node.  Right now this is force-deactivated because not working as explained above.
 func activate_voice_commands(value):
+	print("WhisperAPI voice commands activated")
 	if can_send_audio_request == false:
 		print("Tried to activate Convai Voice Commands but they are deactivated.")
 		return

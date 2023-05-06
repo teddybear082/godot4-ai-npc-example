@@ -39,7 +39,8 @@ enum text_to_speech_type {
 # Enum for AI brain choice
 enum ai_brain_type {
 	CONVAI,
-	GPTTURBO
+	GPTTURBO,
+	GPT4ALL
 }
 
 # Export for speech to text type
@@ -62,6 +63,7 @@ enum ai_brain_type {
 @onready var convai_node = get_node("GodotConvAI")
 @onready var eleven_labs_tts_node = get_node("ElevenLabsTTS")
 @onready var whisper_api_node = get_node("WhisperAPI")
+@onready var gpt4all_node = get_node("GPT4All")
 @onready var placeholder_sound_player = get_node("PlaceholderSoundPlayer")
 
 # Variable used to determine if player can use proximity interaction
@@ -122,6 +124,9 @@ func _ready():
 	
 	# Connect whisper speech to text received signal to handler function
 	whisper_api_node.connect("whisper_speech_to_text_received", Callable(self, "_on_whisper_processed"))
+	
+	# Connect AI response generated signal from GPT4All to handler function
+	gpt4all_node.connect("AI_response_generated", Callable(self, "_on_gpt4all_processed"))
 	
 	# If using config file to load keys and options, set those here
 	if use_config_file == true:
@@ -201,6 +206,11 @@ func _ready():
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
 	
+	# Testing only - GPT4all
+#	await get_tree().create_timer(10.0).timeout
+#	var thread = Thread.new()
+#	var err = thread.start(Callable($GPT4All, "call_GPT4All").bind("What do you think of Alyx Vance?"))
+	
 			
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
@@ -276,8 +286,13 @@ func _on_wit_ai_processed(prompt : String):
 			convai_node.call_convAI(prompt)
 		else:
 			convai_node.call_convAI_stream(prompt)
-	else:
+	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
+	else:
+		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
+		# To do: investigate mutex and semaphores
+		var thread = Thread.new()
+		var err = thread.start(Callable($GPT4All, "call_GPT4All").bind(prompt))
 
 
 # Function called when GPT 3.5 turbo finishes processes AI dialogue response, use text_to_speech addon node, Eleven AI or ConvAI to play the audio response	
@@ -299,7 +314,7 @@ func _on_convai_processed(dialogue : String):
 	mic_active_label3D.visible = false
 	if text_to_speech_choice == text_to_speech_type.GODOT:
 		# The false argument here is optional, if true you can interrupt dialogue, with false, allows streaming in advance of text for speech.  Waiting for Godot 4.1 to fully fix streaming responses.
-		DisplayServer.tts_speak(dialogue, voice_id, 50, 1.0, 1.2, false)
+		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
 	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
 	elif text_to_speech_choice == text_to_speech_type.WIT:
@@ -309,6 +324,19 @@ func _on_convai_processed(dialogue : String):
 		pass
 
 
+# Function called when GPT4All finishes processing AI response, use the text it produces to call text to speech
+func _on_gpt4all_processed(dialogue: String):
+	mic_active_label3D.visible = false
+	if text_to_speech_choice == text_to_speech_type.GODOT:
+		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
+	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
+		eleven_labs_tts_node.call_ElevenLabs(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.WIT:
+		wit_ai_node.call_wit_TTS(dialogue)
+	else:
+		convai_node.call_convAI_TTS(dialogue)	
+
+
 # Function called when whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_whisper_processed(prompt: String):
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
@@ -316,9 +344,13 @@ func _on_whisper_processed(prompt: String):
 			convai_node.call_convAI(prompt)
 		else:
 			convai_node.call_convAI_stream(prompt)
-	else:
+	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
-	
+	else:
+		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
+		# To do: investigate mutex and semaphores
+		var thread = Thread.new()
+		var err = thread.start(Callable($GPT4All, "call_GPT4All").bind(prompt))
 
 # Saver function, saving options to config file
 func save_api_info():
