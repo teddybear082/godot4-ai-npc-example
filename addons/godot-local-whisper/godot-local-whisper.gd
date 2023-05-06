@@ -9,13 +9,12 @@ signal whisper_speech_to_text_received(text)
 var micrecordplayer : AudioStreamPlayer
 var record_effect : AudioEffectRecord = null
 var interface_enabled : bool = false
-var recording
 var save_path : String
 var executable_path : String
 var model_path : String
 var Whisper_executable : String
-var arguments : Array
-var output : Array = []
+
+
 func _ready():
 	# Audio request ready stuff to allow recording of microphone
 	var current_number = 0
@@ -53,18 +52,20 @@ func _ready():
 # Function to call local whisper install for transcription
 func call_local_whisper(audiofilepath):
 	print("calling local whisper with audio file prompt")
-	arguments = ["-m", model_path, "-f", audiofilepath]
+	var arguments = ["-m", model_path, "-f", audiofilepath]
 	#print(Whisper_executable)
 	#print(arguments)
-	var exit_code = OS.execute(Whisper_executable, arguments, output, true, false)
+	var output = []
+	var exit_code = OS.execute(Whisper_executable, arguments, output, true, true)
 	var response = output[0]
 	#print(response)
 	var response_after_timestamp = response.get_slice_count("]")
 	var text_after_timestamp = response.get_slice("]", response_after_timestamp-1)
 	#print(text_after_timestamp)
 	var final_text = text_after_timestamp.get_slice("whisper_print_timings", 0)
-	print(final_text)
-	emit_signal("whisper_speech_to_text_received", final_text)
+	var final_text_cleaned = final_text.strip_edges()
+	print(final_text_cleaned)
+	emit_signal("whisper_speech_to_text_received", final_text_cleaned)
 		
 		
 # This is needed to activate the voice commands in the node.
@@ -85,14 +86,18 @@ func activate_voice_commands(value):
 # Start voice capture		
 func start_voice_command():
 	print ("Reading sound")
+	if !micrecordplayer.playing:
+		micrecordplayer.play()
 	record_effect.set_recording_active(true)
 		
 		
 # End voice capture		
 func end_voice_command():
 	print("stop reading sound")
-	recording = record_effect.get_recording()
+	var recording = record_effect.get_recording()
+	await get_tree().create_timer(1.0).timeout
 	record_effect.set_recording_active(false)
+	micrecordplayer.stop()
 #	print(recording)
 #	print(recording.format)
 #	print(recording.mix_rate)
@@ -110,6 +115,7 @@ func end_voice_command():
 	else:
 		save_path = OS.get_executable_path().get_base_dir().path_join("local_whisper_audio.wav")
 	var check_ok = recording.save_to_wav(save_path)
+	#print(check_ok)
 	var thread = Thread.new()
 	var err = thread.start(Callable(self, "call_local_whisper").bind(save_path))
 			

@@ -309,7 +309,7 @@ func _on_wit_ai_processed(prompt : String):
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
-		var err = thread.start(Callable($GPT4All, "call_GPT4All").bind(prompt))
+		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
 
 
 # Function called when GPT 3.5 turbo finishes processes AI dialogue response, use text_to_speech addon node, Eleven AI or ConvAI to play the audio response	
@@ -367,7 +367,7 @@ func _on_whisper_processed(prompt: String):
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
-		var err = thread.start(Callable($GPT4All, "call_GPT4All").bind(prompt))
+		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
 
 # Function called when local whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_local_whisper_processed(prompt: String):
@@ -382,7 +382,7 @@ func _on_local_whisper_processed(prompt: String):
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
-		var err = thread.start(Callable($GPT4All, "call_GPT4All").bind(prompt))
+		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
 
 # Saver function, saving options to config file
 func save_api_info():

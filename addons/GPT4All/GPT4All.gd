@@ -16,8 +16,6 @@ signal AI_response_generated(response)
 var executable_path : String
 var GPT4Allexecutable : String
 var model_path : String
-var output = []
-var arguments : Array
 var json_path : String
 var prompt_template_path : String
 
@@ -39,14 +37,16 @@ func _ready():
 
 # Call to local GPT4All model - thanks so much to derkork on godot discord for helping me figure out OS.execute arguments
 func call_GPT4All(prompt):
-	arguments = ["-m", model_path, "-j", json_path, "-p", prompt, "--load_template", prompt_template_path]
-	print(GPT4Allexecutable)
+	var arguments = ["-m", model_path, "-j", json_path, "-p", prompt, "--load_template", prompt_template_path]
+	#print(GPT4Allexecutable)
 	#print(arguments)
+	var output = []
 	var exit_code = OS.execute(GPT4Allexecutable, arguments, output, true, false)
 	var response = output[0].get_slice(prompt, 1)
 	#print(response)
 	var last_part_of_response = response.get_slice_count(":")
 	#print(last_part_of_response)
 	var final_response = response.get_slice(":", last_part_of_response-1)
+	#var final_response_without_breaks = final_response.final_response.replace("\\r\\n", "")
 	print(final_response)
 	emit_signal("AI_response_generated", final_response)

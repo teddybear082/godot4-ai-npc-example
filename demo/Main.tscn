@@ -433,6 +433,7 @@ font_size = 62
 autowrap_mode = 2
 
 [node name="GodotConvAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("29")]
+use_standalone_text_to_speech = true
 
 [node name="ElevenLabsTTS" parent="Godot-AI-NPC-Controller" instance=ExtResource("30")]
 
