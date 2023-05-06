@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://dpsjlwa7mye4o"]
+[gd_scene load_steps=46 format=3 uid="uid://dpsjlwa7mye4o"]
 
 [ext_resource type="PackedScene" uid="uid://de75036o5g1q6" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-medium.glb" id="2"]
 [ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
@@ -31,7 +31,8 @@
 [ext_resource type="PackedScene" uid="uid://c7w6h7i10rgiy" path="res://addons/godot-whisper/whisper_api.tscn" id="29_cfp6j"]
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="29_msa3g"]
 [ext_resource type="PackedScene" path="res://addons/godot-elevenlabs-tts/ElevenLabsTTS.tscn" id="30"]
-[ext_resource type="Script" path="res://addons/GPT4All/GPT4All.gd" id="30_x56gy"]
+[ext_resource type="PackedScene" uid="uid://cqcujpqemwwf3" path="res://addons/GPT4All/gpt4all.tscn" id="30_snwds"]
+[ext_resource type="PackedScene" uid="uid://blv5csr270whi" path="res://addons/godot-local-whisper/local_whisper.tscn" id="31_v58ok"]
 
 [sub_resource type="BoxMesh" id="1"]
 size = Vector3(10, 0.25, 10)
@@ -437,8 +438,9 @@ autowrap_mode = 2
 
 [node name="WhisperAPI" parent="Godot-AI-NPC-Controller" instance=ExtResource("29_cfp6j")]
 
-[node name="GPT4All" type="Node" parent="Godot-AI-NPC-Controller"]
-script = ExtResource("30_x56gy")
+[node name="GPT4All" parent="Godot-AI-NPC-Controller" instance=ExtResource("30_snwds")]
+
+[node name="LocalWhisper" parent="Godot-AI-NPC-Controller" instance=ExtResource("31_v58ok")]
 
 [node name="PlaceholderSoundPlayer" type="AudioStreamPlayer" parent="Godot-AI-NPC-Controller"]
 

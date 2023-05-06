@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqcujpqemwwf3"]
+
+[ext_resource type="Script" path="res://addons/GPT4All/GPT4All.gd" id="1_fgm08"]
+
+[node name="GPT4All" type="Node"]
+script = ExtResource("1_fgm08")

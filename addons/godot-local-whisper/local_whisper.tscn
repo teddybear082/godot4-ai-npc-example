@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://blv5csr270whi"]
+
+[ext_resource type="Script" path="res://addons/godot-local-whisper/godot-local-whisper.gd" id="1_g3vt0"]
+
+[node name="LocalWhisper" type="Node"]
+script = ExtResource("1_g3vt0")

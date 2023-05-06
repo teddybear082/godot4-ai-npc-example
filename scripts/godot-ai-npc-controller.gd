@@ -25,7 +25,8 @@ signal options_loaded
 enum speech_to_text_type {
 	WIT,
 	CONVAI,
-	WHISPER
+	WHISPER,
+	LOCALWHISPER
 }
 
 # Enum for text to speech choice
@@ -64,6 +65,7 @@ enum ai_brain_type {
 @onready var eleven_labs_tts_node = get_node("ElevenLabsTTS")
 @onready var whisper_api_node = get_node("WhisperAPI")
 @onready var gpt4all_node = get_node("GPT4All")
+@onready var local_whisper_node = get_node("LocalWhisper")
 @onready var placeholder_sound_player = get_node("PlaceholderSoundPlayer")
 
 # Variable used to determine if player can use proximity interaction
@@ -128,6 +130,9 @@ func _ready():
 	# Connect AI response generated signal from GPT4All to handler function
 	gpt4all_node.connect("AI_response_generated", Callable(self, "_on_gpt4all_processed"))
 	
+	# Connect local whisper speech to text received signal to handler function
+	local_whisper_node.connect("whisper_speech_to_text_received", Callable(self, "_on_local_whisper_processed"))
+	
 	# If using config file to load keys and options, set those here
 	if use_config_file == true:
 		# Set wit.ai API key
@@ -189,9 +194,13 @@ func _ready():
 		# Activate wit ai voice commands
 		wit_ai_node.activate_voice_commands(true)
 		
-	else:
+	elif speech_to_text_choice == speech_to_text_type.WHISPER:
 		# Activate GPT Whisper speech to text
 		whisper_api_node.activate_voice_commands(true)
+		
+	else:
+		# Activate local whisper speech to text (only works on windows)
+		local_whisper_node.activate_voice_commands(true)
 		
 	# If text to speech mode is convai, then if ConvAI is the AI brain, make sure its voice response mode is set to true, otherwise make sure to use standalone convAI TTS function
 	if text_to_speech_choice == text_to_speech_type.CONVAI:
@@ -224,6 +233,8 @@ func _on_player_controller_button_pressed(button):
 			convai_node.start_voice_command()
 		elif speech_to_text_choice == speech_to_text_type.WHISPER:
 			whisper_api_node.start_voice_command()
+		else:
+			local_whisper_node.start_voice_command()
 		mic_active = true
 		mic_active_label3D.text = mic_recording_text
 		mic_active_label3D.visible = true
@@ -237,6 +248,8 @@ func _on_player_controller_button_pressed(button):
 			convai_node.end_voice_command()
 		elif speech_to_text_choice == speech_to_text_type.WHISPER:
 			whisper_api_node.end_voice_command()
+		else:
+			local_whisper_node.end_voice_command()
 		mic_active = false
 		return
 	
@@ -264,6 +277,8 @@ func _on_npc_area_interaction_area_clicked(location):
 			convai_node.end_voice_command()
 		elif speech_to_text_choice == speech_to_text_type.WHISPER:
 			whisper_api_node.end_voice_command()
+		else:
+			local_whisper_node.end_voice_command()
 		mic_active = false
 		mic_active_label3D.text = waiting_text
 	# Otherwise, start voice command and display mic recording notification to user	
@@ -274,6 +289,8 @@ func _on_npc_area_interaction_area_clicked(location):
 			convai_node.start_voice_command()
 		elif speech_to_text_choice == speech_to_text_type.WHISPER:
 			whisper_api_node.start_voice_command()
+		else:
+			local_whisper_node.start_voice_command()
 		mic_active = true
 		mic_active_label3D.text = mic_recording_text
 		mic_active_label3D.visible = true
@@ -339,6 +356,21 @@ func _on_gpt4all_processed(dialogue: String):
 
 # Function called when whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_whisper_processed(prompt: String):
+	if ai_brain_type_choice == ai_brain_type.CONVAI:
+		if use_convai_stream_mode == false:
+			convai_node.call_convAI(prompt)
+		else:
+			convai_node.call_convAI_stream(prompt)
+	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
+		gpt_node.call_GPT(prompt)
+	else:
+		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
+		# To do: investigate mutex and semaphores
+		var thread = Thread.new()
+		var err = thread.start(Callable($GPT4All, "call_GPT4All").bind(prompt))
+
+# Function called when local whisper finishes processing speech to text, use the text it produces to call AI brain
+func _on_local_whisper_processed(prompt: String):
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
