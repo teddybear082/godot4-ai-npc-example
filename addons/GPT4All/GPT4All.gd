@@ -31,7 +31,8 @@ func _ready():
 	else:
 		executable_path = OS.get_executable_path().get_base_dir()
 	GPT4Allexecutable = executable_path.path_join("chat.exe")
-	model_path = executable_path.path_join("ggml-gpt4all-j-v1.3-groovy.bin")
+	#model_path = executable_path.path_join("ggml-gpt4all-j-v1.3-groovy.bin")
+	model_path = executable_path.path_join("ggml-gpt4all-l13b-snoozy.bin")
 	json_path = executable_path.path_join("groovy.json")
 	prompt_template_path = executable_path.path_join("prompt-template.txt")
 
@@ -47,6 +48,9 @@ func call_GPT4All(prompt):
 	var last_part_of_response = response.get_slice_count(":")
 	#print(last_part_of_response)
 	var final_response = response.get_slice(":", last_part_of_response-1)
-	#var final_response_without_breaks = final_response.final_response.replace("\\r\\n", "")
-	print(final_response)
-	emit_signal("AI_response_generated", final_response)
+	#print(final_response.c_escape())
+	var final_response_without_breaks = final_response.replace("\n", "")
+	var final_response_without_returns = final_response_without_breaks.replace("\r", "")
+	var final_response_clean = final_response_without_returns.replace("#", "")
+	print(final_response_clean)
+	emit_signal("AI_response_generated", final_response_clean)

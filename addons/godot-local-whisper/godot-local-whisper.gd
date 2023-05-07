@@ -56,7 +56,7 @@ func call_local_whisper(audiofilepath):
 	#print(Whisper_executable)
 	#print(arguments)
 	var output = []
-	var exit_code = OS.execute(Whisper_executable, arguments, output, true, true)
+	var exit_code = OS.execute(Whisper_executable, arguments, output, true, false)
 	var response = output[0]
 	#print(response)
 	var response_after_timestamp = response.get_slice_count("]")

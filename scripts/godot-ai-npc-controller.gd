@@ -215,12 +215,7 @@ func _ready():
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
 	
-	# Testing only - GPT4all
-#	await get_tree().create_timer(10.0).timeout
-#	var thread = Thread.new()
-#	var err = thread.start(Callable($GPT4All, "call_GPT4All").bind("What do you think of Alyx Vance?"))
 	
-			
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
 	if button != activate_mic_button:
