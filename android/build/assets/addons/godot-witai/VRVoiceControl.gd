@@ -131,6 +131,7 @@ func _ready():
 		
 # This is needed to activate the voice commands in the node.
 func activate_voice_commands(value):
+	print("WitAI voice commands activated.")
 	interface_enabled = value
 	if value:
 		if audio_player.stream == null:

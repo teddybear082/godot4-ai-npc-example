@@ -58,3 +58,6 @@ func _ready():
 	if OS.has_feature("android") and $StartXR.enable_passthrough == true:
 		building.visible = false
 		building_floor.visible = false
+		$Building/Colliders/Barriers.queue_free()
+		$Building/Colliders/Boxes.queue_free()
+		$Building/Colliders/Conveyor.queue_free()

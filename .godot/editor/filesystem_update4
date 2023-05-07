@@ -3,5 +3,5 @@ res://demo/Main.tscn
 res://assets/materials/floormaterial.tres
 res://addons/godot-xr-tools/hands/animations/left/hand_blend_tree.tres
 res://addons/godot-xr-tools/hands/animations/right/hand_blend_tree.tres
+res://addons/godot-local-whisper/godot-local-whisper.gd
 res://addons/GPT4All/GPT4All.gd
-res://scripts/godot-ai-npc-controller.gd

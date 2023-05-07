@@ -42,6 +42,7 @@ func _ready():
 	# This script will not work on android right now - maybe someday there will be an android release of GPT4All!
 	elif OS.has_feature("android"):
 		print("Whisper local option will not function on android.")
+		executable_path = OS.get_executable_path()
 	# Gets executable path if running outside of editor
 	else:
 		executable_path = OS.get_executable_path().get_base_dir()

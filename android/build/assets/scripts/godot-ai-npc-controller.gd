@@ -20,12 +20,14 @@ signal options_loaded
 # Variable for text to display while waiting for response
 @export var waiting_text: String = "Waiting for response..."
 
+
 # Enum for speech to text choice - note, if convai is chosen, convai will automatically be set as brain
 # To-Do - add OpenAI Whisper as an option
 enum speech_to_text_type {
 	WIT,
 	CONVAI,
-	WHISPER
+	WHISPER,
+	LOCALWHISPER
 }
 
 # Enum for text to speech choice
@@ -39,7 +41,8 @@ enum text_to_speech_type {
 # Enum for AI brain choice
 enum ai_brain_type {
 	CONVAI,
-	GPTTURBO
+	GPTTURBO,
+	GPT4ALL
 }
 
 # Export for speech to text type
@@ -62,6 +65,8 @@ enum ai_brain_type {
 @onready var convai_node = get_node("GodotConvAI")
 @onready var eleven_labs_tts_node = get_node("ElevenLabsTTS")
 @onready var whisper_api_node = get_node("WhisperAPI")
+@onready var gpt4all_node = get_node("GPT4All")
+@onready var local_whisper_node = get_node("LocalWhisper")
 @onready var placeholder_sound_player = get_node("PlaceholderSoundPlayer")
 
 # Variable used to determine if player can use proximity interaction
@@ -88,6 +93,7 @@ var eleven_labs_character_code : String
 var wit_ai_tts_voice : String
 var wit_ai_tts_speed : int
 var wit_ai_tts_pitch : int
+var gpt4all_model_name : String
 var config_text_to_speech_choice
 var config_ai_brain_type_choice
 var config_speech_to_text_choice
@@ -110,6 +116,7 @@ func _ready():
 	if !OS.has_feature("android"):
 		voices = DisplayServer.tts_get_voices_for_language("en")
 		voice_id = voices[0]
+		DisplayServer.tts_set_utterance_callback(DisplayServer.TTS_UTTERANCE_STARTED, Callable(self, "_on_voice_played"))
 
 	# Connect wit ai speech to text received signal to handler function
 	wit_ai_node.connect("wit_ai_speech_to_text_received", Callable(self, "_on_wit_ai_processed"))
@@ -123,6 +130,22 @@ func _ready():
 	# Connect whisper speech to text received signal to handler function
 	whisper_api_node.connect("whisper_speech_to_text_received", Callable(self, "_on_whisper_processed"))
 	
+	# Connect AI response generated signal from GPT4All to handler function
+	gpt4all_node.connect("AI_response_generated", Callable(self, "_on_gpt4all_processed"))
+	
+	# Connect local whisper speech to text received signal to handler function
+	local_whisper_node.connect("whisper_speech_to_text_received", Callable(self, "_on_local_whisper_processed"))
+	
+	# Connect voice played signal from Wit ai
+	wit_ai_node.connect("wit_voice_sample_played", Callable(self, "_on_voice_played"))
+	
+	# Connect voice played signal from Convai
+	convai_node.connect("convAI_voice_sample_played", Callable(self, "_on_voice_played"))
+	
+	# Connect voice played signal from ElevenLabs
+	eleven_labs_tts_node.connect("ElevenLabs_generated_speech", Callable(self, "_on_voice_played"))
+	
+	#Connect 
 	# If using config file to load keys and options, set those here
 	if use_config_file == true:
 		# Set wit.ai API key
@@ -169,6 +192,9 @@ func _ready():
 		#Set Whisper API key
 		whisper_api_node.set_api_key(whisper_api_key)
 		
+		#Set GPT4All model
+		gpt4all_node.set_model(gpt4all_model_name)
+		
 		# Set own options
 		text_to_speech_choice = config_text_to_speech_choice
 		ai_brain_type_choice = config_ai_brain_type_choice
@@ -184,9 +210,13 @@ func _ready():
 		# Activate wit ai voice commands
 		wit_ai_node.activate_voice_commands(true)
 		
-	else:
+	elif speech_to_text_choice == speech_to_text_type.WHISPER:
 		# Activate GPT Whisper speech to text
 		whisper_api_node.activate_voice_commands(true)
+		
+	else:
+		# Activate local whisper speech to text (only works on windows)
+		local_whisper_node.activate_voice_commands(true)
 		
 	# If text to speech mode is convai, then if ConvAI is the AI brain, make sure its voice response mode is set to true, otherwise make sure to use standalone convAI TTS function
 	if text_to_speech_choice == text_to_speech_type.CONVAI:
@@ -201,7 +231,7 @@ func _ready():
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
 	
-			
+	
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
 	if button != activate_mic_button:
@@ -214,6 +244,8 @@ func _on_player_controller_button_pressed(button):
 			convai_node.start_voice_command()
 		elif speech_to_text_choice == speech_to_text_type.WHISPER:
 			whisper_api_node.start_voice_command()
+		else:
+			local_whisper_node.start_voice_command()
 		mic_active = true
 		mic_active_label3D.text = mic_recording_text
 		mic_active_label3D.visible = true
@@ -227,6 +259,8 @@ func _on_player_controller_button_pressed(button):
 			convai_node.end_voice_command()
 		elif speech_to_text_choice == speech_to_text_type.WHISPER:
 			whisper_api_node.end_voice_command()
+		else:
+			local_whisper_node.end_voice_command()
 		mic_active = false
 		return
 	
@@ -254,6 +288,8 @@ func _on_npc_area_interaction_area_clicked(location):
 			convai_node.end_voice_command()
 		elif speech_to_text_choice == speech_to_text_type.WHISPER:
 			whisper_api_node.end_voice_command()
+		else:
+			local_whisper_node.end_voice_command()
 		mic_active = false
 		mic_active_label3D.text = waiting_text
 	# Otherwise, start voice command and display mic recording notification to user	
@@ -264,6 +300,8 @@ func _on_npc_area_interaction_area_clicked(location):
 			convai_node.start_voice_command()
 		elif speech_to_text_choice == speech_to_text_type.WHISPER:
 			whisper_api_node.start_voice_command()
+		else:
+			local_whisper_node.start_voice_command()
 		mic_active = true
 		mic_active_label3D.text = mic_recording_text
 		mic_active_label3D.visible = true
@@ -271,19 +309,26 @@ func _on_npc_area_interaction_area_clicked(location):
 
 # Function called when wit.ai finishes processing speech to text, use the text it produces to call GPT	
 func _on_wit_ai_processed(prompt : String):
+	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
 		else:
 			convai_node.call_convAI_stream(prompt)
-	else:
+	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
+	else:
+		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
+		# To do: investigate mutex and semaphores
+		var thread = Thread.new()
+		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
 
 
 # Function called when GPT 3.5 turbo finishes processes AI dialogue response, use text_to_speech addon node, Eleven AI or ConvAI to play the audio response	
 # If you are using a different text to speech solution, the command to call it could be used here instead.
 func _on_gpt_3_5_turbo_processed(dialogue : String):
-	mic_active_label3D.visible = false
+	#mic_active_label3D.visible = false
+	mic_active_label3D.text = "Response: " + dialogue
 	if text_to_speech_choice == text_to_speech_type.GODOT:
 		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
 	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
@@ -296,10 +341,11 @@ func _on_gpt_3_5_turbo_processed(dialogue : String):
 
 # Function called when convAI finishes processes AI dialogue response, use Convai node, text_to_speech addon node or Eleven Labs to play the audio response depending on user choice	
 func _on_convai_processed(dialogue : String):
-	mic_active_label3D.visible = false
+	#mic_active_label3D.visible = false
+	mic_active_label3D.text = "Response: " + dialogue
 	if text_to_speech_choice == text_to_speech_type.GODOT:
 		# The false argument here is optional, if true you can interrupt dialogue, with false, allows streaming in advance of text for speech.  Waiting for Godot 4.1 to fully fix streaming responses.
-		DisplayServer.tts_speak(dialogue, voice_id, 50, 1.0, 1.2, false)
+		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
 	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
 	elif text_to_speech_choice == text_to_speech_type.WIT:
@@ -309,17 +355,58 @@ func _on_convai_processed(dialogue : String):
 		pass
 
 
+# Function called when GPT4All finishes processing AI response, use the text it produces to call text to speech
+func _on_gpt4all_processed(dialogue: String):
+	#mic_active_label3D.visible = false
+	mic_active_label3D.text = "Response: " + dialogue
+	if text_to_speech_choice == text_to_speech_type.GODOT:
+		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
+	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
+		eleven_labs_tts_node.call_ElevenLabs(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.WIT:
+		wit_ai_node.call_wit_TTS(dialogue)
+	else:
+		convai_node.call_convAI_TTS(dialogue)	
+
+
 # Function called when whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_whisper_processed(prompt: String):
+	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
 		else:
 			convai_node.call_convAI_stream(prompt)
-	else:
+	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
-	
+	else:
+		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
+		# To do: investigate mutex and semaphores
+		var thread = Thread.new()
+		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
 
+
+# Function called when local whisper finishes processing speech to text, use the text it produces to call AI brain
+func _on_local_whisper_processed(prompt: String):
+	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
+	if ai_brain_type_choice == ai_brain_type.CONVAI:
+		if use_convai_stream_mode == false:
+			convai_node.call_convAI(prompt)
+		else:
+			convai_node.call_convAI_stream(prompt)
+	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
+		gpt_node.call_GPT(prompt)
+	else:
+		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
+		# To do: investigate mutex and semaphores
+		var thread = Thread.new()
+		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
+
+# Receiver function for whenever AI voice is played
+func _on_voice_played():
+	mic_active_label3D.visible = false
+	
+	
 # Saver function, saving options to config file
 func save_api_info():
 	# Save convai session id if using convai for possible persistence between sessions
@@ -364,6 +451,7 @@ func save_api_info():
 		prefs_cfg.set_value("wit_options", "wit_ai_tts_voice", wit_ai_tts_voice)
 		prefs_cfg.set_value("wit_options", "wit_ai_tts_speed", wit_ai_tts_speed)
 		prefs_cfg.set_value("wit_options", "wit_ai_tts_pitch", wit_ai_tts_pitch)
+		prefs_cfg.set_value("gpt4all_options", "gpt4all_model_name", gpt4all_model_name)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_choice)
@@ -414,6 +502,7 @@ func load_api_info():
 		wit_ai_tts_speed = prefs_cfg.get_value("wit_options", "wit_ai_tts_speed", 100)
 		wit_ai_tts_pitch = prefs_cfg.get_value("wit_options", "wit_ai_tts_pitch", 100)
 		whisper_api_key = prefs_cfg.get_value("api_keys", "whisper_api_key", "insert your whisper api key")
+		gpt4all_model_name = prefs_cfg.get_value("gpt4all_options", "gpt4all_model_name", "ggml-gpt4all-l13b-snoozy.bin")
 		config_text_to_speech_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_type.CONVAI)
 		config_ai_brain_type_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type.CONVAI)
 		config_speech_to_text_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_type.CONVAI)
