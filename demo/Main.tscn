@@ -412,26 +412,6 @@ wit_tts_voice_selection = "Prospector"
 
 [node name="GodotGPT35Turbo" parent="Godot-AI-NPC-Controller" instance=ExtResource("23")]
 
-[node name="InteractLabel3D" type="Label3D" parent="Godot-AI-NPC-Controller"]
-transform = Transform3D(0.00153585, 0, 0.999999, 0, 1, 0, -0.999999, 0, 0.00153585, -3.06764, 2.15063, 9.31323e-10)
-visible = false
-pixel_size = 0.001
-billboard = 2
-text = "In NPC proximity. Press B / Y to talk."
-font = ExtResource("19")
-font_size = 64
-autowrap_mode = 2
-
-[node name="MicActiveLabel3D" type="Label3D" parent="Godot-AI-NPC-Controller"]
-transform = Transform3D(0.602595, 0, 0.798047, 0, 1, 0, -0.798047, 0, 0.602595, -2.48017, 1.21867, -1.32777)
-visible = false
-pixel_size = 0.001
-modulate = Color(0.882353, 0.0431373, 0.160784, 1)
-text = "Mic recording..."
-font = SubResource("11")
-font_size = 62
-autowrap_mode = 2
-
 [node name="GodotConvAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("29")]
 use_standalone_text_to_speech = true
 
@@ -442,6 +422,27 @@ use_standalone_text_to_speech = true
 [node name="GPT4All" parent="Godot-AI-NPC-Controller" instance=ExtResource("30_snwds")]
 
 [node name="LocalWhisper" parent="Godot-AI-NPC-Controller" instance=ExtResource("31_v58ok")]
+
+[node name="MicActiveLabel3D" type="Label3D" parent="Godot-AI-NPC-Controller"]
+transform = Transform3D(0.602595, 0, 0.798047, 0, 1, 0, -0.798047, 0, 0.602595, -1.88246, 1.63711, -2.16239)
+visible = false
+pixel_size = 0.001
+modulate = Color(0.882353, 0.0431373, 0.160784, 1)
+text = "Mic recording..."
+font = SubResource("11")
+font_size = 62
+autowrap_mode = 2
+width = 1000.0
+
+[node name="InteractLabel3D" type="Label3D" parent="Godot-AI-NPC-Controller"]
+transform = Transform3D(0.00153585, 0, 0.999999, 0, 1, 0, -0.999999, 0, 0.00153585, -3.06764, 2.15063, 9.31323e-10)
+visible = false
+pixel_size = 0.001
+billboard = 2
+text = "In NPC proximity. Press B / Y to talk."
+font = ExtResource("19")
+font_size = 64
+autowrap_mode = 2
 
 [node name="PlaceholderSoundPlayer" type="AudioStreamPlayer" parent="Godot-AI-NPC-Controller"]
 

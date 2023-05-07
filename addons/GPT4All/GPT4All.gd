@@ -33,17 +33,18 @@ func _ready():
 	GPT4Allexecutable = executable_path.path_join("chat.exe")
 	#model_path = executable_path.path_join("ggml-gpt4all-j-v1.3-groovy.bin")
 	model_path = executable_path.path_join("ggml-gpt4all-l13b-snoozy.bin")
-	json_path = executable_path.path_join("groovy.json")
-	prompt_template_path = executable_path.path_join("prompt-template.txt")
+	json_path = executable_path.path_join("gpt4all.json")
+	prompt_template_path = executable_path.path_join("prompt_template.txt")
 
 # Call to local GPT4All model - thanks so much to derkork on godot discord for helping me figure out OS.execute arguments
 func call_GPT4All(prompt):
 	var arguments = ["-m", model_path, "-j", json_path, "-p", prompt, "--load_template", prompt_template_path]
-	#print(GPT4Allexecutable)
+	print(GPT4Allexecutable)
 	#print(arguments)
 	var output = []
 	var exit_code = OS.execute(GPT4Allexecutable, arguments, output, true, false)
 	var response = output[0].get_slice(prompt, 1)
+	#print(output)
 	#print(response)
 	var last_part_of_response = response.get_slice_count(":")
 	#print(last_part_of_response)
@@ -54,3 +55,8 @@ func call_GPT4All(prompt):
 	var final_response_clean = final_response_without_returns.replace("#", "")
 	print(final_response_clean)
 	emit_signal("AI_response_generated", final_response_clean)
+
+
+# Function to set model name
+func set_model(new_model_name : String):
+	model_path = executable_path.path_join(new_model_name)
