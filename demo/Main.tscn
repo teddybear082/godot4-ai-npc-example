@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://dpsjlwa7mye4o"]
+[gd_scene load_steps=48 format=3 uid="uid://dpsjlwa7mye4o"]
 
 [ext_resource type="PackedScene" uid="uid://de75036o5g1q6" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-medium.glb" id="2"]
 [ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
@@ -33,6 +33,8 @@
 [ext_resource type="PackedScene" path="res://addons/godot-elevenlabs-tts/ElevenLabsTTS.tscn" id="30"]
 [ext_resource type="PackedScene" uid="uid://cqcujpqemwwf3" path="res://addons/GPT4All/gpt4all.tscn" id="30_snwds"]
 [ext_resource type="PackedScene" uid="uid://blv5csr270whi" path="res://addons/godot-local-whisper/local_whisper.tscn" id="31_v58ok"]
+[ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="32_h8v3t"]
+[ext_resource type="PackedScene" uid="uid://dcjdrl3ldtps2" path="res://demo/Options2D.tscn" id="33_m67ws"]
 
 [sub_resource type="BoxMesh" id="1"]
 size = Vector3(10, 0.25, 10)
@@ -445,6 +447,14 @@ font_size = 64
 autowrap_mode = 2
 
 [node name="PlaceholderSoundPlayer" type="AudioStreamPlayer" parent="Godot-AI-NPC-Controller"]
+
+[node name="OptionsViewport2Din3D" parent="Godot-AI-NPC-Controller" instance=ExtResource("32_h8v3t")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.834359, 2.24472, 2.86985)
+screen_size = Vector2(2, 1)
+viewport_size = Vector2(1920, 1080)
+scene = ExtResource("33_m67ws")
+update_mode = 2
+collision_layer = 1048576
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_tg4mb")

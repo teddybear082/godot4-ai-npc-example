@@ -32,8 +32,8 @@ func _ready():
 	else:
 		executable_path = OS.get_executable_path().get_base_dir()
 	GPT4Allexecutable = executable_path.path_join("chat.exe")
-	#model_path = executable_path.path_join("ggml-gpt4all-j-v1.3-groovy.bin")
-	model_path = executable_path.path_join("ggml-gpt4all-l13b-snoozy.bin")
+	model_path = executable_path.path_join("ggml-gpt4all-j-v1.3-groovy.bin")
+	#model_path = executable_path.path_join("ggml-gpt4all-l13b-snoozy.bin")
 	json_path = executable_path.path_join("gpt4all.json")
 	prompt_template_path = executable_path.path_join("prompt_template.txt")
 

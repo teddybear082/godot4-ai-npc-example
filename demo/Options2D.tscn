@@ -1,0 +1,83 @@
+[gd_scene load_steps=4 format=3 uid="uid://dcjdrl3ldtps2"]
+
+[ext_resource type="FontFile" path="res://fonts/droid-sans/DroidSans.tres" id="1_6unf2"]
+[ext_resource type="Script" path="res://scripts/Options2D.gd" id="1_hra5p"]
+[ext_resource type="Theme" uid="uid://cntxyf6c7wi1a" path="res://optionbuttontheme.tres" id="3_x7g82"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hra5p")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 0
+offset_right = 1712.0
+offset_bottom = 1033.0
+mouse_filter = 1
+theme = ExtResource("3_x7g82")
+color = Color(0, 0, 0, 1)
+
+[node name="TTSLabel" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_left = 79.0
+offset_top = 717.0
+offset_right = 1364.0
+offset_bottom = 870.0
+theme_override_fonts/font = ExtResource("1_6unf2")
+theme_override_font_sizes/font_size = 128
+text = "Text to Speech Choice:"
+
+[node name="AIBrainLabel" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 470.0
+offset_right = 1012.0
+offset_bottom = 623.0
+theme_override_fonts/font = ExtResource("1_6unf2")
+theme_override_font_sizes/font_size = 128
+text = "AI Brain Choice:"
+
+[node name="STTLabel" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 195.0
+offset_right = 1385.0
+offset_bottom = 348.0
+theme_override_fonts/font = ExtResource("1_6unf2")
+theme_override_font_sizes/font_size = 128
+text = "Speech to Text Choice:"
+
+[node name="STTOptionButton" type="OptionButton" parent="ColorRect"]
+layout_mode = 0
+offset_left = 1417.0
+offset_top = 243.0
+offset_right = 1431.0
+offset_bottom = 263.0
+theme = ExtResource("3_x7g82")
+theme_override_fonts/font = ExtResource("1_6unf2")
+theme_override_font_sizes/font_size = 64
+
+[node name="AIBrainOptionButton" type="OptionButton" parent="ColorRect"]
+layout_mode = 0
+offset_left = 1065.0
+offset_top = 521.0
+offset_right = 1079.0
+offset_bottom = 541.0
+theme = ExtResource("3_x7g82")
+theme_override_fonts/font = ExtResource("1_6unf2")
+theme_override_font_sizes/font_size = 64
+
+[node name="TTSOptionButton" type="OptionButton" parent="ColorRect"]
+layout_mode = 0
+offset_left = 1391.0
+offset_top = 766.0
+offset_right = 1405.0
+offset_bottom = 786.0
+theme = ExtResource("3_x7g82")
+theme_override_fonts/font = ExtResource("1_6unf2")
+theme_override_font_sizes/font_size = 64

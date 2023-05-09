@@ -1,0 +1,9 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cntxyf6c7wi1a"]
+
+[ext_resource type="FontFile" path="res://fonts/droid-sans/DroidSans.tres" id="1_g0dfq"]
+
+[resource]
+default_font = ExtResource("1_g0dfq")
+OptionButton/font_sizes/font_size = 64
+PopupMenu/font_sizes/font_separator_size = 32
+PopupMenu/font_sizes/font_size = 64
