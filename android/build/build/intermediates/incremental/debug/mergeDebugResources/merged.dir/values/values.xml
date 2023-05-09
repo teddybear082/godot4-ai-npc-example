@@ -84,7 +84,7 @@
     <integer name="status_bar_notification_info_maxnum">999</integer>
     <string name="error_engine_setup_message">Unable to setup the Godot Engine! Aborting…</string>
     <string name="error_missing_vulkan_requirements_message">Warning - this device does not meet the requirements for Vulkan support</string>
-    <string name="godot_project_name_string">godot-gordon-freeman</string>
+    <string name="godot_project_name_string">godotainpc</string>
     <string name="kilobytes_per_second">%1$s KB/s</string>
     <string name="notification_download_complete">Download complete</string>
     <string name="notification_download_failed">Download unsuccessful</string>

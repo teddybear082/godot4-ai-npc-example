@@ -1,6 +1,6 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="org.godotengine.godotgordonfreeman"
+3    package="org.godotengine.godotainpc"
 4    android:installLocation="auto"
 5    android:versionCode="1"
 6    android:versionName="1.0" >
@@ -186,7 +186,7 @@
 106-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:26:9-34:20
 107            android:name="androidx.core.content.FileProvider"
 107-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:27:13-62
-108            android:authorities="org.godotengine.godotgordonfreeman.fileprovider"
+108            android:authorities="org.godotengine.godotainpc.fileprovider"
 108-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:28:13-64
 109            android:exported="false"
 109-->[godot-lib.template_debug.aar] C:\Users\Willi\.gradle\caches\transforms-3\332589c207f88c0a612abe50cba23a1a\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:29:13-37

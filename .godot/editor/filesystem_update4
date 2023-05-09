@@ -3,6 +3,5 @@ res://demo/Options2D.tscn
 res://assets/materials/floormaterial.tres
 res://addons/godot-xr-tools/hands/animations/left/hand_blend_tree.tres
 res://addons/godot-xr-tools/hands/animations/right/hand_blend_tree.tres
-res://scripts/Options2D.gd
-res://demo/Main.tscn
 res://optionbuttontheme.tres
+res://demo/Main.tscn

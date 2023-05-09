@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="godot-gordon-freeman"
+config/name="godot4-ai-npc"
 run/main_scene="res://demo/Main.tscn"
 config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"

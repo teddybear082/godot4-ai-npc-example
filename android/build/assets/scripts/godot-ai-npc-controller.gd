@@ -22,7 +22,6 @@ signal options_loaded
 
 
 # Enum for speech to text choice - note, if convai is chosen, convai will automatically be set as brain
-# To-Do - add OpenAI Whisper as an option
 enum speech_to_text_type {
 	WIT,
 	CONVAI,
@@ -68,6 +67,8 @@ enum ai_brain_type {
 @onready var gpt4all_node = get_node("GPT4All")
 @onready var local_whisper_node = get_node("LocalWhisper")
 @onready var placeholder_sound_player = get_node("PlaceholderSoundPlayer")
+@onready var options_viewport = get_node("OptionsViewport2Din3D")
+@onready var options_scene = options_viewport.get_scene_instance()
 
 # Variable used to determine if player can use proximity interaction
 var close_enough_to_talk : bool = false
@@ -144,6 +145,14 @@ func _ready():
 	
 	# Connect voice played signal from ElevenLabs
 	eleven_labs_tts_node.connect("ElevenLabs_generated_speech", Callable(self, "_on_voice_played"))
+	
+	# Connect options scene signals
+	# signal ai_brain_option_chosen(choice)
+	#signal tts_option_chosen(choice)
+	#signal stt_option_chosen(choice)
+	options_viewport.connect_scene_signal("ai_brain_option_chosen", Callable(self, "_on_ai_brain_option_chosen"))
+	options_viewport.connect_scene_signal("tts_option_chosen", Callable(self, "_on_tts_option_chosen"))
+	options_viewport.connect_scene_signal("stt_option_chosen", Callable(self, "_on_stt_option_chosen"))
 	
 	#Connect 
 	# If using config file to load keys and options, set those here
@@ -226,10 +235,16 @@ func _ready():
 			convai_node.set_voice_response_mode(false)
 			convai_node.set_use_standalone_tts(true)	
 	
+	# Set buttons on options menu to current choices
+	options_scene.get_node("ColorRect/STTOptionButton").selected = speech_to_text_choice
+	options_scene.get_node("ColorRect/TTSOptionButton").selected = text_to_speech_choice
+	options_scene.get_node("ColorRect/AIBrainOptionButton").selected = ai_brain_type_choice
+	
 	# Testing only right now - convai's speech to text pipeline seems to have issues across the board so is not functioning
 	# in standalone mode or character/getResponse mode
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
+	
 	
 	
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
@@ -310,6 +325,12 @@ func _on_npc_area_interaction_area_clicked(location):
 # Function called when wit.ai finishes processing speech to text, use the text it produces to call GPT	
 func _on_wit_ai_processed(prompt : String):
 	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
+	# Example of parsing speech to text for key command words like quitting the game; wit actually does this with its intent system but this could be a fallback if it misses it.
+	if prompt.matchn("*quit*"):
+		save_api_info()
+		await get_tree().create_timer(1.0).timeout
+		get_tree().quit()
+		return
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
@@ -372,6 +393,12 @@ func _on_gpt4all_processed(dialogue: String):
 # Function called when whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_whisper_processed(prompt: String):
 	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
+	# Example of parsing speech to text for key command words like quitting the game
+	if prompt.matchn("*quit*"):
+		save_api_info()
+		await get_tree().create_timer(1.0).timeout
+		get_tree().quit()
+		return
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
@@ -389,6 +416,12 @@ func _on_whisper_processed(prompt: String):
 # Function called when local whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_local_whisper_processed(prompt: String):
 	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
+	# Example of parsing speech to text for key command words like quitting the game
+	if prompt.matchn("*quit*"):
+		save_api_info()
+		await get_tree().create_timer(1.0).timeout
+		get_tree().quit()
+		return
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
@@ -407,6 +440,54 @@ func _on_voice_played():
 	mic_active_label3D.visible = false
 	
 	
+func _on_ai_brain_option_chosen(choice):
+	ai_brain_type_choice = choice
+	
+	
+
+func _on_tts_option_chosen(choice):
+	text_to_speech_choice = choice
+	print("text to speech option is" + str(choice))
+	if text_to_speech_choice == text_to_speech_type.CONVAI:
+		if ai_brain_type_choice == ai_brain_type.CONVAI:
+			convai_node.set_voice_response_mode(true)
+		else:
+			convai_node.set_voice_response_mode(false)
+			convai_node.set_use_standalone_tts(true)	
+	
+	
+func _on_stt_option_chosen(choice):
+	speech_to_text_choice = choice
+	print("speech to text option is" + str(choice))
+	if speech_to_text_choice == speech_to_text_type.CONVAI:
+		ai_brain_type_choice = ai_brain_type.CONVAI
+		# Activate convai voice commands
+		convai_node.activate_voice_commands(true)
+		wit_ai_node.activate_voice_commands(false)
+		whisper_api_node.activate_voice_commands(false)
+		local_whisper_node.activate_voice_commands(false)
+	
+	elif speech_to_text_choice == speech_to_text_type.WIT:
+		# Activate wit ai voice commands
+		wit_ai_node.activate_voice_commands(true)
+		convai_node.activate_voice_commands(false)
+		whisper_api_node.activate_voice_commands(false)
+		local_whisper_node.activate_voice_commands(false)
+		
+	elif speech_to_text_choice == speech_to_text_type.WHISPER:
+		# Activate GPT Whisper speech to text
+		whisper_api_node.activate_voice_commands(true)
+		wit_ai_node.activate_voice_commands(false)
+		convai_node.activate_voice_commands(false)
+		local_whisper_node.activate_voice_commands(false)
+	else:
+		# Activate local whisper speech to text (only works on windows)
+		local_whisper_node.activate_voice_commands(true)
+		wit_ai_node.activate_voice_commands(false)
+		convai_node.activate_voice_commands(false)
+		whisper_api_node.activate_voice_commands(false)
+		
+			
 # Saver function, saving options to config file
 func save_api_info():
 	# Save convai session id if using convai for possible persistence between sessions
