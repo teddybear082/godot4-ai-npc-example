@@ -5,7 +5,7 @@
 
 Example of using various AI and speech technologies to create an AI NPC in Godot 4.  There is also an example of some of these scripts for Godot 3 here: https://github.com/teddybear082/godot-ai-npc-example. 
 
-Will be creating a separate more refined and streamlined final project in collaboration with **DigitalN8m4r3** where you talk to an AI-generated Gordon Freeman in your living room in a different repo.  Stay tuned.  This repo is more an experimental playground for coders and tinkerers than a true consumer final release.
+This repo is more an experimental playground for coders and tinkerers than a true consumer final release.
 
 Download the release marked for **PCVR** to use with windows PCVR: https://github.com/teddybear082/godot4-ai-npc-example/releases/download/v0.01-testing-alpha-only/pcvr-ai-npc-release.zip.
 
