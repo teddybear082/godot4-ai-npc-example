@@ -11,7 +11,7 @@ Download the release marked for **PCVR** to use with windows PCVR: https://githu
 
 Download the release marked for **Quest** to use with Quest: https://github.com/teddybear082/godot4-ai-npc-example/releases/download/v0.01-testing-alpha-only/quest-release-ai-npc.zip.  
 
-**Instructions and information on use and the various options available are in the Wiki.**
+**Instructions and information on use and the various options available are in the Wiki: https://github.com/teddybear082/godot4-ai-npc-example/wiki**
 
 At a high level, included options/scripts are:
 
