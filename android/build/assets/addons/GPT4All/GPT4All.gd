@@ -45,7 +45,7 @@ func call_GPT4All(prompt):
 	var output = []
 	var exit_code = OS.execute(GPT4Allexecutable, arguments, output, true, false)
 	var response = output[0].get_slice(prompt, 1)
-	#print(output)
+	print(output)
 	#print(response)
 	var last_part_of_response = response.get_slice_count(":")
 	#print(last_part_of_response)

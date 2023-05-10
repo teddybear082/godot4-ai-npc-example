@@ -77,27 +77,27 @@ var close_enough_to_talk : bool = false
 var mic_active : bool = false
 
 # Variables to save / load user preferences and API keys between sessions in config file
-var wit_ai_token : String
-var gpt_3_5_turbo_api_key : String
-var whisper_api_key : String
-var gpt_npc_background_directions : String
-var gpt_sample_npc_question : String
-var gpt_sample_npc_response : String
-var gpt_temperature : float
-var convai_api_key : String
-var convai_character_id : String
-var convai_session_id : String
-var last_convai_session_id : String
-var convai_standalone_tts_voice
-var eleven_labs_api_key : String
-var eleven_labs_character_code : String
-var wit_ai_tts_voice : String
-var wit_ai_tts_speed : int
-var wit_ai_tts_pitch : int
-var gpt4all_model_name : String
-var config_text_to_speech_choice
-var config_ai_brain_type_choice
-var config_speech_to_text_choice
+var wit_ai_token : String = "insert_your_wit_api_token_here"
+var gpt_3_5_turbo_api_key : String = "insert your api key here"
+var whisper_api_key : String = "insert your whisper api key"
+var gpt_npc_background_directions : String = "You are a non-playable character in a video game.  You are a robot.  Your name is Bob.  Your job is taping boxes of supplies.  You love organization.  You hate mess. Your boss is Robbie the Robot. Robbie is a difficult boss who makes a lot of demands.  You respond to the user's questions as if you are in the video game world with the player."
+var gpt_sample_npc_question : String = "Hi, what do you do here?"
+var gpt_sample_npc_response : String = "Greetings fellow worker! My name is Bob and I am a robot.  My job is to tape up the boxes in this factory before they are shipped out to our customers!"
+var gpt_temperature : float = 0.5
+var convai_api_key : String = "insert your api key"
+var convai_character_id : String = "9a86c86a-dc4e-11ed-8ecb-42010a7c4003"
+var convai_session_id : String = "-1"
+var last_convai_session_id : String = "-1"
+var convai_standalone_tts_voice = "WUMale 1"
+var eleven_labs_api_key : String = "insert your Eleven Labs API Key"
+var eleven_labs_character_code : String = "nccuBdAiU0VZsr2UBFyD"
+var wit_ai_tts_voice : String = "Prospector"
+var wit_ai_tts_speed : int = 100
+var wit_ai_tts_pitch : int = 100
+var gpt4all_model_name : String = "ggml-gpt4all-j-v1.3-groovy.bin"
+var config_text_to_speech_choice = text_to_speech_type.CONVAI
+var config_ai_brain_type_choice = ai_brain_type.CONVAI
+var config_speech_to_text_choice = speech_to_text_type.WIT
 
 # Whether to use convai in stream or normal API mode
 var use_convai_stream_mode : bool = true
@@ -152,7 +152,7 @@ func _ready():
 	#signal stt_option_chosen(choice)
 	options_viewport.connect_scene_signal("ai_brain_option_chosen", Callable(self, "_on_ai_brain_option_chosen"))
 	options_viewport.connect_scene_signal("tts_option_chosen", Callable(self, "_on_tts_option_chosen"))
-	options_viewport.connect_scene_signal("stt_option_chosen", Callable(self, "_on_stt_option_chosen"))
+#	options_viewport.connect_scene_signal("stt_option_chosen", Callable(self, "_on_stt_option_chosen"))
 	
 	#Connect 
 	# If using config file to load keys and options, set those here
@@ -231,12 +231,13 @@ func _ready():
 	if text_to_speech_choice == text_to_speech_type.CONVAI:
 		if ai_brain_type_choice == ai_brain_type.CONVAI:
 			convai_node.set_voice_response_mode(true)
+			convai_node.set_use_standalone_tts(false)
 		else:
 			convai_node.set_voice_response_mode(false)
 			convai_node.set_use_standalone_tts(true)	
 	
 	# Set buttons on options menu to current choices
-	options_scene.get_node("ColorRect/STTOptionButton").selected = speech_to_text_choice
+#	options_scene.get_node("ColorRect/STTOptionButton").selected = speech_to_text_choice
 	options_scene.get_node("ColorRect/TTSOptionButton").selected = text_to_speech_choice
 	options_scene.get_node("ColorRect/AIBrainOptionButton").selected = ai_brain_type_choice
 	
@@ -456,37 +457,37 @@ func _on_tts_option_chosen(choice):
 			convai_node.set_use_standalone_tts(true)	
 	
 	
-func _on_stt_option_chosen(choice):
-	speech_to_text_choice = choice
-	print("speech to text option is" + str(choice))
-	if speech_to_text_choice == speech_to_text_type.CONVAI:
-		ai_brain_type_choice = ai_brain_type.CONVAI
-		# Activate convai voice commands
-		convai_node.activate_voice_commands(true)
-		wit_ai_node.activate_voice_commands(false)
-		whisper_api_node.activate_voice_commands(false)
-		local_whisper_node.activate_voice_commands(false)
-	
-	elif speech_to_text_choice == speech_to_text_type.WIT:
-		# Activate wit ai voice commands
-		wit_ai_node.activate_voice_commands(true)
-		convai_node.activate_voice_commands(false)
-		whisper_api_node.activate_voice_commands(false)
-		local_whisper_node.activate_voice_commands(false)
-		
-	elif speech_to_text_choice == speech_to_text_type.WHISPER:
-		# Activate GPT Whisper speech to text
-		whisper_api_node.activate_voice_commands(true)
-		wit_ai_node.activate_voice_commands(false)
-		convai_node.activate_voice_commands(false)
-		local_whisper_node.activate_voice_commands(false)
-	else:
-		# Activate local whisper speech to text (only works on windows)
-		local_whisper_node.activate_voice_commands(true)
-		wit_ai_node.activate_voice_commands(false)
-		convai_node.activate_voice_commands(false)
-		whisper_api_node.activate_voice_commands(false)
-		
+#func _on_stt_option_chosen(choice):
+#	speech_to_text_choice = choice
+#	print("speech to text option is" + str(choice))
+#	if speech_to_text_choice == speech_to_text_type.CONVAI:
+#		ai_brain_type_choice = ai_brain_type.CONVAI
+#		# Activate convai voice commands
+#		convai_node.activate_voice_commands(true)
+#		wit_ai_node.activate_voice_commands(false)
+#		whisper_api_node.activate_voice_commands(false)
+#		local_whisper_node.activate_voice_commands(false)
+#
+#	elif speech_to_text_choice == speech_to_text_type.WIT:
+#		# Activate wit ai voice commands
+#		wit_ai_node.activate_voice_commands(true)
+#		convai_node.activate_voice_commands(false)
+#		whisper_api_node.activate_voice_commands(false)
+#		local_whisper_node.activate_voice_commands(false)
+#
+#	elif speech_to_text_choice == speech_to_text_type.WHISPER:
+#		# Activate GPT Whisper speech to text
+#		whisper_api_node.activate_voice_commands(true)
+#		wit_ai_node.activate_voice_commands(false)
+#		convai_node.activate_voice_commands(false)
+#		local_whisper_node.activate_voice_commands(false)
+#	else:
+#		# Activate local whisper speech to text (only works on windows)
+#		local_whisper_node.activate_voice_commands(true)
+#		wit_ai_node.activate_voice_commands(false)
+#		convai_node.activate_voice_commands(false)
+#		whisper_api_node.activate_voice_commands(false)
+#
 			
 # Saver function, saving options to config file
 func save_api_info():
@@ -583,9 +584,9 @@ func load_api_info():
 		wit_ai_tts_speed = prefs_cfg.get_value("wit_options", "wit_ai_tts_speed", 100)
 		wit_ai_tts_pitch = prefs_cfg.get_value("wit_options", "wit_ai_tts_pitch", 100)
 		whisper_api_key = prefs_cfg.get_value("api_keys", "whisper_api_key", "insert your whisper api key")
-		gpt4all_model_name = prefs_cfg.get_value("gpt4all_options", "gpt4all_model_name", "ggml-gpt4all-l13b-snoozy.bin")
+		gpt4all_model_name = prefs_cfg.get_value("gpt4all_options", "gpt4all_model_name", "ggml-gpt4all-j-v1.3-groovy.bin")
 		config_text_to_speech_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_type.CONVAI)
 		config_ai_brain_type_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type.CONVAI)
-		config_speech_to_text_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_type.CONVAI)
+		config_speech_to_text_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_type.WIT)
 	emit_signal("options_loaded")
 

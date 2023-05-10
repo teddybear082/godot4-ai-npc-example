@@ -24,60 +24,40 @@ color = Color(0, 0, 0, 1)
 
 [node name="TTSLabel" type="Label" parent="ColorRect"]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 747.0
-offset_right = 1349.0
-offset_bottom = 900.0
+offset_left = 49.0
+offset_top = 668.0
+offset_right = 1334.0
+offset_bottom = 821.0
 theme_override_fonts/font = ExtResource("1_6unf2")
 theme_override_font_sizes/font_size = 128
 text = "Text to Speech Choice:"
 
 [node name="AIBrainLabel" type="Label" parent="ColorRect"]
 layout_mode = 0
-offset_left = 75.0
-offset_top = 474.0
-offset_right = 989.0
-offset_bottom = 627.0
+offset_left = 53.0
+offset_top = 233.0
+offset_right = 967.0
+offset_bottom = 386.0
 theme_override_fonts/font = ExtResource("1_6unf2")
 theme_override_font_sizes/font_size = 128
 text = "AI Brain Choice:"
 
-[node name="STTLabel" type="Label" parent="ColorRect"]
-layout_mode = 0
-offset_left = 70.0
-offset_top = 195.0
-offset_right = 1355.0
-offset_bottom = 348.0
-theme_override_fonts/font = ExtResource("1_6unf2")
-theme_override_font_sizes/font_size = 128
-text = "Speech to Text Choice:"
-
-[node name="STTOptionButton" type="OptionButton" parent="ColorRect"]
-layout_mode = 0
-offset_left = 1387.0
-offset_top = 266.0
-offset_right = 1401.0
-offset_bottom = 286.0
-theme = ExtResource("3_x7g82")
-theme_override_fonts/font = ExtResource("1_6unf2")
-theme_override_font_sizes/font_size = 64
-
 [node name="AIBrainOptionButton" type="OptionButton" parent="ColorRect"]
 layout_mode = 0
-offset_left = 1034.0
-offset_top = 544.0
-offset_right = 1048.0
-offset_bottom = 564.0
+offset_left = 1004.0
+offset_top = 310.0
+offset_right = 1018.0
+offset_bottom = 330.0
 theme = ExtResource("3_x7g82")
 theme_override_fonts/font = ExtResource("1_6unf2")
 theme_override_font_sizes/font_size = 64
 
 [node name="TTSOptionButton" type="OptionButton" parent="ColorRect"]
 layout_mode = 0
-offset_left = 1372.0
-offset_top = 823.0
-offset_right = 1386.0
-offset_bottom = 843.0
+offset_left = 1353.0
+offset_top = 744.0
+offset_right = 1367.0
+offset_bottom = 764.0
 theme = ExtResource("3_x7g82")
 theme_override_fonts/font = ExtResource("1_6unf2")
 theme_override_font_sizes/font_size = 64

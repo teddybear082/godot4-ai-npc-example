@@ -49,4 +49,4 @@ func post_data_as_file(url: String, field_name: String, file_name: String, data,
 	print(body1 + "binary data, for example audio file data, inserted here" + body2)
 	#print(post_content)
 	var err = request_raw(url, custom_headers, HTTPClient.METHOD_POST, post_content)
-	print("err from request raw from convai voice stream request is: " + str(err))
+	print("err from request raw from http file post request is: " + str(err))

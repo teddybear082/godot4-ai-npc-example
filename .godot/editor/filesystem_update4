@@ -1,7 +1,6 @@
 res://default_env.tres
-res://demo/Options2D.tscn
+res://demo/Main.tscn
 res://assets/materials/floormaterial.tres
 res://addons/godot-xr-tools/hands/animations/left/hand_blend_tree.tres
 res://addons/godot-xr-tools/hands/animations/right/hand_blend_tree.tres
 res://optionbuttontheme.tres
-res://demo/Main.tscn

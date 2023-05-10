@@ -148,6 +148,8 @@ func activate_voice_commands(value):
 # Start voice capture		
 func start_voice_command():
 	#print ("Reading sound")
+	if !audio_player.playing:
+		audio_player.play()
 	if not sending and interface_enabled:
 		#print ("Reading sound")
 		sending = true
@@ -172,13 +174,14 @@ func end_voice_command():
 			new_wav_stream.loop_mode = AudioStreamWAV.LOOP_DISABLED
 			new_wav_stream.stereo = false
 			new_wav_stream.mix_rate = target_rate
-			new_wav_stream.FORMAT_16_BITS # was 8 bits
+			new_wav_stream.FORMAT_16_BITS
 			new_wav_stream.data = audio_content
+			# There appears to be a bug here, likely an enginge bug, that save_to_wav doesn't completely overwrite the previous save file for some reason
 			var err = new_wav_stream.save_to_wav(save_path)
 			#print(err)
 			call_whisper(save_path)
+			audio_player.stop()
 			
-
 
 # Method to set api token from code
 func set_api_key(new_api_key : String):

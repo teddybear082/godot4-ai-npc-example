@@ -121,9 +121,6 @@ func _ready():
 	# Set up second http request and response signal for call_convAI_TTS function
 	TTS_http_request = HTTPRequest.new()
 	add_child(TTS_http_request)
-	if use_standalone_text_to_speech == true:
-		TTS_http_request.set_download_file("user://convaiaudio.mp3")
-		convai_tts_stream = AudioStreamMP3.new()
 	TTS_http_request.connect("request_completed", Callable(self, "_on_TTS_request_completed"))
 	
 	# Set up third http request anad response signal for call_convAI_stream function
@@ -263,6 +260,9 @@ func _on_request_completed(result, responseCode, headers, body):
 
 # Function to call convAI's standalone text-to-speech API (not using convAI to generate AI response text)
 func call_convAI_TTS(text):
+	TTS_http_request.set_download_file("user://convaiaudio.mp3")
+	if convai_tts_stream == null:
+		convai_tts_stream = AudioStreamMP3.new()
 	
 	var body = JSON.stringify({
 		"transcript": text,
