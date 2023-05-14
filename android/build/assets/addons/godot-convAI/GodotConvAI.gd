@@ -85,6 +85,7 @@ var TTS_http_request : HTTPRequest
 var http_file_post_request
 var stream_http_request : HTTPRequest
 var stored_streamed_audio : PackedByteArray = []
+var stream_queued_text : String = ""
 # Variables for possible voice requests to server
 var can_send_audio_request : bool = true
 var record_effect : AudioEffectRecord = null
@@ -354,8 +355,7 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 			if "text" in data_json:
 				print("Text: ", data_json["text"])
 				var AI_generated_dialogue = data_json["text"]
-				# Let other nodes know that AI generated dialogue is ready from convAI	
-				emit_signal("AI_response_generated", AI_generated_dialogue)
+				stream_queued_text += AI_generated_dialogue
 				
 			if "sessionID" in data_json:
 				#print("SessionID: ", data_json["sessionID"])
@@ -378,7 +378,10 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 					convai_speech_player.play()
 					stored_streamed_audio.resize(0)
 					emit_signal("convAI_voice_sample_played")	
-
+	
+	# Let other nodes know that AI generated dialogue is ready from convAI	
+	emit_signal("AI_response_generated", stream_queued_text)
+	stream_queued_text = ""
 
 # Function to call convAI's AI generation using convAI's stream with voice protocol instead, here, this is sending an audio file recorded from the microphone above to convAI directly
 # Presently this is broken because Godot can't record a mono wav file.
@@ -458,8 +461,7 @@ func _on_voice_stream_request_completed(result, responseCode, headers, body):
 			if "text" in data_json:
 				print("Text: ", data_json["text"])
 				var AI_generated_dialogue = data_json["text"]
-				# Let other nodes know that AI generated dialogue is ready from convAI	
-				emit_signal("AI_response_generated", AI_generated_dialogue)
+				stream_queued_text += AI_generated_dialogue
 				
 			if "sessionID" in data_json:
 				#print("SessionID: ", data_json["sessionID"])
@@ -482,7 +484,9 @@ func _on_voice_stream_request_completed(result, responseCode, headers, body):
 					convai_speech_player.play()
 					stored_streamed_audio.resize(0)
 					emit_signal("convAI_voice_sample_played")	
-		
+	# Let other nodes know that AI generated dialogue is ready from convAI	
+	emit_signal("AI_response_generated", stream_queued_text)
+	stream_queued_text = ""	
 		
 # This is needed to activate the voice commands in the node.  Right now this is force-deactivated because not working as explained above.
 func activate_voice_commands(value):
