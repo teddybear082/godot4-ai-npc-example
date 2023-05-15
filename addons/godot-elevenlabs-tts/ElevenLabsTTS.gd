@@ -28,6 +28,9 @@ var eleven_labs_stream
 var http_request : HTTPRequest
 
 func _ready():
+	# Make sure audio input is enabled even if program is not set to otherwise to prevent inadvertent errors in use
+	ProjectSettings.set_setting("audio/driver/enable_input", true)
+	
 	# Create httprequest node
 	http_request = HTTPRequest.new()
 	add_child(http_request)

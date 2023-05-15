@@ -4,4 +4,6 @@ res://assets/materials/floormaterial.tres
 res://addons/godot-xr-tools/hands/animations/left/hand_blend_tree.tres
 res://addons/godot-xr-tools/hands/animations/right/hand_blend_tree.tres
 res://optionbuttontheme.tres
+res://addons/godot-elevenlabs-tts/ElevenLabsTTS.gd
+res://addons/godot-local-whisper/godot-local-whisper.gd
 res://addons/godot-convAI/GodotConvAI.gd
