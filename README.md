@@ -31,7 +31,6 @@ At a high level, included options/scripts are:
 
 **KNOWN ISSUES:**
 
-* Wit.ai text to speech will process requests out of order at times if initial request exceeds Wit's request limit of roughly 250 characters (needs better httprequest management)
 * Convai speech to text does not work, seems to be an API issue
 * ElevenLabs text to speech will only process first request if several are sent, e.g., streaming text (needs better httprequest management)
 
