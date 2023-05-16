@@ -86,6 +86,8 @@ var voices_query_request = HTTPRequest
 var stored_streamed_audio : PackedByteArray = []
 var wit_speech_player : AudioStreamPlayer
 var wit_stream : AudioStreamMP3
+var wit_tts_request_queue : Array = []
+
 
 func _ready():
 	#token = "put your wit.ai token here"
@@ -343,22 +345,30 @@ func call_wit_TTS(text):
 	# Wit only allows requests up to 250 characters, so we will split multiple sentences into separate HTTP requests if we get over that limit
 	if text.length() > 250:
 		var dialogue_sections = text.split(".")
+		var first_section = true
 		for each_sentence in dialogue_sections:
 			if each_sentence == "":
 				continue
 			var body = JSON.stringify({
 				"q": each_sentence,
-				"voice": wit_tts_voice_selection
+				"voice": wit_tts_voice_selection,
+				"speed": wit_tts_speech_speed,
+				"pitch": wit_tts_speech_pitch
 			})
-			var tts_request = HTTPRequest.new()
-			add_child(tts_request)
-			tts_request.connect("request_completed", Callable(self, "_wit_TTS_response_received"))
-			var error = tts_request.request(tts_endpoint, tts_headers, HTTPClient.METHOD_POST, body)
-			#print(error)
-			if error != OK:
-				push_error("An error occurred in the HTTP request.")
-	
-	# If does not exceed limit, do not split up request
+			# Don't queue first request, just send request
+			if first_section == true:
+				first_section = false
+				var tts_request = HTTPRequest.new()
+				add_child(tts_request)
+				tts_request.connect("request_completed", Callable(self, "_wit_TTS_response_received"))
+				var error = tts_request.request(tts_endpoint, tts_headers, HTTPClient.METHOD_POST, body)
+				#print(error)
+				if error != OK:
+					push_error("An error occurred in the HTTP request.")
+			# Queue all other sentences to wit to wait to send until after each previous sentence is processed	
+			else:
+				_queue_wit_tts_request(body)
+	# If text prompt does not exceed limit, do not split up request, just send it
 	else:
 		var body = JSON.stringify({
 				"q": text,
@@ -397,6 +407,7 @@ func _wit_TTS_response_received(result, response_code, headers, body):
 		stored_streamed_audio.resize(0)
 		emit_signal("wit_voice_sample_played")	
 
+	_process_request_queue()
 
 # Receiver function for when speech player finishes for streaming purposes					
 func _on_speech_player_finished():
@@ -409,3 +420,26 @@ func _on_speech_player_finished():
 		emit_signal("wit_voice_sample_played")
 	
 	
+# Internal-only functions used when needing to queue requests because text fed to wit.ai TTS is longer than the allowed limit of ~250 characters
+func _send_queued_tts_request(body):
+	var tts_headers = ["Authorization: Bearer %s"%token, "Content-Type: application/json", "Accept: audio/mpeg"]
+	var tts_endpoint = "https://api.wit.ai/synthesize"
+	var tts_request = HTTPRequest.new()
+	add_child(tts_request)
+	tts_request.connect("request_completed", Callable(self, "_wit_TTS_response_received"))
+	var error = tts_request.request(tts_endpoint, tts_headers, HTTPClient.METHOD_POST, body)
+	#print(error)
+	if error != OK:
+		push_error("An error occurred in the HTTP request.")
+
+# Add text to request queue
+func _queue_wit_tts_request(text):
+	wit_tts_request_queue.append(text)
+	
+		
+func _process_request_queue():
+	# If there are requests in the queue and no request is currently being processed, send the next request
+	if wit_tts_request_queue.size() > 0:
+		var next_request = wit_tts_request_queue[0]
+		wit_tts_request_queue.pop_front()
+		_send_queued_tts_request(next_request)

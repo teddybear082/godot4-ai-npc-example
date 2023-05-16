@@ -455,7 +455,9 @@ func _on_tts_option_chosen(choice):
 		else:
 			convai_node.set_voice_response_mode(false)
 			convai_node.set_use_standalone_tts(true)	
-	
+	else:
+		convai_node.set_voice_response_mode(false)
+		convai_node.set_use_standalone_tts(false)
 	
 #func _on_stt_option_chosen(choice):
 #	speech_to_text_choice = choice
