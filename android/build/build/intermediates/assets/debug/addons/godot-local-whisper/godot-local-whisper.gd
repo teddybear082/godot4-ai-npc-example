@@ -16,6 +16,9 @@ var Whisper_executable : String
 
 
 func _ready():
+	# Make sure audio input is enabled even if program is not set to otherwise to prevent inadvertent errors in use
+	ProjectSettings.set_setting("audio/driver/enable_input", true)
+	
 	# Audio request ready stuff to allow recording of microphone
 	var current_number = 0
 	while AudioServer.get_bus_index("LocalWhisperMicRecorder" + str(current_number)) != -1:

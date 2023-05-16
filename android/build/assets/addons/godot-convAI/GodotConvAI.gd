@@ -106,6 +106,9 @@ var actual_rate = AudioServer.get_mix_rate()
 var save_path = ""	
 
 func _ready():
+	# Make sure audio input is enabled even if program is not set to otherwise to prevent inadvertent errors in use
+	ProjectSettings.set_setting("audio/driver/enable_input", true)
+	
 	# Set up normal http request node for calls to call_convAI function
 	http_request = HTTPRequest.new()
 	add_child(http_request)
