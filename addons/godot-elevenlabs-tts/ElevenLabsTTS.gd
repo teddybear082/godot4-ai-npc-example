@@ -27,20 +27,17 @@ var eleven_labs_stream
 # HTTP Request node used to query Eleven Labs API
 var http_request : HTTPRequest
 
+# Stored audio
+var stored_streamed_audio : PackedByteArray
+
 func _ready():
 	# Make sure audio input is enabled even if program is not set to otherwise to prevent inadvertent errors in use
 	ProjectSettings.set_setting("audio/driver/enable_input", true)
 	
-	# Create httprequest node
-	http_request = HTTPRequest.new()
-	add_child(http_request)
-	http_request.set_download_file("user://elevenlabs.mp3")
-	http_request.connect("request_completed", Callable(self, "_on_request_completed"))
-	
 	# Create audio player node for speech playback
 	eleven_labs_speech_player = AudioStreamPlayer.new()
 	add_child(eleven_labs_speech_player)
-	
+	eleven_labs_speech_player.connect("finished", Callable(self, "_on_speech_player_finished"))
 	# Endpoint and headers change depending on if using stream mode
 	if use_stream_mode == true:
 		endpoint = endpoint + character_code + "/stream"
@@ -55,6 +52,10 @@ func _ready():
 # Call Eleven labs API for text to speech	
 func call_ElevenLabs(text):
 	#print("calling Eleven Labs TTS")
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
+	http_request.connect("request_completed", Callable(self, "_on_request_completed"))
+	
 	var body = JSON.stringify({
 		"text": text,
 		"voice_settings": {"stability": 0, "similarity_boost": 0}
@@ -78,16 +79,15 @@ func _on_request_completed(result, responseCode, headers, body):
 		print(body.get_string_from_utf8())
 		return
 		
-	var audio_file_from_eleven = body
-	
-	var file = FileAccess.open("user://elevenlabs.mp3", FileAccess.READ)
-	var bytes = file.get_buffer(file.get_length())
-	eleven_labs_stream.data = bytes 
-	eleven_labs_speech_player.set_stream(eleven_labs_stream)
-	eleven_labs_speech_player.play()
-	
-	# Let other nodes know that AI generated dialogue is ready from GPT	
-	emit_signal("ElevenLabs_generated_speech")
+	stored_streamed_audio.append_array(body)
+	# If speech player not playing, play streamed audio and delete the queue if any; if audio is currently playing just queue audio for delivery after
+	if !eleven_labs_speech_player.playing:
+		eleven_labs_stream.data = stored_streamed_audio
+		eleven_labs_speech_player.set_stream(eleven_labs_stream)
+		eleven_labs_speech_player.play()
+		stored_streamed_audio.resize(0)	
+		# Let other nodes know that AI generated dialogue is ready from GPT	
+		emit_signal("ElevenLabs_generated_speech")
 	
 	
 # Set new API key
@@ -106,3 +106,14 @@ func set_character_code(new_code):
 		endpoint = "https://api.elevenlabs.io/v1/text-to-speech/" + character_code + "/stream"
 	else:
 		endpoint = "https://api.elevenlabs.io/v1/text-to-speech/" + character_code
+
+
+# Receiver function for when speech player finishes					
+func _on_speech_player_finished():
+	# If not using streamed audio endpoint, then stored_streamed_audio will always be zero, if using streaming, then will be over 0 if being queued while player is already playing
+	if stored_streamed_audio.size() > 0:
+		eleven_labs_stream.data = stored_streamed_audio
+		eleven_labs_stream.set_stream(eleven_labs_stream)
+		eleven_labs_speech_player.play()
+		stored_streamed_audio.resize(0)
+		emit_signal("ElevenLabs_generated_speech")
