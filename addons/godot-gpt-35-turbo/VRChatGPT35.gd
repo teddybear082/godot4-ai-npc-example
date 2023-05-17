@@ -74,7 +74,7 @@ func _on_request_completed(result, responseCode, headers, body):
 		print(body.get_string_from_utf8())
 		return
 		
-	var data = body.get_string_from_utf8()#fix_chunked_response(body.get_string_from_utf8())
+	var data = body.get_string_from_utf8()
 	print ("Data received: %s"%data)
 	var test_json_conv = JSON.new()
 	test_json_conv.parse(data)

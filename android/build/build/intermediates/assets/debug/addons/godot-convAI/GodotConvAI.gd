@@ -15,7 +15,7 @@ signal convAI_voice_sample_played
 @export var convai_character_id: String = "insert your convai character code"
 @export var voice_response: bool = false
 @export var voice_sample_rate: int = 22050
-@export var voice_pitch_scale = 1.0 # (float,-10.0, 10.0)
+@export var voice_pitch_scale = 1.0
 @export var use_standalone_text_to_speech: bool = false: set = set_use_standalone_tts
 
 # Array of standard convai voices as of creation of this script (April 2023): https://docs.convai.com/api-docs/reference/core-api-reference/standalone-voice-api/text-to-speech-api
@@ -386,8 +386,7 @@ func _on_stream_request_completed(result, responseCode, headers, body):
 	emit_signal("AI_response_generated", stream_queued_text)
 	stream_queued_text = ""
 
-# Function to call convAI's AI generation using convAI's stream with voice protocol instead, here, this is sending an audio file recorded from the microphone above to convAI directly
-# Presently this is broken because Godot can't record a mono wav file.
+# Function to call convAI's AI generation using convAI's stream with voice protocol instead, here, this is sending an audio file recorded from the microphone above to convAI directly with mono
 func _process(delta):
 	if capture_effect and sending:
 		var data: PackedVector2Array = capture_effect.get_buffer(capture_effect.get_frames_available())

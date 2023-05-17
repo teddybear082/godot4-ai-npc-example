@@ -1,13 +1,11 @@
 extends Node3D
 
 ## This is a demo created to showcase a potential example flow of using an AI NPC in VR.
-## You need API keys for wit.ai (presently free) and GPT to use this demo.  
-## This implementation uses GPT-3.5-turbo since it is pretty cheap.  However, you could sub out the GPT node for 
-## a node that implements your preferred generator.
+## You need API keys for wit.ai (presently free), Convai.com (free and paid tiers available), and OpenAI to use the relevant parts of this demo. 
 ## In this demo, the player can start interacting with the NPC either by pointing at the NPC
 ## and clicking trigger, or by getting close enough to the NPC and pressing B or Y on the VR controller.
 ## Messsages are displayed to show when interaction is available as well as when the mic is recording
-## or when hte program is waiting for the AI response.
+## or when the program is waiting for the AI response.
 
 
 
@@ -54,7 +52,7 @@ func _ready():
 	player_left_controller.connect("button_pressed", Callable(ai_npc_controller, "_on_player_controller_button_pressed"))
 	player_right_controller.connect("button_pressed", Callable(ai_npc_controller, "_on_player_controller_button_pressed"))
 
-	# Check if on android and passthrough enabled, and if so, hide building structure to allow passthrough to work
+	# Check if on android and passthrough enabled, and if so, hide building structure to allow passthrough to work and destroy blocking colliders
 	if OS.has_feature("android") and $StartXR.enable_passthrough == true:
 		building.visible = false
 		building_floor.visible = false

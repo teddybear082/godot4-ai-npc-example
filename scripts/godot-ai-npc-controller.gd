@@ -11,7 +11,6 @@ signal options_saved
 signal options_loaded
 
 # Variable to choose interaction button for speaking to NPC when using "proximity" mode
-#@export (XRTools.Buttons) var activate_mic_button : int = XRTools.Buttons.VR_BUTTON_BY
 @export var activate_mic_button : String = "by_button"
 
 # Variable for text to display while mic active and recording
@@ -147,9 +146,6 @@ func _ready():
 	eleven_labs_tts_node.connect("ElevenLabs_generated_speech", Callable(self, "_on_voice_played"))
 	
 	# Connect options scene signals
-	# signal ai_brain_option_chosen(choice)
-	#signal tts_option_chosen(choice)
-	#signal stt_option_chosen(choice)
 	options_viewport.connect_scene_signal("ai_brain_option_chosen", Callable(self, "_on_ai_brain_option_chosen"))
 	options_viewport.connect_scene_signal("tts_option_chosen", Callable(self, "_on_tts_option_chosen"))
 #	options_viewport.connect_scene_signal("stt_option_chosen", Callable(self, "_on_stt_option_chosen"))
@@ -245,7 +241,6 @@ func _ready():
 	# in standalone mode or character/getResponse mode
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
-	
 	
 	
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
@@ -349,7 +344,6 @@ func _on_wit_ai_processed(prompt : String):
 # Function called when GPT 3.5 turbo finishes processes AI dialogue response, use text_to_speech addon node, Eleven AI or ConvAI to play the audio response	
 # If you are using a different text to speech solution, the command to call it could be used here instead.
 func _on_gpt_3_5_turbo_processed(dialogue : String):
-	#mic_active_label3D.visible = false
 	mic_active_label3D.text = "Response: " + dialogue
 	if text_to_speech_choice == text_to_speech_type.GODOT:
 		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
@@ -363,7 +357,6 @@ func _on_gpt_3_5_turbo_processed(dialogue : String):
 
 # Function called when convAI finishes processes AI dialogue response, use Convai node, text_to_speech addon node or Eleven Labs to play the audio response depending on user choice	
 func _on_convai_processed(dialogue : String):
-	#mic_active_label3D.visible = false
 	mic_active_label3D.text = "Response: " + dialogue
 	if text_to_speech_choice == text_to_speech_type.GODOT:
 		# The false argument here is optional, if true you can interrupt dialogue, with false, allows streaming in advance of text for speech.  Waiting for Godot 4.1 to fully fix streaming responses.
@@ -379,7 +372,6 @@ func _on_convai_processed(dialogue : String):
 
 # Function called when GPT4All finishes processing AI response, use the text it produces to call text to speech
 func _on_gpt4all_processed(dialogue: String):
-	#mic_active_label3D.visible = false
 	mic_active_label3D.text = "Response: " + dialogue
 	if text_to_speech_choice == text_to_speech_type.GODOT:
 		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
@@ -436,6 +428,7 @@ func _on_local_whisper_processed(prompt: String):
 		var thread = Thread.new()
 		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
 
+
 # Receiver function for whenever AI voice is played
 func _on_voice_played():
 	mic_active_label3D.visible = false
@@ -445,7 +438,6 @@ func _on_ai_brain_option_chosen(choice):
 	ai_brain_type_choice = choice
 	
 	
-
 func _on_tts_option_chosen(choice):
 	text_to_speech_choice = choice
 	print("text to speech option is" + str(choice))
@@ -458,7 +450,8 @@ func _on_tts_option_chosen(choice):
 	else:
 		convai_node.set_voice_response_mode(false)
 		convai_node.set_use_standalone_tts(false)
-	
+
+# This seemed to be too complicated to implement but leaving as example code commented out	
 #func _on_stt_option_chosen(choice):
 #	speech_to_text_choice = choice
 #	print("speech to text option is" + str(choice))

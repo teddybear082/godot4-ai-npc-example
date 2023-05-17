@@ -6,7 +6,7 @@ extends Node
 ## You can get the required chat.exe at https://github.com/kuvaus/LlamaGPTJ-chat/releases
 ## And the models are anything model compatible with gpt4all (https://github.com/nomic-ai/gpt4all)
 ## Which are typically models with a ggml- prefix.
-## This project comes with an example release (1.6, as of May 5, 2023) and llm (ggml-gpt4all-j-1.3-groovy.bin
+## This project comes with an example release (1.8, as of May 14, 2023) and llm (ggml-gpt4all-j-1.3-groovy.bin
 ## Which are MIT and Apache-2 licensed respectively so can be used for commercial or personal purposes.  
 
 
@@ -44,6 +44,8 @@ func call_GPT4All(prompt):
 	#print(arguments)
 	var output = []
 	var exit_code = OS.execute(GPT4Allexecutable, arguments, output, true, false)
+	# Parse the text of output according to its current format; if this doesn't work correctly, the formatting may have chanced since this code was written.
+	#print(output[0])
 	var last_part_of_response = output[0].get_slice_count("bytes")
 	var final_response = output[0].get_slice("bytes", last_part_of_response-1)
 	var final_response_without_breaks = final_response.replace("\n", "")

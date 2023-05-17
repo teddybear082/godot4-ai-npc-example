@@ -68,14 +68,10 @@ var wit_tts_voices : Array = [
 @export_range (25, 400, 1) var wit_tts_speech_pitch : int = 100 : set = set_wit_tts_speech_pitch
 
 var capture_effect = null
-
 var request
-
 var audio_player
-
 var audio_buffer = PackedByteArray()
 var audio_buffer_pos = 0
-
 var endpoint
 var is_ssl = true
 var target_rate = 16000
@@ -185,11 +181,6 @@ func end_voice_command():
 		sending = false
 		
 		if audio_buffer_pos / target_rate > command_minlen_sec:
-			
-			#Only process audio if there is enough speech
-			#Prevent spurious calls	
-		
-			#var audio_content = audio_buffer.subarray(0,audio_buffer_pos*2)
 			var audio_content = audio_buffer.slice(0, audio_buffer_pos*2)
 			# Make request to wit.ai speech endpoint		
 			request = HTTPRequest.new()
