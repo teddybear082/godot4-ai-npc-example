@@ -89,7 +89,10 @@ func _on_request_completed(result, responseCode, headers, body):
 		print(headers)
 		print(body.get_string_from_utf8())
 		return
-		
+	
+	# Check to see if any requests are waiting to be processed
+	_process_request_queue()
+	
 	stored_streamed_audio.append_array(body)
 	# If speech player not playing, play streamed audio and delete the queue if any; if audio is currently playing just queue audio for delivery after
 	if !eleven_labs_speech_player.playing:
@@ -99,8 +102,7 @@ func _on_request_completed(result, responseCode, headers, body):
 		stored_streamed_audio.resize(0)	
 		# Let other nodes know that AI generated dialogue is ready from GPT	
 		emit_signal("ElevenLabs_generated_speech")
-	# Check to see if any requests are waiting to be processed
-	_process_request_queue()
+	
 	
 # Set new API key
 func set_api_key(new_api_key):

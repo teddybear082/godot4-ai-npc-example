@@ -1,18 +1,18 @@
 bdbec74c6e5bd72edee867077d70896c
-::res://::1684282318
+::res://::1684284772
 default_bus_layout.tres::AudioBusLayout::261841076451552994::1683024107::0::1::::<><>::
-default_env.tres::Environment::9124224684588276908::1684281896::0::1::::<><>::
-export_presets.cfg::TextFile::-1::1684281683::0::1::::<><>::
+default_env.tres::Environment::9124224684588276908::1684283304::0::1::::<><>::
+export_presets.cfg::TextFile::-1::1684283297::0::1::::<><>::
 icon.png::CompressedTexture2D::300792686067952121::1681005633::1682274634::1::::<><>::
 openxr_action_map.tres::OpenXRActionMap::8422391758210820149::1682262192::0::1::::<><>::
-optionbuttontheme.tres::Theme::5725959172535301060::1684279437::0::1::::<><>::res://fonts/droid-sans/DroidSans.tres
+optionbuttontheme.tres::Theme::5725959172535301060::1684283304::0::1::::<><>::res://fonts/droid-sans/DroidSans.tres
 README.md::TextFile::-1::1684259965::0::1::::<><>::
 ::res://addons/::1683371247
 ::res://addons/godot-convAI/::1684280816
 GodotConvAI.gd::GDScript::-1::1684280816::0::1::::<>Node<>::
 GodotConvAI.tscn::PackedScene::-1::1682252485::0::1::::<><>::res://addons/godot-convAI/GodotConvAI.gd
-::res://addons/godot-elevenlabs-tts/::1684281169
-ElevenLabsTTS.gd::GDScript::-1::1684281169::0::1::::<>Node<>::
+::res://addons/godot-elevenlabs-tts/::1684282540
+ElevenLabsTTS.gd::GDScript::-1::1684282540::0::1::::<>Node<>::
 ElevenLabsTTS.tscn::PackedScene::-1::1682252485::0::1::::<><>::res://addons/godot-elevenlabs-tts/ElevenLabsTTS.gd
 ::res://addons/godot-gpt-35-turbo/::1684280249
 GodotGPT35Turbo.tscn::PackedScene::-1::1682252485::0::1::::<><>::res://addons/godot-gpt-35-turbo/VRChatGPT35.gd
@@ -102,7 +102,7 @@ hand_physics_bone.gd::GDScript::-1::1682274720::0::1::::XRToolsHandPhysicsBone<>
 License.md::TextFile::-1::1682274720::0::1::::<><>::
 physics_hand.gd::GDScript::-1::1682274720::0::1::::XRToolsPhysicsHand<>XRToolsHand<>::
 ::res://addons/godot-xr-tools/hands/animations/::1682274720
-::res://addons/godot-xr-tools/hands/animations/left/::1684279437
+::res://addons/godot-xr-tools/hands/animations/left/::1684283304
 AnimationPlayer.tscn::PackedScene::1348338211824726535::1682274720::0::1::::<><>::uid://dgfeikrugfewi<>uid://dlxa6f6hwurka<>uid://dqa0h82y3qn1t<>uid://di384xtde8ydf<>uid://dd67rufxwj2u<>uid://db62hs5s4n2b3<>uid://bediglpx0rj7i<>uid://nq3xh1olqipq<>uid://plad1r85f7ws<>uid://bi1l6lre2w2lp<>uid://c3e6h0rv2uw2d<>uid://dfekure1r6q13<>uid://b0rhk4r0r0t32<>uid://f5k0gh4qnmv5<>uid://1nlkfvitq7ku<>uid://dhjb0e334tfwl<>uid://dkjsnihi81b7p<>uid://bn0fdhe2jwq3h<>uid://bo1b8w0s4ci81<>uid://m5x2m8x3tcel<>uid://fi23m6i7orhw<>uid://c8qmcuyaltdnw<>uid://bqnoubqq7ogwu<>uid://ddbo6ioa282en<>uid://brkptjihht3ae<>uid://cnng6xumhw7cx<>uid://cevirj0eagdrq<>uid://cc6phxovf1ban<>uid://ohthjp8qbcc4<>uid://dmx42g64577g5<>uid://dhsoxntrktx0p<>uid://c0u2a3yc2vhg8<>uid://4g211my0hoiw<>uid://d06l7hygl4qt3<>uid://bxei4oebd4hu3
 Cup.res::Animation::7590974708412206284::1682274720::0::1::::<><>::
 Default pose.res::Animation::7978875689906027064::1682274720::0::1::::<><>::
@@ -113,7 +113,7 @@ Grip 4.res::Animation::7295099457076786082::1682274720::0::1::::<><>::
 Grip 5.res::Animation::2673866244220991652::1682274720::0::1::::<><>::
 Grip Shaft.res::Animation::947226568896451102::1682274720::0::1::::<><>::
 Grip.res::Animation::1075547560655330150::1682274720::0::1::::<><>::
-hand_blend_tree.tres::AnimationNodeBlendTree::8000931627586676636::1684279437::0::1::::<><>::
+hand_blend_tree.tres::AnimationNodeBlendTree::8000931627586676636::1684283304::0::1::::<><>::
 Hold.res::Animation::3002329105171642897::1682274720::0::1::::<><>::
 Horns.res::Animation::6748282567936908705::1682274720::0::1::::<><>::
 Metal.res::Animation::7519107566372913432::1682274720::0::1::::<><>::
@@ -140,7 +140,7 @@ Sign_Point.res::Animation::6570490880079797409::1682274720::0::1::::<><>::
 Straight.res::Animation::2049549906742426534::1682274720::0::1::::<><>::
 Surfer.res::Animation::8978704289758581818::1682274720::0::1::::<><>::
 Thumb.res::Animation::4009559863906171416::1682274720::0::1::::<><>::
-::res://addons/godot-xr-tools/hands/animations/right/::1684279437
+::res://addons/godot-xr-tools/hands/animations/right/::1684283304
 AnimationPlayer.tscn::PackedScene::4018207629101171331::1682274720::0::1::::<><>::uid://do01jton6rk42<>uid://ky28birj4su6<>uid://daqddcrbpam0c<>uid://r8hleealhrqt<>uid://rs7vpclot07o<>uid://d1xnpyc08njjx<>uid://s1vqcxyqcvea<>uid://c8dghcftg1thx<>uid://ccds2u22gbxn7<>uid://bv5tuc1kjv0k5<>uid://cdjfhqnr4n2mr<>uid://b1kqsodcr1til<>uid://cg6fsqb2iuuih<>uid://c3isimdlxg54a<>uid://bxmc3vlfih764<>uid://dg4v7rqiaje2h<>uid://cuwwpxi44vwpm<>uid://c6vghurk7t5yb<>uid://mjotm5uukoo3<>uid://ca21ej1p3g2yt<>uid://cseojxi8rrqc<>uid://c8hn123uon74u<>uid://b6ra3rqia1gvb<>uid://csp3fdknowmi5<>uid://2ttepgvf634h<>uid://wcwa3p1qrhwr<>uid://bcwx6a6mhsoj2<>uid://btnsp36fjkldf<>uid://c35i6glt1ov2m<>uid://b8mmk2ufmlyf<>uid://ddgl3lsnlfiny<>uid://ccy3e7a0hvxyl<>uid://d3h36bkauutoq<>uid://bq7cjxdn28jcv<>uid://d2ukhr3n2r1u8
 Cup.res::Animation::8195111040024005301::1682274720::0::1::::<><>::
 Default pose.res::Animation::753131858148690599::1682274720::0::1::::<><>::
@@ -151,7 +151,7 @@ Grip 4.res::Animation::9032470046656576133::1682274720::0::1::::<><>::
 Grip 5.res::Animation::1318376778329847596::1682274720::0::1::::<><>::
 Grip Shaft.res::Animation::7095643256860440737::1682274720::0::1::::<><>::
 Grip.res::Animation::4920554403641237694::1682274720::0::1::::<><>::
-hand_blend_tree.tres::AnimationNodeBlendTree::912215260637445682::1684279437::0::1::::<><>::
+hand_blend_tree.tres::AnimationNodeBlendTree::912215260637445682::1684283304::0::1::::<><>::
 Hold.res::Animation::3923507217133086158::1682274720::0::1::::<><>::
 Horns.res::Animation::5002304244875762093::1682274720::0::1::::<><>::
 Metal.res::Animation::4232978752073040327::1682274720::0::1::::<><>::
@@ -367,8 +367,8 @@ LICENSE.txt::TextFile::-1::1682276228::0::1::::<><>::
 ::res://android/plugins/godotopenxrpico/::1682276228
 LICENSE.md::TextFile::-1::1682276228::0::1::::<><>::
 ::res://assets/::1682251794
-::res://assets/materials/::1684279437
-floormaterial.tres::StandardMaterial3D::6540743981260348921::1684279437::0::1::::<><>::uid://d23edxxq1c3qe
+::res://assets/materials/::1684283304
+floormaterial.tres::StandardMaterial3D::6540743981260348921::1684283304::0::1::::<><>::uid://d23edxxq1c3qe
 ::res://assets/models/::1682251794
 ::res://assets/models/gdquest/::1682274636
 Azul.material::StandardMaterial3D::-1::1628107886::0::1::::<><>::
@@ -520,9 +520,9 @@ pattern_0026.png::CompressedTexture2D::4399940979500726163::1666979818::16822746
 pattern_0027.png::CompressedTexture2D::2823857612019619841::1666979819::1682274634::1::::<><>::
 pattern_0028.png::CompressedTexture2D::4707359152108094110::1666979819::1682274634::1::::<><>::
 pattern_0029.png::CompressedTexture2D::461403599032086983::1666979819::1682274634::1::::<><>::
-::res://demo/::1684281896
+::res://demo/::1684283304
 Main.gd::GDScript::-1::1684281631::0::1::::<>Node3D<>::
-Main.tscn::PackedScene::8249820758875338616::1684281896::0::1::::<><>::uid://de75036o5g1q6<>uid://3l4j0tlmkfdm<>uid://cnn66tacxxgyj<>uid://ckodl60h5lhr8<>uid://c0gndlah2ieer<>uid://cxs1bawqyedpk<>uid://dd7f42rrddmwp<>uid://c0exeywd1cdgr<>uid://20nb6kx5jftx<>uid://c7dsp87147d45<>uid://byfitmoc2utqm<>uid://dh5xfpe2pe53f<>uid://ckpxvchnbxacu<>uid://dpdg1cb1a4jjs<>uid://dnta4qo40aedr<>res://assets/models/gdquest/mannequiny-0.3.0.gd<>res://demo/Main.gd<>res://fonts/droid-sans/DroidSans.tres<>uid://nqitbcfd0the<>uid://4c8xmiiqske6<>uid://cmah6673gpjmp<>res://addons/godot-gpt-35-turbo/GodotGPT35Turbo.tscn<>res://scripts/Godot-AI-NPC-Controller.tscn<>res://addons/godot-witai/VRVoiceControl-WitAI.tscn<>res://scripts/npc_interaction_area.gd<>uid://ek8c4w247n4i<>res://addons/godot-convAI/GodotConvAI.tscn<>uid://8ulc2s07842v<>uid://c7w6h7i10rgiy<>uid://clc5dre31iskm<>res://addons/godot-elevenlabs-tts/ElevenLabsTTS.tscn<>uid://cqcujpqemwwf3<>uid://blv5csr270whi<>uid://clujaf3u776a3<>uid://dcjdrl3ldtps2
+Main.tscn::PackedScene::8249820758875338616::1684283304::0::1::::<><>::uid://de75036o5g1q6<>uid://3l4j0tlmkfdm<>uid://cnn66tacxxgyj<>uid://ckodl60h5lhr8<>uid://c0gndlah2ieer<>uid://cxs1bawqyedpk<>uid://dd7f42rrddmwp<>uid://c0exeywd1cdgr<>uid://20nb6kx5jftx<>uid://c7dsp87147d45<>uid://byfitmoc2utqm<>uid://dh5xfpe2pe53f<>uid://ckpxvchnbxacu<>uid://dpdg1cb1a4jjs<>uid://dnta4qo40aedr<>res://assets/models/gdquest/mannequiny-0.3.0.gd<>res://demo/Main.gd<>res://fonts/droid-sans/DroidSans.tres<>uid://nqitbcfd0the<>uid://4c8xmiiqske6<>uid://cmah6673gpjmp<>res://addons/godot-gpt-35-turbo/GodotGPT35Turbo.tscn<>res://scripts/Godot-AI-NPC-Controller.tscn<>res://addons/godot-witai/VRVoiceControl-WitAI.tscn<>res://scripts/npc_interaction_area.gd<>uid://ek8c4w247n4i<>res://addons/godot-convAI/GodotConvAI.tscn<>uid://8ulc2s07842v<>uid://c7w6h7i10rgiy<>uid://clc5dre31iskm<>res://addons/godot-elevenlabs-tts/ElevenLabsTTS.tscn<>uid://cqcujpqemwwf3<>uid://blv5csr270whi<>uid://clujaf3u776a3<>uid://dcjdrl3ldtps2
 Options2D.tscn::PackedScene::7318432269132527203::1683663198::0::1::::<><>::res://fonts/droid-sans/DroidSans.tres<>res://scripts/Options2D.gd<>uid://cntxyf6c7wi1a
 ::res://demo/npc/::1681006444
 ::res://demo/player/::1682278063
@@ -547,8 +547,8 @@ Apache License.txt::TextFile::-1::1681126232::0::1::::<><>::
 DroidSans-Bold.ttf::FontFile::6434227450256950665::1681126232::1682274634::1::::<><>::
 DroidSans.tres::FontFile::-1::1682252485::0::1::::<><>::res://fonts/droid-sans/DroidSans.ttf
 DroidSans.ttf::FontFile::303407942871465670::1681126232::1682274634::1::::<><>::
-::res://scripts/::1684281527
-godot-ai-npc-controller.gd::GDScript::-1::1684281527::0::1::::<>Node<>::
+::res://scripts/::1684282540
+godot-ai-npc-controller.gd::GDScript::-1::1684282540::0::1::::<>Node<>::
 Godot-AI-NPC-Controller.tscn::PackedScene::-1::1682252485::0::1::::<><>::res://scripts/godot-ai-npc-controller.gd
 npc_interaction_area.gd::GDScript::-1::1682252485::0::1::::<>Area3D<>::
 Options2D.gd::GDScript::-1::1683663187::0::1::::<>Control<>::

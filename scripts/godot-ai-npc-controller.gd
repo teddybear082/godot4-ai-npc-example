@@ -242,14 +242,7 @@ func _ready():
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
 	
-	# Testing ElevenLabs streaming
-	await get_tree().create_timer(10.0).timeout
-	eleven_labs_tts_node.call_ElevenLabs("Even after Google's statement about being afraid of open source models, I was not expecting OpenAI to go after the open source community so fast. It seems a really great idea to give governments (and a few companies they allow too) even more power over us while still presenting these ideas as being for the sake of people's safety and democracy.")
-	eleven_labs_tts_node.call_ElevenLabs("Second statement here.")
-	eleven_labs_tts_node.call_ElevenLabs("Third.")
 	
-	await get_tree().create_timer(10.0).timeout
-	eleven_labs_tts_node.call_ElevenLabs("End.")
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
 	if button != activate_mic_button:
