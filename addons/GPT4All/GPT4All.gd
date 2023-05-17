@@ -2,11 +2,11 @@ extends Node
 ## This is a script to query a local GPT4All Install for AI-generated NPC dialogue. 
 ## The script expects the model and chat.exe file to be in the same directory
 ## As user data for the editor version and the executable for other versions.
-## This is only compatible with windows at this time.
+## This is only compatible with Windows at this time.
 ## You can get the required chat.exe at https://github.com/kuvaus/LlamaGPTJ-chat/releases
 ## And the models are anything model compatible with gpt4all (https://github.com/nomic-ai/gpt4all)
 ## Which are typically models with a ggml- prefix.
-## This project comes with an example release (1.8, as of May 14, 2023) and llm (ggml-gpt4all-j-1.3-groovy.bin
+## This project comes with an example release (2.0, as of May 17, 2023) of kuvaus's chat.exe and llm (ggml-gpt4all-j-1.3-groovy.bin
 ## Which are MIT and Apache-2 licensed respectively so can be used for commercial or personal purposes.  
 
 
@@ -33,7 +33,6 @@ func _ready():
 		executable_path = OS.get_executable_path().get_base_dir()
 	GPT4Allexecutable = executable_path.path_join("chat.exe")
 	model_path = executable_path.path_join("ggml-gpt4all-j-v1.3-groovy.bin")
-	#model_path = executable_path.path_join("ggml-gpt4all-l13b-snoozy.bin")
 	json_path = executable_path.path_join("gpt4all.json")
 	prompt_template_path = executable_path.path_join("prompt_template.txt")
 
@@ -51,7 +50,7 @@ func call_GPT4All(prompt):
 	var final_response_without_breaks = final_response.replace("\n", "")
 	var final_response_without_returns = final_response_without_breaks.replace("\r", "")
 	var final_response_clean = final_response_without_returns.replace("#", "")
-	print(final_response_clean)
+	#print(final_response_clean)
 	emit_signal("AI_response_generated", final_response_clean)
 
 
