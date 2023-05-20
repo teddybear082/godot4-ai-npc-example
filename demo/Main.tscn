@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://dpsjlwa7mye4o"]
+[gd_scene load_steps=49 format=3 uid="uid://cpneed0jfseuk"]
 
 [ext_resource type="PackedScene" uid="uid://de75036o5g1q6" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-medium.glb" id="2"]
 [ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
@@ -33,6 +33,7 @@
 [ext_resource type="PackedScene" path="res://addons/godot-elevenlabs-tts/ElevenLabsTTS.tscn" id="30"]
 [ext_resource type="PackedScene" uid="uid://cqcujpqemwwf3" path="res://addons/GPT4All/gpt4all.tscn" id="30_snwds"]
 [ext_resource type="PackedScene" uid="uid://blv5csr270whi" path="res://addons/godot-local-whisper/local_whisper.tscn" id="31_v58ok"]
+[ext_resource type="PackedScene" path="res://addons/godot-VASynth/xva_synth.tscn" id="32_gtpug"]
 [ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="32_h8v3t"]
 [ext_resource type="PackedScene" uid="uid://dcjdrl3ldtps2" path="res://demo/Options2D.tscn" id="33_m67ws"]
 
@@ -424,6 +425,8 @@ use_standalone_text_to_speech = true
 [node name="GPT4All" parent="Godot-AI-NPC-Controller" instance=ExtResource("30_snwds")]
 
 [node name="LocalWhisper" parent="Godot-AI-NPC-Controller" instance=ExtResource("31_v58ok")]
+
+[node name="XVASynth" parent="Godot-AI-NPC-Controller" instance=ExtResource("32_gtpug")]
 
 [node name="MicActiveLabel3D" type="Label3D" parent="Godot-AI-NPC-Controller"]
 transform = Transform3D(0.602595, 0, 0.798047, 0, 1, 0, -0.798047, 0, 0.602595, -1.88246, 1.63711, -2.16239)

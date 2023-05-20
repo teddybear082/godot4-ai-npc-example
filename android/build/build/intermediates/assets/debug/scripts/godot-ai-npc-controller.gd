@@ -68,6 +68,7 @@ enum ai_brain_type {
 @onready var placeholder_sound_player = get_node("PlaceholderSoundPlayer")
 @onready var options_viewport = get_node("OptionsViewport2Din3D")
 @onready var options_scene = options_viewport.get_scene_instance()
+@onready var vasynth_node = get_node("VASynth")
 
 # Variable used to determine if player can use proximity interaction
 var close_enough_to_talk : bool = false
@@ -242,6 +243,17 @@ func _ready():
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
 	
+	# Testing only
+#	await get_tree().create_timer(10.0).timeout
+#	#vasynth_node.initiate_VASynth("test")
+#	vasynth_node.load_VASynth_model()
+#
+#	await get_tree().create_timer(5.0).timeout
+#	vasynth_node.VASynth_synthesize("Hi, how are you doing?")
+	
+	# Testing only
+	await get_tree().create_timer(10.0).timeout
+	gpt4all_node.call_GPT4All_server("Summarize the most important points of our conversation so far without being too wordy.")
 	
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
