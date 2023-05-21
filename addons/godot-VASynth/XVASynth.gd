@@ -40,7 +40,7 @@ func load_XVASynth_model():
 	add_child(http_request)
 	http_request.connect("request_completed", Callable(self, "_on_XVASynth_model_request_completed"))
 	var body = JSON.stringify({
-		"outputs": null, "model": "D:/DExtraSteamGames/steamapps/common/xVASynth/resources/app/models/skyrim/sk_femalenord", "modelType": "FastPitch1.1", "version": "2.0", "base_lang": "en", "pluginsContext": "{}"
+		"outputs": null, "model": "D:/DExtraSteamGames/steamapps/common/xVASynth/resources/app/models/GodofWar/kratos", "modelType": "FastPitch1.1", "version": "2.0", "base_lang": "en", "pluginsContext": "{}"
 	})
 	var headers = PackedStringArray([])
 	http_request.request("http://localhost:8008/loadModel", headers, HTTPClient.METHOD_POST, body)
@@ -69,7 +69,7 @@ func XVASynth_synthesize(prompt):
 		outfile = executabledirectory.path_join("vasynth.wav")
 	else:
 		outfile = executabledirectory.path_join("vasynth.wav")
-	var body = JSON.stringify({"sequence": prompt, "pitch": [], "duration": [], "energy":[], "pace": 1, "modelType":"FastPitch1.1", "outfile": outfile, "pluginsContext":"[]", "vocoder": ""})
+	var body = JSON.stringify({"sequence": prompt, "pitch": [], "duration": [], "energy":[], "pace": 1.30, "modelType":"FastPitch1.1", "outfile": outfile, "pluginsContext":"[]", "vocoder": ""})
 	var headers = PackedStringArray([])
 	var http_request : HTTPRequest = HTTPRequest.new()
 	add_child(http_request)

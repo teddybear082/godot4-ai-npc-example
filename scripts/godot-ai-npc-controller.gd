@@ -363,6 +363,8 @@ func _on_gpt_3_5_turbo_processed(dialogue : String):
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
 	elif text_to_speech_choice == text_to_speech_type.WIT:
 		wit_ai_node.call_wit_TTS(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.XVASYNTH:
+		xvasynth_node.XVASynth_synthesize(dialogue)
 	else:
 		convai_node.call_convAI_TTS(dialogue)
 
