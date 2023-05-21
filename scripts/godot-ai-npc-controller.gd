@@ -253,7 +253,13 @@ func _ready():
 	# in standalone mode or character/getResponse mode
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
-
+	
+	# Testing only for more work on XVASynth
+	await get_tree().create_timer(20.0).timeout
+#	xvasynth_node.XVASynth_synthesize("     First, You will die, and it will be fun. Second, I will win. Third, I will triumph. Fourth, I will go to the movies.  Fifth, I will win an oscar.   ")
+#	xvasynth_node.XVASynth_synthesize("     Sixth, I will laugh    ")
+#	xvasynth_node.XVASynth_synthesize("     Endin here.")
+	
 	
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
