@@ -67,7 +67,7 @@ func call_GPT4All_server(prompt):
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.connect("request_completed", Callable(self, "_on_request_completed"))
-	var url = "http://localhost:4891/v1/chat/completions"
+	var url = "http://127.0.0.1:4891/v1/chat/completions"
 	var headers = []
 	var temperature = 0.5
 	var body = JSON.stringify({
@@ -102,7 +102,7 @@ func _on_request_completed(result, responseCode, headers, body):
 	var response = test_json_conv.get_data()
 	var choices = response.choices[0]
 	var AI_generated_dialogue = choices["text"]
-	#print(AI_generated_dialogue)
+	print(AI_generated_dialogue)
 	emit_signal("AI_response_generated", AI_generated_dialogue)
 	
 	

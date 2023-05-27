@@ -5,3 +5,4 @@ res://addons/godot-xr-tools/hands/animations/left/hand_blend_tree.tres
 res://addons/godot-xr-tools/hands/animations/right/hand_blend_tree.tres
 res://optionbuttontheme.tres
 res://scripts/godot-ai-npc-controller.gd
+res://addons/godot-VASynth/XVASynth.gd

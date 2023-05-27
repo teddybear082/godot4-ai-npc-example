@@ -124,7 +124,7 @@ func _ready():
 	if FileAccess.file_exists(OS.get_user_data_dir().path_join("xvasynthserverstart.bat")) or FileAccess.file_exists(OS.get_executable_path().get_base_dir().path_join("xvasynthserverstart.bat")):
 		var thread = Thread.new()
 		thread.start(Callable(xvasynth_node, "initiate_XVASynth"))
-		await get_tree().create_timer(5.0).timeout
+		await get_tree().create_timer(10.0).timeout
 		xvasynth_node.load_XVASynth_model()
 		
 	# Connect wit ai speech to text received signal to handler function
@@ -255,12 +255,15 @@ func _ready():
 	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
 	
 	# Testing only for more work on XVASynth
-	await get_tree().create_timer(20.0).timeout
+#	await get_tree().create_timer(20.0).timeout
 #	xvasynth_node.XVASynth_synthesize("     First, You will die, and it will be fun. Second, I will win. Third, I will triumph. Fourth, I will go to the movies.  Fifth, I will win an oscar.   ")
 #	xvasynth_node.XVASynth_synthesize("     Sixth, I will laugh    ")
-#	xvasynth_node.XVASynth_synthesize("     Endin here.")
-	
-	
+#	xvasynth_node.XVASynth_synthesize("     Endin here.   ")
+#
+	# Testing GPT4All server mode
+#	await get_tree().create_timer(5.0).timeout
+#	gpt4all_node.call_GPT4All_server("Hi, who are you?")
+
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
 	if button != activate_mic_button:
