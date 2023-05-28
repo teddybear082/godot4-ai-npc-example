@@ -124,7 +124,7 @@ func _ready():
 	if FileAccess.file_exists(OS.get_user_data_dir().path_join("xvasynthserverstart.bat")) or FileAccess.file_exists(OS.get_executable_path().get_base_dir().path_join("xvasynthserverstart.bat")):
 		var thread = Thread.new()
 		thread.start(Callable(xvasynth_node, "initiate_XVASynth"))
-		await get_tree().create_timer(10.0).timeout
+		await get_tree().create_timer(5.0).timeout
 		xvasynth_node.load_XVASynth_model()
 		
 	# Connect wit ai speech to text received signal to handler function
@@ -252,13 +252,13 @@ func _ready():
 	# Testing only right now - convai's speech to text pipeline seems to have issues across the board so is not functioning
 	# in standalone mode or character/getResponse mode
 	#await get_tree().create_timer(10.0).timeout
-	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
+	#convai_node.call_convai_speech_to_text_standalone("user://convaimicaudio.wav")
 	
-	# Testing only for more work on XVASynth
-#	await get_tree().create_timer(20.0).timeout
-#	xvasynth_node.XVASynth_synthesize("     First, You will die, and it will be fun. Second, I will win. Third, I will triumph. Fourth, I will go to the movies.  Fifth, I will win an oscar.   ")
+	# Testing for XVASynth
+#	await get_tree().create_timer(10.0).timeout
+#	xvasynth_node.XVASynth_synthesize("     First, I will win. Second, I will be victorious.  Third, I will triumph. Fourth, I will go to the movies.  Fifth, I will win an oscar.   ")
 #	xvasynth_node.XVASynth_synthesize("     Sixth, I will laugh    ")
-#	xvasynth_node.XVASynth_synthesize("     Endin here.   ")
+#	xvasynth_node.XVASynth_synthesize("     Ending here.   ")
 #
 	# Testing GPT4All server mode
 #	await get_tree().create_timer(5.0).timeout
@@ -360,7 +360,7 @@ func _on_wit_ai_processed(prompt : String):
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
 		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
-
+		#gpt4all_node.call_GPT4All_server(prompt)
 
 # Function called when GPT 3.5 turbo finishes processes AI dialogue response, use text_to_speech addon node, Eleven AI or ConvAI to play the audio response	
 # If you are using a different text to speech solution, the command to call it could be used here instead.
@@ -431,7 +431,7 @@ func _on_whisper_processed(prompt: String):
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
 		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
-
+		#gpt4all_node.call_GPT4All_server(prompt)
 
 # Function called when local whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_local_whisper_processed(prompt: String):
@@ -454,7 +454,7 @@ func _on_local_whisper_processed(prompt: String):
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
 		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
-
+		#gpt4all_node.call_GPT4All_server(prompt)
 
 # Receiver function for whenever AI voice is played
 func _on_voice_played():
