@@ -99,7 +99,7 @@ var gpt4all_model_name : String = "ggml-gpt4all-j-v1.3-groovy.bin"
 var config_text_to_speech_choice = text_to_speech_type.CONVAI
 var config_ai_brain_type_choice = ai_brain_type.CONVAI
 var config_speech_to_text_choice = speech_to_text_type.WIT
-
+var xVASynth_model_path : String = ""
 # Whether to use convai in stream or normal API mode
 var use_convai_stream_mode : bool = true
 
@@ -120,11 +120,12 @@ func _ready():
 		voice_id = voices[0]
 		DisplayServer.tts_set_utterance_callback(DisplayServer.TTS_UTTERANCE_STARTED, Callable(self, "_on_voice_played"))
 	
-	# Set up xvasynth if it exists
-	if FileAccess.file_exists(OS.get_user_data_dir().path_join("xvasynthserverstart.bat")) or FileAccess.file_exists(OS.get_executable_path().get_base_dir().path_join("xvasynthserverstart.bat")):
+	# Set up xvasynth if user has entered a xVASynth model path in the config file
+	if !OS.has_feature("android") and xVASynth_model_path != "":
+		xvasynth_node.model_path = xVASynth_model_path
 		var thread = Thread.new()
 		thread.start(Callable(xvasynth_node, "initiate_XVASynth"))
-		await get_tree().create_timer(5.0).timeout
+		await get_tree().create_timer(7.0).timeout
 		xvasynth_node.load_XVASynth_model()
 		
 	# Connect wit ai speech to text received signal to handler function
@@ -433,6 +434,7 @@ func _on_whisper_processed(prompt: String):
 		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
 		#gpt4all_node.call_GPT4All_server(prompt)
 
+
 # Function called when local whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_local_whisper_processed(prompt: String):
 	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
@@ -559,6 +561,7 @@ func save_api_info():
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_choice)
+		prefs_cfg.set_value("xVASynth_options", "xVASynth_model_path", xVASynth_model_path)
 		err = prefs_cfg.save(exe_cfg_path)
 	
 	emit_signal("options_saved")
@@ -610,5 +613,6 @@ func load_api_info():
 		config_text_to_speech_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_type.CONVAI)
 		config_ai_brain_type_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type.CONVAI)
 		config_speech_to_text_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_type.WIT)
+		xVASynth_model_path = prefs_cfg.get_value("xVASynth_options", "xVASynth_model_path", "")
 	emit_signal("options_loaded")
 
