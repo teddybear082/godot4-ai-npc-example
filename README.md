@@ -27,11 +27,16 @@ At a high level, included options/scripts are:
 
 * GPT4All - Llama GPT-J-Chat (locally run, no paid API key required) (for AI character response generation)
 
+* GPT4All - regular windows program server mode (locally run, no paid API key required) (for AI character response generation)
+
 * Godot Text to Speech (locally run, no paid API Key rquired) (this is just an implementation of Godot 4's native text to speech functionality through Display Server)
+
+* XVASynth Text to Speech (locally run, no paid API Key required; requires download of XVASynth v.3.0 from Steam or NexusMods and a v3 voice model installed at the location where XVASynth expects)
 
 **KNOWN ISSUES:**
 
-* Convai speech to text does not work, seems to be an API issue
+* Convai speech to text does not work, seems to be an API issue with the .wav file format Godot uses
+
 * ElevenLabs text to speech will only process first request if several are sent, e.g., streaming text (needs better httprequest management)
 
 **Special Thanks to:**
@@ -53,6 +58,8 @@ At a high level, included options/scripts are:
 * Kenney for the free cc0 art assets used in this project
 
 * ChatGPT for helping me with some of the audio conversion scripts lol (yes, used some AI to create the AI project)
+
+* XVASynth dev, DanRuta for making a great free program and helping me use its largely undocumented headless server mode
 
 * All the other creators of the various tools used in this project.
 
