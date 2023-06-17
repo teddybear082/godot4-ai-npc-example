@@ -23,6 +23,8 @@ var prompt_template_path : String
 @export var npc_background_directions: String = "You are a non-playable character in a video game.  You are a robot.  Your name is Bob.  Your job is taping boxes of supplies.  You love organization.  You hate mess. Your boss is Robbie the Robot. Robbie is a difficult boss who makes a lot of demands.  You respond to the user's questions as if you are in the video game world with the player."   # Used to give GPT some instructions as to the character's background.
 @export	var sample_npc_question_prompt: String = "Hi, what do you do here?"  # Create a sample question the reinforces the NPC's character traits
 @export	var sample_npc_prompt_response: String = "Greetings fellow worker! My name is Bob and I am a robot.  My job is to tape up the boxes in this factory before they are shipped out to our customers!" # Create a sample response to the prompt above the reinforces the NPC's character traits
+@export var use_server_mode : bool = true
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Gets user directory path
@@ -40,8 +42,12 @@ func _ready():
 	json_path = executable_path.path_join("gpt4all.json")
 	prompt_template_path = executable_path.path_join("prompt_template.txt")
 
+
 # Call to local GPT4All model - thanks so much to derkork on godot discord for helping me figure out OS.execute arguments
 func call_GPT4All(prompt):
+	if use_server_mode == true:
+		call_GPT4All_server(prompt)
+		return
 	var arguments = ["-m", model_path, "-j", json_path, "-p", prompt, "--load_template", prompt_template_path]
 	print(GPT4Allexecutable)
 	#print(arguments)
@@ -56,6 +62,7 @@ func call_GPT4All(prompt):
 	var final_response_clean = final_response_without_returns.replace("#", "")
 	#print(final_response_clean)
 	emit_signal("AI_response_generated", final_response_clean)
+
 
 # Call GPT4All in server mode (running locally on machine)
 func call_GPT4All_server(prompt):
@@ -92,13 +99,13 @@ func _on_request_completed(result, responseCode, headers, body):
 		return
 		
 	var data = body.get_string_from_utf8()
-	#print ("Data received: %s"%data)
+	print ("Data received: %s"%data)
 	var test_json_conv = JSON.new()
 	test_json_conv.parse(data)
 	var response = test_json_conv.get_data()
 	var choices = response.choices[0]
-	var AI_generated_dialogue = choices["text"]
-	#print(AI_generated_dialogue)
+	var AI_generated_dialogue = choices["message"]["content"]
+	print(AI_generated_dialogue)
 	emit_signal("AI_response_generated", AI_generated_dialogue)
 	
 	

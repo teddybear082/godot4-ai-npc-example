@@ -439,7 +439,7 @@ func call_convAI_stream_with_voice():
 	# This is the format godothttpfilepost expects:
 	#post_file(url: String, field_name: String, file_name: String, file_path: String, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = [])
 	
-	http_file_post_request.post_file(url, "file", "audio.wav", save_path, body, "audio/wav", voice_file_headers)
+	http_file_post_request.post_file(url, "file", "convaimicaudio.wav", save_path, body, "audio/wav", voice_file_headers)
 
 
 # Function to receive response to convAI's AI generation using the stream protocol and audio file prompt
@@ -530,16 +530,16 @@ func end_voice_command():
 			var audio_content = audio_buffer.slice(0, audio_buffer_pos * 2)
 			save_path = ""
 			if OS.has_feature("editor"):
-				save_path = "user://audio.wav"
+				save_path = "user://convaimicaudio.wav"
 			elif OS.has_feature("android"):
-				save_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/audio.wav"
+				save_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false) + "/convaimicaudio.wav"
 			else:
-				save_path = OS.get_executable_path().get_base_dir() + "/audio.wav"
+				save_path = OS.get_executable_path().get_base_dir() + "/convaimicaudio.wav"
 			var new_wav_stream = AudioStreamWAV.new()
 			new_wav_stream.loop_mode = AudioStreamWAV.LOOP_DISABLED
 			new_wav_stream.stereo = false
 			new_wav_stream.mix_rate = target_rate
-			new_wav_stream.FORMAT_16_BITS # was 8 bits
+			new_wav_stream.FORMAT_16_BITS
 			new_wav_stream.data = audio_content
 			var err = new_wav_stream.save_to_wav(save_path)
 			#print(err)
@@ -621,7 +621,7 @@ func call_convai_speech_to_text_standalone(speechfile_path):
 	# This is the format godothttpfilepost expects:
 	#post_file(url: String, field_name: String, file_name: String, file_path: String, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = [])
 	
-	http_file_post_request.post_file("https://api.convai.com/stt/", "file", "audio.wav", speechfile_path, body, "audio/wav", voice_file_headers)
+	http_file_post_request.post_file("https://api.convai.com/stt/", "file", "convaimicaudio.wav", speechfile_path, body, "audio/wav", voice_file_headers)
 	
 	
 # Receiver function for standalone convai speech to text

@@ -262,8 +262,8 @@ func _ready():
 #	xvasynth_node.XVASynth_synthesize("     Ending here.   ")
 #
 	# Testing GPT4All server mode
-#	await get_tree().create_timer(5.0).timeout
-#	gpt4all_node.call_GPT4All_server("Hi, who are you?")
+	#await get_tree().create_timer(5.0).timeout
+	#gpt4all_node.call_GPT4All("Hi, who are you?")
 
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):

@@ -17,7 +17,8 @@ enum text_to_speech_type {
 	GODOT,
 	ELEVENLABS,
 	CONVAI,
-	WIT
+	WIT,
+	XVASYNTH
 }
 
 # Enum for AI brain choice
@@ -56,8 +57,10 @@ func _ready():
 	TTSOptionButton.add_item("Eleven Labs", 1)
 	TTSOptionButton.add_item("Convai", 2)
 	TTSOptionButton.add_item("Wit.ai", 3)
+	TTSOptionButton.add_item("XVASynth-PCVR only", 4)
 	if OS.has_feature("android"):
 		TTSOptionButton.set_item_disabled(0, true)
+		TTSOptionButton.set_item_disabled(4, true)
 			
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

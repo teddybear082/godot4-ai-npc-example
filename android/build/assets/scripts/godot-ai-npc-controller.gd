@@ -33,7 +33,8 @@ enum text_to_speech_type {
 	GODOT,
 	ELEVENLABS,
 	CONVAI,
-	WIT
+	WIT,
+	XVASYNTH
 }
 
 # Enum for AI brain choice
@@ -68,7 +69,7 @@ enum ai_brain_type {
 @onready var placeholder_sound_player = get_node("PlaceholderSoundPlayer")
 @onready var options_viewport = get_node("OptionsViewport2Din3D")
 @onready var options_scene = options_viewport.get_scene_instance()
-@onready var vasynth_node = get_node("VASynth")
+@onready var xvasynth_node = get_node("XVASynth")
 
 # Variable used to determine if player can use proximity interaction
 var close_enough_to_talk : bool = false
@@ -98,7 +99,7 @@ var gpt4all_model_name : String = "ggml-gpt4all-j-v1.3-groovy.bin"
 var config_text_to_speech_choice = text_to_speech_type.CONVAI
 var config_ai_brain_type_choice = ai_brain_type.CONVAI
 var config_speech_to_text_choice = speech_to_text_type.WIT
-
+var xVASynth_model_path : String = ""
 # Whether to use convai in stream or normal API mode
 var use_convai_stream_mode : bool = true
 
@@ -118,7 +119,15 @@ func _ready():
 		voices = DisplayServer.tts_get_voices_for_language("en")
 		voice_id = voices[0]
 		DisplayServer.tts_set_utterance_callback(DisplayServer.TTS_UTTERANCE_STARTED, Callable(self, "_on_voice_played"))
-
+	
+	# Set up xvasynth if user has entered a xVASynth model path in the config file
+	if !OS.has_feature("android") and xVASynth_model_path != "":
+		xvasynth_node.model_path = xVASynth_model_path
+		var thread = Thread.new()
+		thread.start(Callable(xvasynth_node, "initiate_XVASynth"))
+		await get_tree().create_timer(7.0).timeout
+		xvasynth_node.load_XVASynth_model()
+		
 	# Connect wit ai speech to text received signal to handler function
 	wit_ai_node.connect("wit_ai_speech_to_text_received", Callable(self, "_on_wit_ai_processed"))
 	
@@ -145,6 +154,9 @@ func _ready():
 	
 	# Connect voice played signal from ElevenLabs
 	eleven_labs_tts_node.connect("ElevenLabs_generated_speech", Callable(self, "_on_voice_played"))
+	
+	# Connect voice played signal from XVASynth
+	xvasynth_node.connect("xvasynth_voice_sample_played", Callable(self, "_on_voice_played"))
 	
 	# Connect options scene signals
 	options_viewport.connect_scene_signal("ai_brain_option_chosen", Callable(self, "_on_ai_brain_option_chosen"))
@@ -241,20 +253,18 @@ func _ready():
 	# Testing only right now - convai's speech to text pipeline seems to have issues across the board so is not functioning
 	# in standalone mode or character/getResponse mode
 	#await get_tree().create_timer(10.0).timeout
-	#convai_node.call_convai_speech_to_text_standalone("user://audio.wav")
+	#convai_node.call_convai_speech_to_text_standalone("user://convaimicaudio.wav")
 	
-	# Testing only
+	# Testing for XVASynth
 #	await get_tree().create_timer(10.0).timeout
-#	#vasynth_node.initiate_VASynth("test")
-#	vasynth_node.load_VASynth_model()
+#	xvasynth_node.XVASynth_synthesize("     First, I will win. Second, I will be victorious.  Third, I will triumph. Fourth, I will go to the movies.  Fifth, I will win an oscar.   ")
+#	xvasynth_node.XVASynth_synthesize("     Sixth, I will laugh    ")
+#	xvasynth_node.XVASynth_synthesize("     Ending here.   ")
 #
-#	await get_tree().create_timer(5.0).timeout
-#	vasynth_node.VASynth_synthesize("Hi, how are you doing?")
-	
-	# Testing only
-	await get_tree().create_timer(10.0).timeout
-	gpt4all_node.call_GPT4All_server("Summarize the most important points of our conversation so far without being too wordy.")
-	
+	# Testing GPT4All server mode
+	#await get_tree().create_timer(5.0).timeout
+	#gpt4all_node.call_GPT4All("Hi, who are you?")
+
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
 	if button != activate_mic_button:
@@ -351,7 +361,7 @@ func _on_wit_ai_processed(prompt : String):
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
 		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
-
+		#gpt4all_node.call_GPT4All_server(prompt)
 
 # Function called when GPT 3.5 turbo finishes processes AI dialogue response, use text_to_speech addon node, Eleven AI or ConvAI to play the audio response	
 # If you are using a different text to speech solution, the command to call it could be used here instead.
@@ -363,6 +373,8 @@ func _on_gpt_3_5_turbo_processed(dialogue : String):
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
 	elif text_to_speech_choice == text_to_speech_type.WIT:
 		wit_ai_node.call_wit_TTS(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.XVASYNTH:
+		xvasynth_node.XVASynth_synthesize(dialogue)
 	else:
 		convai_node.call_convAI_TTS(dialogue)
 
@@ -377,6 +389,8 @@ func _on_convai_processed(dialogue : String):
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
 	elif text_to_speech_choice == text_to_speech_type.WIT:
 		wit_ai_node.call_wit_TTS(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.XVASYNTH:
+		xvasynth_node.XVASynth_synthesize(dialogue)
 	# If using convai text to speech, don't need to do anything else since speech already generated by that node
 	else:
 		pass
@@ -391,6 +405,8 @@ func _on_gpt4all_processed(dialogue: String):
 		eleven_labs_tts_node.call_ElevenLabs(dialogue)
 	elif text_to_speech_choice == text_to_speech_type.WIT:
 		wit_ai_node.call_wit_TTS(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.XVASYNTH:
+		xvasynth_node.XVASynth_synthesize(dialogue)
 	else:
 		convai_node.call_convAI_TTS(dialogue)	
 
@@ -416,6 +432,7 @@ func _on_whisper_processed(prompt: String):
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
 		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
+		#gpt4all_node.call_GPT4All_server(prompt)
 
 
 # Function called when local whisper finishes processing speech to text, use the text it produces to call AI brain
@@ -439,7 +456,7 @@ func _on_local_whisper_processed(prompt: String):
 		# To do: investigate mutex and semaphores
 		var thread = Thread.new()
 		var err = thread.start(Callable(gpt4all_node, "call_GPT4All").bind(prompt))
-
+		#gpt4all_node.call_GPT4All_server(prompt)
 
 # Receiver function for whenever AI voice is played
 func _on_voice_played():
@@ -494,7 +511,7 @@ func _on_tts_option_chosen(choice):
 #		wit_ai_node.activate_voice_commands(false)
 #		convai_node.activate_voice_commands(false)
 #		whisper_api_node.activate_voice_commands(false)
-#
+
 			
 # Saver function, saving options to config file
 func save_api_info():
@@ -544,6 +561,7 @@ func save_api_info():
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type_choice)
 		prefs_cfg.set_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_choice)
+		prefs_cfg.set_value("xVASynth_options", "xVASynth_model_path", xVASynth_model_path)
 		err = prefs_cfg.save(exe_cfg_path)
 	
 	emit_signal("options_saved")
@@ -595,5 +613,6 @@ func load_api_info():
 		config_text_to_speech_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_tts_choice", text_to_speech_type.CONVAI)
 		config_ai_brain_type_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_ai_brain_choice", ai_brain_type.CONVAI)
 		config_speech_to_text_choice = prefs_cfg.get_value("ai_npc_options", "ai_npc_controller_stt_choice", speech_to_text_type.WIT)
+		xVASynth_model_path = prefs_cfg.get_value("xVASynth_options", "xVASynth_model_path", "")
 	emit_signal("options_loaded")
 

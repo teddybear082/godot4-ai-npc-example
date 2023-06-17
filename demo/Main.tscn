@@ -423,6 +423,7 @@ use_standalone_text_to_speech = true
 [node name="WhisperAPI" parent="Godot-AI-NPC-Controller" instance=ExtResource("29_cfp6j")]
 
 [node name="GPT4All" parent="Godot-AI-NPC-Controller" instance=ExtResource("30_snwds")]
+use_server_mode = false
 
 [node name="LocalWhisper" parent="Godot-AI-NPC-Controller" instance=ExtResource("31_v58ok")]
 
