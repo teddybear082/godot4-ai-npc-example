@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://tqm31xblssi2"]
+
+[ext_resource type="Script" path="res://addons/godot-convAI/ConvaiSSE.gd" id="1_3odpa"]
+[ext_resource type="PackedScene" uid="uid://8sutp4hp6lys" path="res://addons/godot-convAI/convai_httpsse_client.tscn" id="2_2o2uj"]
+
+[node name="ConvaiSSE" type="Node"]
+script = ExtResource("1_3odpa")
+
+[node name="ConvaiHTTPSSEClient" parent="." instance=ExtResource("2_2o2uj")]
