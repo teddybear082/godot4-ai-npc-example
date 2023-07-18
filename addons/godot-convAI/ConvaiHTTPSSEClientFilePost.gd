@@ -1,6 +1,6 @@
 extends Node
 
-## This code sets up the framework to use Convai's streaming mode, which uses Server Sent Events.
+## This code sets up the framework to use Convai's streaming mode, which uses Server Sent Events, but with an audio file.
 ## It is adapted from code in https://github.com/WolfgangSenff/HTTPSSEClient, which is MIT Licensed.
 ## It is specifically written to capture Convai's SSE events only that might be relevant for an AI NPC, not for more general purposes.
 
@@ -20,7 +20,7 @@ var port : int
 var use_ssl : bool
 var verify_host : bool
 var headers : PackedStringArray
-var body : String
+var body : PackedByteArray
 var told_to_connect : bool = false
 var connection_in_progress : bool = false
 var request_in_progress : bool = false
@@ -28,7 +28,7 @@ var is_requested : bool = false
 var response_body = PackedByteArray()
 var current_responses : Array = []
 
-func connect_to_host(domain : String, url_after_domain : String, port : int = -1, use_ssl : bool = false, verify_host : bool = true, new_headers : PackedStringArray = [], new_body : String = ""):
+func connect_to_host(domain : String, url_after_domain : String, port : int = -1, use_ssl : bool = false, verify_host : bool = true, new_headers : PackedStringArray = [], new_body : PackedByteArray = []):
 	#print("Connecting to host")
 	self.domain = domain
 	self.url_after_domain = url_after_domain
@@ -61,7 +61,7 @@ func attempt_to_request(httpclient_status):
 		#print("connected in attempt to request")
 		var enhanced_headers = headers + PackedStringArray(["Accept: text/event-stream"])
 		#print(enhanced_headers)
-		var err = httpclient.request(HTTPClient.METHOD_POST, url_after_domain, enhanced_headers, body)
+		var err = httpclient.request_raw(HTTPClient.METHOD_POST, url_after_domain, enhanced_headers, body)
 		if err == OK:
 			is_requested = true
 			#print("made it to err=OK in attempt to request")

@@ -20,10 +20,13 @@ signal AI_action_generated(action)
 @export var api_key : String = "insert_your_convai_API_key": set = set_api_key
 
 # Convai Character ID from dashboard
-@export var convai_character_id : String = "f2b59698-1352-11ee-bb1a-42010a400002"
+@export var  convai_character_id : String = "f2b59698-1352-11ee-bb1a-42010a400002"
 
 # Special client node for receiving server sent events
 @onready var http_sse_client = $ConvaiHTTPSSEClient
+
+# Special client node for receiving server sent events with audio file transmission
+@onready var http_sse_client_file_post = $ConvaiHTTPSSEClientFilePost
 
 # Choose whether to receive voice responses from Convai
 @export var voice_response : bool = true
@@ -49,8 +52,16 @@ var stream_queued_text : String = ""
 var convai_speech_player : AudioStreamPlayer
 var convai_stream : AudioStreamWAV
 
+# Variables for audio recording
+var record_effect : AudioEffectRecord
+var micrecordplayer : AudioStreamPlayer
+var save_path : String
+var new_save_path : String
+var interface_enabled : bool = false
+var use_voice_to_voice_SSE : bool = false
+
 # Array of actions pre-defined for convai character if using actions endpoint
-var actions = "follow, jump, stay here"
+var actions = "quit, follow, jump, stay here"
 	
 func _ready():
 	# If using endpoint without actions, switch sub_url
@@ -63,10 +74,25 @@ func _ready():
 	http_sse_client.connect("sessionID_received", Callable(self,"_on_sessionID_received"))
 	http_sse_client.connect("tag_received", Callable(self, "_on_tag_received"))
 	http_sse_client.connect("action_sequence_received", Callable(self, "_on_action_received"))
+	
+	# Connect signals with child SSEClient_File_Post node for voice-to-voice endpoint use
+	http_sse_client_file_post.connect("connected", Callable(self, "on_connected"))
+	http_sse_client_file_post.connect("audio_received", Callable(self, "_on_audio_received"))
+	http_sse_client_file_post.connect("text_received", Callable(self, "_on_text_received"))
+	http_sse_client_file_post.connect("sessionID_received", Callable(self,"_on_sessionID_received"))
+	http_sse_client_file_post.connect("tag_received", Callable(self, "_on_tag_received"))
+	http_sse_client_file_post.connect("action_sequence_received", Callable(self, "_on_action_received"))
+	
 	# Try to start the connection to Convai to reduce response times once a request is made
 	http_sse_client.domain = url
 	http_sse_client.port = -1
-	http_sse_client.attempt_to_connect()
+	http_sse_client_file_post.domain = url
+	http_sse_client_file_post.port = -1
+	# Determine if using voice to voice or not and choose appropriate helper node to activate
+	if use_voice_to_voice_SSE == false:
+		http_sse_client.attempt_to_connect()
+	else:
+		http_sse_client_file_post.attempt_to_connect()
 	
 	set_api_key(api_key)
 	set_session_id(convai_session_id)
@@ -88,7 +114,31 @@ func _ready():
 #	call_convai_SSE("Hi there!")
 #	await get_tree().create_timer(25.0).timeout
 #	call_convai_SSE("Jump now!")
-#
+	
+	# Make sure audio input is enabled even if program is not set to otherwise to prevent inadvertent errors in use
+	ProjectSettings.set_setting("audio/driver/enable_input", true)
+	
+	# Audio request ready stuff to allow recording of microphone
+	var current_number = 0
+	while AudioServer.get_bus_index("ConvaiSSEMicRecorder" + str(current_number)) != -1:
+		current_number += 1
+
+	var bus_name = "ConvaiSSEMicRecorder" + str(current_number)
+	var record_bus_idx = AudioServer.bus_count
+
+	AudioServer.add_bus(record_bus_idx)
+	AudioServer.set_bus_name(record_bus_idx, bus_name)
+
+	record_effect = AudioEffectRecord.new()
+	AudioServer.add_bus_effect(record_bus_idx, record_effect)
+
+	AudioServer.set_bus_mute(record_bus_idx, true)
+	
+	micrecordplayer = AudioStreamPlayer.new()
+	add_child(micrecordplayer)
+	micrecordplayer.bus = bus_name
+
+	
 func call_convai_SSE(prompt : String):
 	var headers = PackedStringArray(["CONVAI-API-KEY: " + api_key, "Content-Type: application/x-www-form-urlencoded"])
 	if voice_response == true:
@@ -107,10 +157,69 @@ func call_convai_SSE(prompt : String):
 	}
 	
 	var form_data = http_sse_client.httpclient.query_string_from_dict(body)
-	print(form_data)
+	#print(form_data)
 	
 	# Now call convAI, using this method will catch if for some reason there is not a present connection to reinitate it as well as make a request
 	http_sse_client.connect_to_host(url, sub_url, 443, true, false, headers, form_data)
+
+
+func call_convai_SSE_with_audio(audio_wav_path):
+	print("Calling Convai SSE with audio")
+	if voice_response == true:
+		voice_response_string = "True"
+	else:
+		voice_response_string = "False"
+	
+	var file = FileAccess.open(audio_wav_path, FileAccess.READ)
+	var content = file.get_buffer(file.get_length())
+	file.close()
+
+#func post_data_as_file(url: String, field_name: String, file_name: String, data, post_fields: Dictionary = {}, content_type: String = "", custom_headers: Array = []):
+	randomize()
+	#var boundary = "---------------------------" + str(randi()) + str(randi())
+	var boundary = "boundary"
+	var headers = PackedStringArray(["CONVAI-API-KEY: " + api_key, "Content-Type: multipart/form-data; boundary=" + boundary])
+	var body1 = "\r\n\r\n"
+	var post_fields = {
+		"charID": convai_character_id,
+		"sessionID": convai_session_id,
+		"voiceResponse": voice_response_string,
+		"actions": actions,
+		"stream": "True"
+	}
+	var field_name = "file"
+	var file_name = "converted_convai_audio_SSE.wav"
+	var content_type = "audio/wav"
+	var data = content
+	for key in post_fields:
+		#print("key found:" + str(key))
+		body1 += "--" + boundary + "\r\n"
+		body1 += "Content-Disposition: form-data; name=\"" + key + "\"\r\n\r\n" + post_fields[key] + "\r\n"
+	body1 += "--" + boundary + "\r\n"
+	body1 += "Content-Disposition: form-data; name=\"" + field_name + "\"; filename=\"" + file_name + "\"\r\nContent-Type: "
+	if content_type != "":
+		body1 += content_type
+	elif data is String:
+		body1 += "text/plain"
+	else:
+		body1 += "application/octet-stream"
+	body1 += "\r\n\r\n"
+	var body2 = "\r\n" + "--" + boundary + "--"
+	var post_content
+	if data is String:
+		post_content = (body1 + data + body2).to_utf8_buffer()
+	elif data is PackedByteArray:
+		#print("http file content found")
+		post_content = body1.to_utf8_buffer() + data + body2.to_utf8_buffer()
+	else:
+		assert(false)
+		return false
+	#print("making file http request")
+	#print(url)
+	#print(headers)
+	#print(body1 + "binary data, for example audio file data, inserted here" + body2)
+	#print(post_content)
+	http_sse_client_file_post.connect_to_host(url, sub_url, 443, true, false, headers, post_content)
 
 func on_connected():
 	pass 
@@ -153,7 +262,10 @@ func _on_tag_received(new_tag : String):
 
 func _on_action_received(new_action):
 	# Insert code to parse newlines, separate out if multiple actions
-	pass
+	if new_action.matchn("*quit*"):
+		get_parent().save_api_info()
+		await get_tree().create_timer(1.0).timeout
+		get_tree().quit()
 
 # Setter function for character
 func set_character_id(new_character_id : String):
@@ -178,4 +290,102 @@ func reset_session():
 # Determine if AI-generated response content also includes and uses voice file
 func set_voice_response_mode(mode : bool):
 	voice_response = mode
+	
+# This is needed to activate the voice commands in the node.
+func activate_voice_commands(value):
+	interface_enabled = value
+	if value:
+		if micrecordplayer.stream == null:
+			micrecordplayer.stream = AudioStreamMicrophone.new()
+		if !micrecordplayer.playing:
+			micrecordplayer.play()
+	else:	
+		if micrecordplayer.playing:
+			micrecordplayer.stop()
+
+		micrecordplayer.stream = null
+	
+
+# Start voice capture		
+func start_voice_command():
+	#print ("Reading sound")
+	if !micrecordplayer.playing:
+		micrecordplayer.play()
+	record_effect.set_recording_active(true)
+		
+		
+# End voice capture		
+func end_voice_command():
+	#print("stop reading sound")
+	var recording = record_effect.get_recording()
+	await get_tree().create_timer(1.0).timeout
+	record_effect.set_recording_active(false)
+	micrecordplayer.stop()
+#	print(recording)
+#	print(recording.format)
+#	print(recording.mix_rate)
+#	print(recording.stereo)
+	var data = recording.get_data()
+#	print(data.size())
+	#var new_data = convert_sound_data_to_16000(data)
+	#recording.data = new_data
+	#recording.mix_rate = 16000
+#	print(recording.mix_rate)
+	if OS.has_feature("editor"):
+		save_path = OS.get_user_data_dir().path_join("convai_audio_SSE.wav")
+		new_save_path = OS.get_user_data_dir().path_join("converted_convai_audio_SSE.wav")
+	elif OS.has_feature("android"):
+		save_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false).path_join("convai_audio_SSE.wav")
+		new_save_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false).path_join("converted_convai_audio_SSE.wav")
+	else:
+		save_path = OS.get_executable_path().get_base_dir().path_join("convai_audio_SSE.wav")
+		new_save_path = OS.get_executable_path().get_base_dir().path_join("converted_convai_audio_SSE.wav")
+	var check_ok = recording.save_to_wav(save_path)
+	await get_tree().create_timer(.2).timeout
+	var thread = Thread.new()
+	var err = thread.start(Callable(self, "convert_file_to_convai_format"))
+	await get_tree().create_timer(.2).timeout
+	call_convai_SSE_with_audio(new_save_path)
+
+#If needed someday
+func fix_chunked_response(data):
+	var tmp = data.replace("}\r\n{","},\n{")
+	return ("[%s]"%tmp)
+
+
+# Unused for now since using ffmpeg: Function to convert recorded sound data to 16000 mix rate which is what is required by Convai
+func convert_sound_data_to_16000(data: PackedByteArray) -> PackedByteArray:
+	var input_mix_rate = 48000
+	var output_mix_rate = 16000
+	var input_frames = data.size() / 2  # each sample is 2 bytes (16 bits)
+	var output_frames = int(input_frames * output_mix_rate / input_mix_rate)
+	var output_data = PackedByteArray()
+
+	for i in range(output_frames):
+		var input_index = int(i * input_frames / output_frames) * 2
+		output_data.append(data[input_index])
+		output_data.append(data[input_index + 1])
+	return output_data
+
+# Unused for now since using ffmpeg; does not seem to work correctly: Function to convert stereo audio to mono
+func convert_sound_data_to_mono(data: PackedByteArray) -> PackedByteArray:
+	var input_frames = data.size() / 2
+	var output_data = PackedByteArray()
+	for i in range(input_frames):
+		var input_index = i * 2
+		var averaged_frame = data[input_index]/2 + data[input_index+1]/2
+		output_data.append(averaged_frame)
+	return output_data
+
+# use ffpmeg.exe to convert wav file in godot format to convai-required 16000 bit rate, mono audio format
+func convert_file_to_convai_format():
+	var ffmpeg_path : String
+	var arguments = ["-y", "-i", save_path, "-ar", "16000", "-ac", "1", new_save_path]
+	if OS.has_feature("editor"):
+		ffmpeg_path = OS.get_user_data_dir().path_join("ffmpeg.exe")
+	elif OS.has_feature("android"):
+		ffmpeg_path = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS, false).path_join("ffmpeg.exe")
+	else:
+		ffmpeg_path = OS.get_executable_path().get_base_dir().path_join("ffmpeg.exe")
+	var exit_code = OS.execute(ffmpeg_path, arguments, [], false, false)
 	
