@@ -41,7 +41,9 @@ enum text_to_speech_type {
 enum ai_brain_type {
 	CONVAI,
 	GPTTURBO,
-	GPT4ALL
+	GPT4ALL,
+	TEXTGENWEBUI,
+	TEXTGENWEBUISTREAMING
 }
 
 # Export for speech to text type
@@ -71,6 +73,7 @@ enum ai_brain_type {
 @onready var options_scene = options_viewport.get_scene_instance()
 @onready var xvasynth_node = get_node("XVASynth")
 @onready var convai_sse_node = get_node("ConvaiSSE")
+@onready var textgenwebui_node = get_node("TextgenwebuiOpenAI")
 # Variable used to determine if player can use proximity interaction
 var close_enough_to_talk : bool = false
 
@@ -149,6 +152,9 @@ func _ready():
 	# Connect AI response generated signal from GPT4All to handler function
 	gpt4all_node.connect("AI_response_generated", Callable(self, "_on_gpt4all_processed"))
 	
+	# Connect AI response generated signal from Textgenwebui to handler function
+	textgenwebui_node.connect("AI_response_generated", Callable(self, "_on_textgenwebui_processed"))
+	
 	# Connect local whisper speech to text received signal to handler function
 	local_whisper_node.connect("whisper_speech_to_text_received", Callable(self, "_on_local_whisper_processed"))
 	
@@ -196,6 +202,10 @@ func _ready():
 		gpt_node.sample_npc_question_prompt = gpt_sample_npc_question
 		gpt_node.sample_npc_prompt_response = gpt_sample_npc_response
 
+		# Set Textgenwebui background info
+		textgenwebui_node.npc_background_directions = gpt_npc_background_directions
+		textgenwebui_node.sample_npc_question_prompt = gpt_sample_npc_question
+		textgenwebui_node.sample_npc_prompt_response = gpt_sample_npc_response
 		# Set ConvAI API key
 		convai_node.set_api_key(convai_api_key)
 		convai_sse_node.set_api_key(convai_api_key)
@@ -287,6 +297,15 @@ func _ready():
 	# Testing GPT4All server mode
 	#await get_tree().create_timer(5.0).timeout
 	#gpt4all_node.call_GPT4All("Hi, who are you?")
+	
+	# Testing Textgenwebui OpenAI mode
+#	await get_tree().create_timer(10.0).timeout
+#	gpt_node.url = "http://127.0.0.1:5001/v1/chat/completions"
+#	gpt_node.call_GPT("Hi how are you doing today?")
+
+	#Testing textgenwebui streaming openai mode
+#	await get_tree().create_timer(10.0).timeout
+#	$TextgenwebuiOpenAI.call_GPT_streaming("Hi how are you?")
 
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
@@ -375,7 +394,7 @@ func _on_wit_ai_processed(prompt : String):
 		return
 	
 	# If using local GPT generation, play additional heard you prompt to fill space
-	if ai_brain_type_choice == ai_brain_type.GPT4ALL:
+	if ai_brain_type_choice == ai_brain_type.GPT4ALL: # or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
 		# Play "I heard you" speech
 		play_heard_you(prompt)
 	
@@ -386,6 +405,10 @@ func _on_wit_ai_processed(prompt : String):
 			convai_sse_node.call_convai_SSE(prompt)
 	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI:
+		textgenwebui_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		textgenwebui_node.call_GPT_streaming(prompt)
 	else:
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores
@@ -441,6 +464,19 @@ func _on_gpt4all_processed(dialogue: String):
 		convai_node.call_convAI_TTS(dialogue)	
 
 
+func _on_textgenwebui_processed(dialogue: String):
+	mic_active_label3D.text = "Response: " + dialogue
+	if text_to_speech_choice == text_to_speech_type.GODOT:
+		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
+	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
+		eleven_labs_tts_node.call_ElevenLabs(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.WIT:
+		wit_ai_node.call_wit_TTS(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.XVASYNTH:
+		xvasynth_node.XVASynth_synthesize(dialogue)
+	else:
+		convai_node.call_convAI_TTS(dialogue)	
+
 # Function called when whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_whisper_processed(prompt: String):
 	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
@@ -452,7 +488,7 @@ func _on_whisper_processed(prompt: String):
 		return
 	
 	# If using local GPT generation, play additional heard you prompt to fill space
-	if ai_brain_type_choice == ai_brain_type.GPT4ALL:
+	if ai_brain_type_choice == ai_brain_type.GPT4ALL: # or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
 		# Play "I heard you" speech
 		play_heard_you(prompt)
 	
@@ -463,6 +499,10 @@ func _on_whisper_processed(prompt: String):
 			convai_sse_node.call_convai_SSE(prompt)
 	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI:
+		textgenwebui_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		textgenwebui_node.call_GPT_streaming(prompt)
 	else:
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores
@@ -482,7 +522,7 @@ func _on_local_whisper_processed(prompt: String):
 		return
 	
 	# If using local GPT generation, play additional heard you prompt to fill space
-	if ai_brain_type_choice == ai_brain_type.GPT4ALL:
+	if ai_brain_type_choice == ai_brain_type.GPT4ALL: #or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
 		# Play "I heard you" speech
 		play_heard_you(prompt)
 	
@@ -493,6 +533,10 @@ func _on_local_whisper_processed(prompt: String):
 			convai_sse_node.call_convai_SSE(prompt)
 	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI:
+		textgenwebui_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		textgenwebui_node.call_GPT_streaming(prompt)
 	else:
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores

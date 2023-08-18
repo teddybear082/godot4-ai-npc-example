@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dfrtv2j4p5e2q"]
+
+[ext_resource type="Script" path="res://addons/textgenwebuiOpenAI/TextgenwebuiOpenAI.gd" id="1_susx4"]
+[ext_resource type="Script" path="res://addons/textgenwebuiOpenAI/TextgenwebuiSSE.gd" id="2_u6wdk"]
+
+[node name="TextgenwebuiOpenAI" type="Node"]
+script = ExtResource("1_susx4")
+
+[node name="TextgenwebuiSSE" type="Node" parent="."]
+script = ExtResource("2_u6wdk")

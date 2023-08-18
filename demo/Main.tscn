@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://cpneed0jfseuk"]
+[gd_scene load_steps=51 format=3 uid="uid://cpneed0jfseuk"]
 
 [ext_resource type="PackedScene" uid="uid://de75036o5g1q6" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/structure-yellow-medium.glb" id="2"]
 [ext_resource type="PackedScene" uid="uid://3l4j0tlmkfdm" path="res://assets/models/kenney/kenney_conveyor-kit/Models/GLTF format/door-wide-half.glb" id="3"]
@@ -37,6 +37,7 @@
 [ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="32_h8v3t"]
 [ext_resource type="PackedScene" uid="uid://tqm31xblssi2" path="res://addons/godot-convAI/convai_sse.tscn" id="33_1dq8q"]
 [ext_resource type="PackedScene" uid="uid://dcjdrl3ldtps2" path="res://demo/Options2D.tscn" id="33_m67ws"]
+[ext_resource type="PackedScene" uid="uid://dfrtv2j4p5e2q" path="res://addons/textgenwebuiOpenAI/textgenwebui_open_ai.tscn" id="34_g1xoi"]
 
 [sub_resource type="BoxMesh" id="1"]
 size = Vector3(10, 0.25, 10)
@@ -431,6 +432,8 @@ use_server_mode = false
 [node name="XVASynth" parent="Godot-AI-NPC-Controller" instance=ExtResource("32_gtpug")]
 
 [node name="ConvaiSSE" parent="Godot-AI-NPC-Controller" instance=ExtResource("33_1dq8q")]
+
+[node name="TextgenwebuiOpenAI" parent="Godot-AI-NPC-Controller" instance=ExtResource("34_g1xoi")]
 
 [node name="MicActiveLabel3D" type="Label3D" parent="Godot-AI-NPC-Controller"]
 transform = Transform3D(0.602595, 0, 0.798047, 0, 1, 0, -0.798047, 0, 0.602595, -1.88246, 1.63711, -2.16239)
