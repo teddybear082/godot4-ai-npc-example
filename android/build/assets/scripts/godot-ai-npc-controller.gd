@@ -41,7 +41,9 @@ enum text_to_speech_type {
 enum ai_brain_type {
 	CONVAI,
 	GPTTURBO,
-	GPT4ALL
+	GPT4ALL,
+	TEXTGENWEBUI,
+	TEXTGENWEBUISTREAMING
 }
 
 # Export for speech to text type
@@ -70,7 +72,8 @@ enum ai_brain_type {
 @onready var options_viewport = get_node("OptionsViewport2Din3D")
 @onready var options_scene = options_viewport.get_scene_instance()
 @onready var xvasynth_node = get_node("XVASynth")
-
+@onready var convai_sse_node = get_node("ConvaiSSE")
+@onready var textgenwebui_node = get_node("TextgenwebuiOpenAI")
 # Variable used to determine if player can use proximity interaction
 var close_enough_to_talk : bool = false
 
@@ -109,6 +112,11 @@ var voice_id
 
 # Array to hold audio files for placeholder sounds (T0 DO: Implement example)
 var placeholder_sound_array = []
+# Used to select random placeholder sound options
+var random : RandomNumberGenerator
+# Used to determine whether voice playing is just a placeholder or is the final voice for the AI response
+var placeholder_voice : bool = false
+
 
 func _ready():
 	# Load config file so it is ready if needed
@@ -136,12 +144,16 @@ func _ready():
 	
 	# Connect AI response generated signal from ConvAI to handler function
 	convai_node.connect("AI_response_generated", Callable(self, "_on_convai_processed"))
+	convai_sse_node.connect("AI_response_generated", Callable(self, "_on_convai_processed"))
 	
 	# Connect whisper speech to text received signal to handler function
 	whisper_api_node.connect("whisper_speech_to_text_received", Callable(self, "_on_whisper_processed"))
 	
 	# Connect AI response generated signal from GPT4All to handler function
 	gpt4all_node.connect("AI_response_generated", Callable(self, "_on_gpt4all_processed"))
+	
+	# Connect AI response generated signal from Textgenwebui to handler function
+	textgenwebui_node.connect("AI_response_generated", Callable(self, "_on_textgenwebui_processed"))
 	
 	# Connect local whisper speech to text received signal to handler function
 	local_whisper_node.connect("whisper_speech_to_text_received", Callable(self, "_on_local_whisper_processed"))
@@ -151,6 +163,7 @@ func _ready():
 	
 	# Connect voice played signal from Convai
 	convai_node.connect("convAI_voice_sample_played", Callable(self, "_on_voice_played"))
+	convai_sse_node.connect("convAI_voice_sample_played", Callable(self, "_on_voice_played"))
 	
 	# Connect voice played signal from ElevenLabs
 	eleven_labs_tts_node.connect("ElevenLabs_generated_speech", Callable(self, "_on_voice_played"))
@@ -189,15 +202,26 @@ func _ready():
 		gpt_node.sample_npc_question_prompt = gpt_sample_npc_question
 		gpt_node.sample_npc_prompt_response = gpt_sample_npc_response
 
+		# Set Textgenwebui background info
+		textgenwebui_node.npc_background_directions = gpt_npc_background_directions
+		textgenwebui_node.sample_npc_question_prompt = gpt_sample_npc_question
+		textgenwebui_node.sample_npc_prompt_response = gpt_sample_npc_response
 		# Set ConvAI API key
 		convai_node.set_api_key(convai_api_key)
-
+		convai_sse_node.set_api_key(convai_api_key)
+		
 		# Set ConvAI Character Code
 		convai_node.set_character_id(convai_character_id)
-
-		# Set Convai Session ID
-		convai_node.set_session_id(convai_session_id)
-
+		convai_sse_node.set_character_id(convai_character_id)
+		
+		# Set Convai Session ID to last one if not default
+		if last_convai_session_id != "-1" and last_convai_session_id != "":
+			convai_node.set_session_id(last_convai_session_id)
+			convai_sse_node.set_session_id(last_convai_session_id)
+		else:
+			convai_node.set_session_id(convai_session_id)
+			convai_sse_node.set_session_id(convai_session_id)
+			
 		# Set Convai Standalone Voice selection
 		convai_node.set_convai_standalone_tts_voice(convai_standalone_tts_voice)
 		
@@ -240,17 +264,26 @@ func _ready():
 	if text_to_speech_choice == text_to_speech_type.CONVAI:
 		if ai_brain_type_choice == ai_brain_type.CONVAI:
 			convai_node.set_voice_response_mode(true)
+			convai_sse_node.set_voice_response_mode(true)
 			convai_node.set_use_standalone_tts(false)
 		else:
 			convai_node.set_voice_response_mode(false)
+			convai_sse_node.set_voice_response_mode(false)
 			convai_node.set_use_standalone_tts(true)	
-	
+	else:
+		convai_node.set_voice_response_mode(false)
+		convai_sse_node.set_voice_response_mode(false)
+		convai_node.set_use_standalone_tts(false)
 	# Set buttons on options menu to current choices
 #	options_scene.get_node("ColorRect/STTOptionButton").selected = speech_to_text_choice
 	options_scene.get_node("ColorRect/TTSOptionButton").selected = text_to_speech_choice
 	options_scene.get_node("ColorRect/AIBrainOptionButton").selected = ai_brain_type_choice
 	
-	# Testing only right now - convai's speech to text pipeline seems to have issues across the board so is not functioning
+	# Set up random for placeholder sounds
+	random = RandomNumberGenerator.new()
+	random.randomize()
+	
+	# Testing only right now
 	# in standalone mode or character/getResponse mode
 	#await get_tree().create_timer(10.0).timeout
 	#convai_node.call_convai_speech_to_text_standalone("user://convaimicaudio.wav")
@@ -264,6 +297,17 @@ func _ready():
 	# Testing GPT4All server mode
 	#await get_tree().create_timer(5.0).timeout
 	#gpt4all_node.call_GPT4All("Hi, who are you?")
+	
+	# Testing Textgenwebui OpenAI mode
+#	await get_tree().create_timer(10.0).timeout
+#	gpt_node.url = "http://127.0.0.1:5001/v1/chat/completions"
+#	gpt_node.call_GPT("Hi how are you doing today?")
+
+	#Testing textgenwebui streaming openai mode
+#	await get_tree().create_timer(10.0).timeout
+#	textgenwebui_node.url = "http://0.0.0.1:5001/v1/chat/completions"
+#	textgenwebui_node.streaming_url = "http://0.0.0.1"
+#	$TextgenwebuiOpenAI.call_GPT_streaming("Hi what are you doing here?")
 
 # Handler for player VR button presses to determine if player is trying to activate or stop mic while in proximity of NPC
 func _on_player_controller_button_pressed(button):
@@ -343,19 +387,30 @@ func _on_npc_area_interaction_area_clicked(location):
 # Function called when wit.ai finishes processing speech to text, use the text it produces to call GPT	
 func _on_wit_ai_processed(prompt : String):
 	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
+	
 	# Example of parsing speech to text for key command words like quitting the game; wit actually does this with its intent system but this could be a fallback if it misses it.
 	if prompt.matchn("*quit*"):
 		save_api_info()
 		await get_tree().create_timer(1.0).timeout
 		get_tree().quit()
 		return
+	
+	# If using local GPT generation, play additional heard you prompt to fill space
+	if ai_brain_type_choice == ai_brain_type.GPT4ALL: # or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		# Play "I heard you" speech
+		play_heard_you(prompt)
+	
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
 		else:
-			convai_node.call_convAI_stream(prompt)
+			convai_sse_node.call_convai_SSE(prompt)
 	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI:
+		textgenwebui_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		textgenwebui_node.call_GPT_streaming(prompt)
 	else:
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores
@@ -411,6 +466,19 @@ func _on_gpt4all_processed(dialogue: String):
 		convai_node.call_convAI_TTS(dialogue)	
 
 
+func _on_textgenwebui_processed(dialogue: String):
+	mic_active_label3D.text = "Response: " + dialogue
+	if text_to_speech_choice == text_to_speech_type.GODOT:
+		DisplayServer.tts_speak(dialogue, voice_id, 100, 1.0, 1.2, false)
+	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
+		eleven_labs_tts_node.call_ElevenLabs(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.WIT:
+		wit_ai_node.call_wit_TTS(dialogue)
+	elif text_to_speech_choice == text_to_speech_type.XVASYNTH:
+		xvasynth_node.XVASynth_synthesize(dialogue)
+	else:
+		convai_node.call_convAI_TTS(dialogue)	
+
 # Function called when whisper finishes processing speech to text, use the text it produces to call AI brain
 func _on_whisper_processed(prompt: String):
 	mic_active_label3D.text = "Speech decoded as: " + prompt + "...Waiting for response."
@@ -420,13 +488,23 @@ func _on_whisper_processed(prompt: String):
 		await get_tree().create_timer(1.0).timeout
 		get_tree().quit()
 		return
+	
+	# If using local GPT generation, play additional heard you prompt to fill space
+	if ai_brain_type_choice == ai_brain_type.GPT4ALL: # or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		# Play "I heard you" speech
+		play_heard_you(prompt)
+	
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
 		else:
-			convai_node.call_convAI_stream(prompt)
+			convai_sse_node.call_convai_SSE(prompt)
 	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI:
+		textgenwebui_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		textgenwebui_node.call_GPT_streaming(prompt)
 	else:
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores
@@ -444,13 +522,23 @@ func _on_local_whisper_processed(prompt: String):
 		await get_tree().create_timer(1.0).timeout
 		get_tree().quit()
 		return
+	
+	# If using local GPT generation, play additional heard you prompt to fill space
+	if ai_brain_type_choice == ai_brain_type.GPT4ALL: #or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI or ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		# Play "I heard you" speech
+		play_heard_you(prompt)
+	
 	if ai_brain_type_choice == ai_brain_type.CONVAI:
 		if use_convai_stream_mode == false:
 			convai_node.call_convAI(prompt)
 		else:
-			convai_node.call_convAI_stream(prompt)
+			convai_sse_node.call_convai_SSE(prompt)
 	elif ai_brain_type_choice == ai_brain_type.GPTTURBO:
 		gpt_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUI:
+		textgenwebui_node.call_GPT(prompt)
+	elif ai_brain_type_choice == ai_brain_type.TEXTGENWEBUISTREAMING:
+		textgenwebui_node.call_GPT_streaming(prompt)
 	else:
 		# If using GPT4All, since you are calling an exe outside of the project you need to create a thread otherwise the program freezes while GPT4All is executing
 		# To do: investigate mutex and semaphores
@@ -460,8 +548,11 @@ func _on_local_whisper_processed(prompt: String):
 
 # Receiver function for whenever AI voice is played
 func _on_voice_played():
-	mic_active_label3D.visible = false
-	
+	if placeholder_voice == false:
+		mic_active_label3D.visible = false
+	# If a voice is played while placeholder is true, then set false for next voice
+	else:
+		placeholder_voice = false
 	
 func _on_ai_brain_option_chosen(choice):
 	ai_brain_type_choice = choice
@@ -473,11 +564,15 @@ func _on_tts_option_chosen(choice):
 	if text_to_speech_choice == text_to_speech_type.CONVAI:
 		if ai_brain_type_choice == ai_brain_type.CONVAI:
 			convai_node.set_voice_response_mode(true)
+			convai_sse_node.set_voice_response_mode(true)
+			convai_node.set_use_standalone_tts(false)
 		else:
 			convai_node.set_voice_response_mode(false)
+			convai_sse_node.set_voice_response_mode(false)
 			convai_node.set_use_standalone_tts(true)	
 	else:
 		convai_node.set_voice_response_mode(false)
+		convai_sse_node.set_voice_response_mode(false)
 		convai_node.set_use_standalone_tts(false)
 
 # This seemed to be too complicated to implement but leaving as example code commented out	
@@ -512,7 +607,24 @@ func _on_tts_option_chosen(choice):
 #		convai_node.activate_voice_commands(false)
 #		whisper_api_node.activate_voice_commands(false)
 
-			
+
+# Play placeholder "heard what you said" sound while waiting for AI response
+func play_heard_you(prompt):
+	placeholder_voice = true
+	var possible_statement_array = ["I heard you say: ", "Hm, so you said: ", "If I heard right, you said: ", "I'm a great listener. You say: ", "Oh, you said: ", "What you're asking me is: "]
+	var statement = random.randi_range(0, possible_statement_array.size()-1)
+	if text_to_speech_choice == text_to_speech_type.GODOT:
+		DisplayServer.tts_speak((possible_statement_array[statement] + prompt), voice_id, 100, 1.0, 1.2, false)
+	elif text_to_speech_choice == text_to_speech_type.ELEVENLABS:
+		eleven_labs_tts_node.call_ElevenLabs(possible_statement_array[statement] + prompt)
+	elif text_to_speech_choice == text_to_speech_type.WIT:
+		wit_ai_node.call_wit_TTS(possible_statement_array[statement] + prompt)
+	elif text_to_speech_choice == text_to_speech_type.XVASYNTH:
+		xvasynth_node.XVASynth_synthesize(possible_statement_array[statement] + prompt)
+	else:
+		convai_node.call_convAI_TTS(possible_statement_array[statement] + prompt)
+	
+	
 # Saver function, saving options to config file
 func save_api_info():
 	# Save convai session id if using convai for possible persistence between sessions

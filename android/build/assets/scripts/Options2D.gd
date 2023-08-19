@@ -25,7 +25,9 @@ enum text_to_speech_type {
 enum ai_brain_type {
 	CONVAI,
 	GPTTURBO,
-	GPT4ALL
+	GPT4ALL,
+	TEXTGENWEBUI,
+	TEXGENWEBUISTREAMING
 }
 
 @onready var AIBrainOptionButton : OptionButton = $ColorRect/AIBrainOptionButton
@@ -43,8 +45,11 @@ func _ready():
 	AIBrainOptionButton.add_item("Convai", 0)
 	AIBrainOptionButton.add_item("GPTTurbo", 1)
 	AIBrainOptionButton.add_item("GPT4All-PCVR Only", 2)
+	AIBrainOptionButton.add_item("TextgenWebUI - PCVR Only", 3)
+	AIBrainOptionButton.add_item("TextgenWebUI-Streaming - PCVR Only", 4)
 	if OS.has_feature("android"):
 		AIBrainOptionButton.set_item_disabled(2, true)
+	
 		
 #	STTOptionButton.add_item("Wit.ai", 0)
 #	STTOptionButton.add_item("Convai (Not Working)", 1)

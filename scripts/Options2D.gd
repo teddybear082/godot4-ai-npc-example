@@ -49,8 +49,7 @@ func _ready():
 	AIBrainOptionButton.add_item("TextgenWebUI-Streaming - PCVR Only", 4)
 	if OS.has_feature("android"):
 		AIBrainOptionButton.set_item_disabled(2, true)
-		AIBrainOptionButton.set_item_disabled(3, true)
-		AIBrainOptionButton.set_item_disabled(4, true)
+	
 		
 #	STTOptionButton.add_item("Wit.ai", 0)
 #	STTOptionButton.add_item("Convai (Not Working)", 1)
