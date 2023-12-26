@@ -5,11 +5,11 @@
 
 Example of using various AI and speech technologies to create an AI NPC in Godot 4.  There is also an example of some of these scripts for Godot 3 here: https://github.com/teddybear082/godot-ai-npc-example. 
 
-This repo is more an experimental playground for coders and tinkerers than a true consumer final release.
+This repo is more an experimental playground for coders and tinkerers than a true consumer final release.  **I haven't worked on this repo in quite some time and have moved on to some other things, but if you are interested in things like this repo, I also have a gitbhub gist here with a node that contains all recent openai API's implemented: https://gist.github.com/teddybear082/53a6dc08a085de6a5caecee8cd70b040**
 
-Download the release marked for **PCVR** to use with windows PCVR: https://github.com/teddybear082/godot4-ai-npc-example/releases/download/v.0.02-alpha/pcvrrelease.zip.
+Download the release marked for **PCVR** to use with windows PCVR: https://github.com/teddybear082/godot4-ai-npc-example/releases/download/v.0.02-alpha/pcvrrelease.zip. This is a very early version and does not have all the features of the underlying code I later added.
 
-Download the release marked for **Quest** to use with Quest: https://github.com/teddybear082/godot4-ai-npc-example/releases/download/v.0.02-alpha/quest-release.zip.  
+Download the release marked for **Quest** to use with Quest: https://github.com/teddybear082/godot4-ai-npc-example/releases/download/v.0.02-alpha/quest-release.zip.  This is a very early version and does not have all the features of the underlying code I later added.
 
 **Instructions and information on use and the various options available are in the Wiki: https://github.com/teddybear082/godot4-ai-npc-example/wiki**
 
